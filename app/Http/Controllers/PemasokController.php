@@ -39,6 +39,7 @@ class PemasokController extends Controller
             1 => 'nama_pemasok',
             2 => 'telepon',
             3 => 'rata_lead_time',
+            4 => 'rata_lead_time_menit',
         ];
 
         return $this->responseDataTables(
@@ -51,7 +52,7 @@ class PemasokController extends Controller
                     'id_pemasok' => $pemasok->id_pemasok,
                     'nama_pemasok' => $pemasok->nama_pemasok,
                     'telepon' => $pemasok->telepon ?? '-',
-                    'rata_lead_time' => $pemasok->rata_lead_time,
+                    'rata_lead_time' => $pemasok->rata_lead_time . ' Hari ' . $pemasok->rata_lead_time_menit . ' Menit',
                     'aksi' => view('pemasok._aksi', ['pemasok' => $pemasok])->render(),
                 ];
             }
@@ -69,10 +70,12 @@ class PemasokController extends Controller
             'nama_pemasok' => ['required', 'string', 'max:100'],
             'alamat' => ['nullable', 'string'],
             'telepon' => ['nullable', 'string', 'max:20'],
-            'rata_lead_time' => ['nullable', 'integer', 'min:1'],
+            'rata_lead_time' => ['nullable', 'integer', 'min:0'],
+            'rata_lead_time_menit' => ['nullable', 'integer', 'min:0'],
         ], [], [
             'nama_pemasok' => 'nama pemasok',
-            'rata_lead_time' => 'rata lead time',
+            'rata_lead_time' => 'rata lead time (hari)',
+            'rata_lead_time_menit' => 'rata lead time (menit)',
         ]);
 
         Pemasok::query()->create([
@@ -80,6 +83,7 @@ class PemasokController extends Controller
             'alamat' => $data['alamat'] ?? null,
             'telepon' => $data['telepon'] ?? null,
             'rata_lead_time' => $data['rata_lead_time'] ?? 1,
+            'rata_lead_time_menit' => $data['rata_lead_time_menit'] ?? 0,
         ]);
 
         return redirect()->route('pemasok.index')->with('sukses', 'Pemasok berhasil ditambahkan.');
@@ -103,9 +107,12 @@ class PemasokController extends Controller
             'nama_pemasok' => ['required', 'string', 'max:100'],
             'alamat' => ['nullable', 'string'],
             'telepon' => ['nullable', 'string', 'max:20'],
-            'rata_lead_time' => ['nullable', 'integer', 'min:1'],
+            'rata_lead_time' => ['nullable', 'integer', 'min:0'],
+            'rata_lead_time_menit' => ['nullable', 'integer', 'min:0'],
         ], [], [
             'nama_pemasok' => 'nama pemasok',
+            'rata_lead_time' => 'rata lead time (hari)',
+            'rata_lead_time_menit' => 'rata lead time (menit)',
         ]);
 
         $pemasok->update([
@@ -113,6 +120,7 @@ class PemasokController extends Controller
             'alamat' => $data['alamat'] ?? null,
             'telepon' => $data['telepon'] ?? null,
             'rata_lead_time' => $data['rata_lead_time'] ?? 1,
+            'rata_lead_time_menit' => $data['rata_lead_time_menit'] ?? 0,
         ]);
 
         return redirect()->route('pemasok.index')->with('sukses', 'Pemasok berhasil diperbarui.');

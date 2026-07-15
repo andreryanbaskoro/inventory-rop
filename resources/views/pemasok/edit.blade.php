@@ -30,10 +30,15 @@
                     <input type="text" name="telepon" value="{{ old('telepon', $pemasok->telepon) }}"
                         class="form-control">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <label class="form-label">Rata lead time (hari)</label>
                     <input type="number" name="rata_lead_time"
-                        value="{{ old('rata_lead_time', $pemasok->rata_lead_time) }}" class="form-control" min="1">
+                        value="{{ old('rata_lead_time', $pemasok->rata_lead_time) }}" class="form-control" min="0">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Rata lead time (menit)</label>
+                    <input type="number" name="rata_lead_time_menit"
+                        value="{{ old('rata_lead_time_menit', $pemasok->rata_lead_time_menit) }}" class="form-control" min="0">
                 </div>
                 <div class="col-12">
                     <label class="form-label">Alamat</label>

@@ -28,10 +28,15 @@
                     <label class="form-label">Telepon</label>
                     <input type="text" name="telepon" value="{{ old('telepon') }}" class="form-control">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <label class="form-label">Rata lead time (hari)</label>
                     <input type="number" name="rata_lead_time" value="{{ old('rata_lead_time', 1) }}"
-                        class="form-control" min="1">
+                        class="form-control" min="0">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Rata lead time (menit)</label>
+                    <input type="number" name="rata_lead_time_menit" value="{{ old('rata_lead_time_menit', 0) }}"
+                        class="form-control" min="0">
                 </div>
                 <div class="col-12">
                     <label class="form-label">Alamat</label>

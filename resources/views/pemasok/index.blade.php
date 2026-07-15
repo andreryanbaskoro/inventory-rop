@@ -25,7 +25,7 @@
                         <th>ID</th>
                         <th>Nama</th>
                         <th>Telepon</th>
-                        <th>Lead time (hari)</th>
+                        <th>Lead time</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>

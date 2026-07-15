@@ -22,7 +22,7 @@
                 <dt class="col-sm-3">Telepon</dt>
                 <dd class="col-sm-9">{{ $pemasok->telepon ?? '-' }}</dd>
                 <dt class="col-sm-3">Lead time</dt>
-                <dd class="col-sm-9">{{ $pemasok->rata_lead_time }} hari</dd>
+                <dd class="col-sm-9">{{ $pemasok->rata_lead_time }} Hari {{ $pemasok->rata_lead_time_menit }} Menit</dd>
                 <dt class="col-sm-3">Alamat</dt>
                 <dd class="col-sm-9">{{ $pemasok->alamat ?? '-' }}</dd>
             </dl>

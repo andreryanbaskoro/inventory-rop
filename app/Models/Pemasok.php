@@ -21,12 +21,14 @@ class Pemasok extends Model
         'alamat',
         'telepon',
         'rata_lead_time',
+        'rata_lead_time_menit',
     ];
 
     protected function casts(): array
     {
         return [
             'rata_lead_time' => 'integer',
+            'rata_lead_time_menit' => 'integer',
         ];
     }
 
