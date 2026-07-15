@@ -33,7 +33,7 @@
 
                 <li class="sidebar-item {{ request()->routeIs('analisis.*') ? 'active' : '' }}">
                     <a href="{{ route('analisis.index') }}" class="sidebar-link">
-                        <i class="bi bi-graph-up-arrow"></i>
+                        <i class="bi bi-graph-up"></i>
                         <span>Analisis ROP & EOQ</span>
                     </a>
                 </li>
