@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('judul_halaman', 'Laporan')
-@section('subjudul', $data['judul'] . ($periode ? ' â€” periode ' . $periode : ''))
+@section('subjudul', $data['judul'] . ($periode ? ' — periode ' . $periode : ''))
 
 @section('breadcrumb')
     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
