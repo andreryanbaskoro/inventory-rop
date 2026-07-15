@@ -123,7 +123,7 @@
                     </a>
                 </div>
                 <h3 class="fw-bold mb-2">Selamat Datang</h3>
-                <p class="mb-4" style="color: var(--cm-text-muted);">Silakan masuk ke akun Anda untuk melanjutkan.</p>
+                <p class="mb-4" style="color: var(--cm-text-muted);">Silahkan masuk ke akun Anda untuk melanjutkan.</p>
 
                 <form action="{{ route('login.proses') }}" method="post">
                     @csrf
