@@ -26,7 +26,13 @@
                 <dt class="col-sm-3">Jenis</dt>
                 <dd class="col-sm-9">{{ $transaksi->jenis }}</dd>
                 <dt class="col-sm-3">Jumlah</dt>
-                <dd class="col-sm-9">{{ $transaksi->jumlah }}</dd>
+                <dd class="col-sm-9">
+                    @if($transaksi->satuan_input != $transaksi->barang?->satuan)
+                        {{ $transaksi->jumlah_input }} {{ $transaksi->satuan_input }} ({{ $transaksi->jumlah }} {{ $transaksi->barang?->satuan }})
+                    @else
+                        {{ $transaksi->jumlah }} {{ $transaksi->barang?->satuan }}
+                    @endif
+                </dd>
                 <dt class="col-sm-3">Keterangan</dt>
                 <dd class="col-sm-9">{{ $transaksi->keterangan ?? '-' }}</dd>
             </dl>

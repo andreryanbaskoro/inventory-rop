@@ -22,6 +22,8 @@ class PengadaanBarang extends Model
         'tanggal_pesan',
         'tanggal_datang',
         'jumlah_pesan',
+        'satuan_pesan_input',
+        'jumlah_pesan_input',
         'status_pengadaan',
         'catatan',
     ];
@@ -32,6 +34,7 @@ class PengadaanBarang extends Model
             'tanggal_pesan' => 'date',
             'tanggal_datang' => 'date',
             'jumlah_pesan' => 'integer',
+            'jumlah_pesan_input' => 'integer',
         ];
     }
 

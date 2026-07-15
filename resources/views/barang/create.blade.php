@@ -38,9 +38,29 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Satuan</label>
-                    <input type="text" name="satuan" value="{{ old('satuan', 'PCS') }}" class="form-control">
+                <div class="col-12">
+                    <div class="card bg-light-secondary border-0 mt-2 mb-3">
+                        <div class="card-body p-3">
+                            <h6 class="mb-2 text-brand"><i class="bi bi-box-seam me-2"></i>Pengaturan Satuan Barang</h6>
+                            <p class="text-muted small mb-3">
+                                Tentukan satuan dasar/terkecil (wajib) dan satuan besar opsional (misal: Karton) jika Anda membeli barang ini dalam jumlah besar.
+                            </p>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label text-secondary small fw-bold">Satuan Dasar/Terkecil <span class="text-danger">*</span></label>
+                                    <input type="text" name="satuan" value="{{ old('satuan', 'PCS') }}" class="form-control" placeholder="Contoh: PCS">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-secondary small fw-bold">Satuan Besar (Opsional)</label>
+                                    <input type="text" name="satuan_besar" value="{{ old('satuan_besar') }}" class="form-control" placeholder="Contoh: KARTON">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-secondary small fw-bold">Isi per Satuan Besar</label>
+                                    <input type="number" name="isi_per_satuan_besar" value="{{ old('isi_per_satuan_besar') }}" class="form-control" min="1" placeholder="Contoh: 24">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Stok awal</label>

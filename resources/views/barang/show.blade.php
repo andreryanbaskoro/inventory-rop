@@ -23,10 +23,14 @@
                         <dd class="col-sm-8">{{ $barang->id_barang }}</dd>
                         <dt class="col-sm-4">Pemasok</dt>
                         <dd class="col-sm-8">{{ $barang->pemasok?->nama_pemasok }}</dd>
-                        <dt class="col-sm-4">Satuan</dt>
+                        <dt class="col-sm-4">Satuan Dasar</dt>
                         <dd class="col-sm-8">{{ $barang->satuan }}</dd>
+                        @if($barang->satuan_besar)
+                            <dt class="col-sm-4">Satuan Besar</dt>
+                            <dd class="col-sm-8">{{ $barang->satuan_besar }} (1 {{ $barang->satuan_besar }} = {{ $barang->isi_per_satuan_besar }} {{ $barang->satuan }})</dd>
+                        @endif
                         <dt class="col-sm-4">Stok</dt>
-                        <dd class="col-sm-8">{{ $barang->stok_saat_ini }} (min {{ $barang->stok_minimum }})</dd>
+                        <dd class="col-sm-8">{{ $barang->stok_saat_ini }} {{ $barang->satuan }} (min {{ $barang->stok_minimum }} {{ $barang->satuan }})</dd>
                         <dt class="col-sm-4">Harga beli / jual</dt>
                         <dd class="col-sm-8">Rp {{ number_format($barang->harga_beli, 0, ',', '.') }} /
                             Rp {{ number_format($barang->harga_jual, 0, ',', '.') }}</dd>

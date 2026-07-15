@@ -28,7 +28,13 @@
                 <dt class="col-sm-3">Tanggal datang</dt>
                 <dd class="col-sm-9">{{ $pengadaan->tanggal_datang?->format('d/m/Y') ?? '-' }}</dd>
                 <dt class="col-sm-3">Jumlah</dt>
-                <dd class="col-sm-9">{{ $pengadaan->jumlah_pesan }}</dd>
+                <dd class="col-sm-9">
+                    @if($pengadaan->satuan_pesan_input != $pengadaan->barang?->satuan)
+                        {{ $pengadaan->jumlah_pesan_input }} {{ $pengadaan->satuan_pesan_input }} ({{ $pengadaan->jumlah_pesan }} {{ $pengadaan->barang?->satuan }})
+                    @else
+                        {{ $pengadaan->jumlah_pesan }} {{ $pengadaan->barang?->satuan }}
+                    @endif
+                </dd>
                 <dt class="col-sm-3">Status</dt>
                 <dd class="col-sm-9">{{ $pengadaan->status_pengadaan }}</dd>
                 <dt class="col-sm-3">Catatan</dt>

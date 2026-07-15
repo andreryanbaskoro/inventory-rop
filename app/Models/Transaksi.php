@@ -21,6 +21,8 @@ class Transaksi extends Model
         'tanggal',
         'jenis',
         'jumlah',
+        'satuan_input',
+        'jumlah_input',
         'keterangan',
     ];
 
@@ -29,6 +31,7 @@ class Transaksi extends Model
         return [
             'tanggal' => 'date',
             'jumlah' => 'integer',
+            'jumlah_input' => 'integer',
         ];
     }
 

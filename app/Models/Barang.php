@@ -21,6 +21,8 @@ class Barang extends Model
         'id_pemasok',
         'nama_barang',
         'satuan',
+        'satuan_besar',
+        'isi_per_satuan_besar',
         'stok_saat_ini',
         'stok_minimum',
         'harga_beli',
@@ -35,6 +37,7 @@ class Barang extends Model
         return [
             'stok_saat_ini' => 'integer',
             'stok_minimum' => 'integer',
+            'isi_per_satuan_besar' => 'integer',
             'harga_beli' => 'decimal:2',
             'harga_jual' => 'decimal:2',
             'biaya_pesan' => 'decimal:2',

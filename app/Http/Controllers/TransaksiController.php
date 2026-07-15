@@ -74,7 +74,9 @@ class TransaksiController extends Controller
                     'id_transaksi' => $transaksi->id_transaksi,
                     'barang' => $transaksi->barang?->nama_barang,
                     'jenis' => $transaksi->jenis,
-                    'jumlah' => $transaksi->jumlah,
+                    'jumlah' => $transaksi->satuan_input != $transaksi->barang?->satuan 
+                                    ? $transaksi->jumlah_input . ' ' . $transaksi->satuan_input . ' (' . $transaksi->jumlah . ' ' . $transaksi->barang?->satuan . ')'
+                                    : $transaksi->jumlah . ' ' . $transaksi->barang?->satuan,
                     'aksi' => view('transaksi._aksi', ['transaksi' => $transaksi])->render(),
                 ];
             }
@@ -98,7 +100,8 @@ class TransaksiController extends Controller
             'id_barang' => ['required', 'exists:barang,id_barang'],
             'tanggal' => ['required', 'date'],
             'jenis' => ['required', 'in:Masuk,Keluar'],
-            'jumlah' => ['required', 'integer', 'min:1'],
+            'jumlah_input' => ['required', 'integer', 'min:1'],
+            'satuan_input' => ['required', 'string'],
             'keterangan' => ['nullable', 'string', 'max:5000'],
         ], [], [
             'id_barang' => 'barang',
@@ -108,18 +111,26 @@ class TransaksiController extends Controller
             DB::transaction(function () use ($data) {
                 $barang = Barang::query()->lockForUpdate()->findOrFail($data['id_barang']);
 
+                // Hitung jumlah sebenarnya (base unit)
+                $jumlahReal = $data['jumlah_input'];
+                if ($barang->satuan_besar && $data['satuan_input'] === $barang->satuan_besar) {
+                    $jumlahReal = $data['jumlah_input'] * $barang->isi_per_satuan_besar;
+                }
+
                 Transaksi::query()->create([
                     'id_barang' => $data['id_barang'],
                     'tanggal' => $data['tanggal'],
                     'jenis' => $data['jenis'],
-                    'jumlah' => $data['jumlah'],
+                    'jumlah' => $jumlahReal,
+                    'satuan_input' => $data['satuan_input'],
+                    'jumlah_input' => $data['jumlah_input'],
                     'keterangan' => $data['keterangan'] ?? null,
                 ]);
 
                 if ($data['jenis'] === 'Masuk') {
-                    $this->stokBarangService->tambahStok($barang, $data['jumlah']);
+                    $this->stokBarangService->tambahStok($barang, $jumlahReal);
                 } else {
-                    $this->stokBarangService->kurangiStok($barang, $data['jumlah']);
+                    $this->stokBarangService->kurangiStok($barang, $jumlahReal);
                 }
             });
         } catch (ValidationException $e) {
@@ -153,7 +164,8 @@ class TransaksiController extends Controller
             'id_barang' => ['required', 'exists:barang,id_barang'],
             'tanggal' => ['required', 'date'],
             'jenis' => ['required', 'in:Masuk,Keluar'],
-            'jumlah' => ['required', 'integer', 'min:1'],
+            'jumlah_input' => ['required', 'integer', 'min:1'],
+            'satuan_input' => ['required', 'string'],
             'keterangan' => ['nullable', 'string', 'max:5000'],
         ]);
 
@@ -170,19 +182,27 @@ class TransaksiController extends Controller
                     $this->stokBarangService->tambahStok($barangLama, $lamaJumlah);
                 }
 
+                $barangBaru = Barang::query()->lockForUpdate()->findOrFail($data['id_barang']);
+                
+                // Hitung jumlah sebenarnya (base unit)
+                $jumlahReal = $data['jumlah_input'];
+                if ($barangBaru->satuan_besar && $data['satuan_input'] === $barangBaru->satuan_besar) {
+                    $jumlahReal = $data['jumlah_input'] * $barangBaru->isi_per_satuan_besar;
+                }
+
                 $transaksi->update([
                     'id_barang' => $data['id_barang'],
                     'tanggal' => $data['tanggal'],
                     'jenis' => $data['jenis'],
-                    'jumlah' => $data['jumlah'],
+                    'jumlah' => $jumlahReal,
+                    'satuan_input' => $data['satuan_input'],
+                    'jumlah_input' => $data['jumlah_input'],
                     'keterangan' => $data['keterangan'] ?? null,
                 ]);
-
-                $barangBaru = Barang::query()->lockForUpdate()->findOrFail($data['id_barang']);
                 if ($data['jenis'] === 'Masuk') {
-                    $this->stokBarangService->tambahStok($barangBaru, $data['jumlah']);
+                    $this->stokBarangService->tambahStok($barangBaru, $jumlahReal);
                 } else {
-                    $this->stokBarangService->kurangiStok($barangBaru, $data['jumlah']);
+                    $this->stokBarangService->kurangiStok($barangBaru, $jumlahReal);
                 }
             });
         } catch (ValidationException $e) {

@@ -68,7 +68,9 @@ class PengadaanController extends Controller
                     'id_pengadaan' => $p->id_pengadaan,
                     'barang' => $p->barang?->nama_barang,
                     'pemasok' => $p->pemasok?->nama_pemasok,
-                    'jumlah_pesan' => $p->jumlah_pesan,
+                    'jumlah_pesan' => $p->satuan_pesan_input != $p->barang?->satuan 
+                                    ? $p->jumlah_pesan_input . ' ' . $p->satuan_pesan_input . ' (' . $p->jumlah_pesan . ' ' . $p->barang?->satuan . ')'
+                                    : $p->jumlah_pesan . ' ' . $p->barang?->satuan,
                     'status_pengadaan' => $p->status_pengadaan,
                     'aksi' => view('pengadaan._aksi', ['pengadaan' => $p])->render(),
                 ];
@@ -90,7 +92,8 @@ class PengadaanController extends Controller
             'id_barang' => ['required', 'exists:barang,id_barang'],
             'id_pemasok' => ['required', 'exists:pemasok,id_pemasok'],
             'tanggal_pesan' => ['required', 'date'],
-            'jumlah_pesan' => ['required', 'integer', 'min:1'],
+            'jumlah_pesan_input' => ['required', 'integer', 'min:1'],
+            'satuan_pesan_input' => ['required', 'string'],
             'status_pengadaan' => ['required', 'in:Dipesan,Dikirim,Selesai'],
             'tanggal_datang' => ['nullable', 'date'],
             'catatan' => ['nullable', 'string'],
@@ -101,12 +104,21 @@ class PengadaanController extends Controller
 
         try {
             DB::transaction(function () use ($data) {
+                $barang = Barang::query()->findOrFail($data['id_barang']);
+                
+                $jumlahReal = $data['jumlah_pesan_input'];
+                if ($barang->satuan_besar && $data['satuan_pesan_input'] === $barang->satuan_besar) {
+                    $jumlahReal = $data['jumlah_pesan_input'] * $barang->isi_per_satuan_besar;
+                }
+
                 $pengadaan = PengadaanBarang::query()->create([
                     'id_barang' => $data['id_barang'],
                     'id_pemasok' => $data['id_pemasok'],
                     'tanggal_pesan' => $data['tanggal_pesan'],
                     'tanggal_datang' => $data['tanggal_datang'] ?? null,
-                    'jumlah_pesan' => $data['jumlah_pesan'],
+                    'jumlah_pesan' => $jumlahReal,
+                    'satuan_pesan_input' => $data['satuan_pesan_input'],
+                    'jumlah_pesan_input' => $data['jumlah_pesan_input'],
                     'status_pengadaan' => $data['status_pengadaan'],
                     'catatan' => $data['catatan'] ?? null,
                 ]);
@@ -143,7 +155,8 @@ class PengadaanController extends Controller
             'id_barang' => ['required', 'exists:barang,id_barang'],
             'id_pemasok' => ['required', 'exists:pemasok,id_pemasok'],
             'tanggal_pesan' => ['required', 'date'],
-            'jumlah_pesan' => ['required', 'integer', 'min:1'],
+            'jumlah_pesan_input' => ['required', 'integer', 'min:1'],
+            'satuan_pesan_input' => ['required', 'string'],
             'status_pengadaan' => ['required', 'in:Dipesan,Dikirim,Selesai'],
             'tanggal_datang' => ['nullable', 'date'],
             'catatan' => ['nullable', 'string'],
@@ -167,12 +180,20 @@ class PengadaanController extends Controller
                     $this->batalkanSelesai($pengadaan);
                 }
 
+                $barang = Barang::query()->findOrFail($data['id_barang']);
+                $jumlahReal = $data['jumlah_pesan_input'];
+                if ($barang->satuan_besar && $data['satuan_pesan_input'] === $barang->satuan_besar) {
+                    $jumlahReal = $data['jumlah_pesan_input'] * $barang->isi_per_satuan_besar;
+                }
+
                 $pengadaan->update([
                     'id_barang' => $data['id_barang'],
                     'id_pemasok' => $data['id_pemasok'],
                     'tanggal_pesan' => $data['tanggal_pesan'],
                     'tanggal_datang' => $data['tanggal_datang'] ?? null,
-                    'jumlah_pesan' => $data['jumlah_pesan'],
+                    'jumlah_pesan' => $jumlahReal,
+                    'satuan_pesan_input' => $data['satuan_pesan_input'],
+                    'jumlah_pesan_input' => $data['jumlah_pesan_input'],
                     'status_pengadaan' => $statusBaru,
                     'catatan' => $data['catatan'] ?? null,
                 ]);
@@ -220,6 +241,8 @@ class PengadaanController extends Controller
             'tanggal' => $pengadaan->tanggal_datang ?? now()->toDateString(),
             'jenis' => 'Masuk',
             'jumlah' => $pengadaan->jumlah_pesan,
+            'satuan_input' => $pengadaan->satuan_pesan_input,
+            'jumlah_input' => $pengadaan->jumlah_pesan_input,
             'keterangan' => $prefix.($pengadaan->catatan ? ' '.$pengadaan->catatan : ''),
         ]);
 
