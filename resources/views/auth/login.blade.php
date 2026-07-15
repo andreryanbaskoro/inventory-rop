@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk — Cahaya Mulya Mart</title>
+    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -109,13 +110,7 @@
             <div class="auth-left">
                 <div class="mb-4">
                     <a href="{{ route('login') }}" class="text-decoration-none d-inline-flex align-items-center gap-3">
-                        <div class="auth-logo-box">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                            </svg>
-                        </div>
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo Cahaya Mulya Mart" style="height: 46px; width: auto; border-radius: 8px;">
                         <div>
                             <h5 class="mb-0 fw-bold text-dark" style="letter-spacing: -0.02em;">Cahaya Mulya Mart</h5>
                             <span class="d-block small" style="color: var(--cm-text-muted);">Sistem Inventaris ROP</span>

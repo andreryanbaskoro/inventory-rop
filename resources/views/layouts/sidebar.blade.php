@@ -5,13 +5,7 @@
         <div class="sidebar-header cm-sidebar-header">
             <div class="d-flex justify-content-between align-items-start">
                 <a href="{{ route('dashboard.index') }}" class="cm-brand text-decoration-none d-flex align-items-center gap-2">
-                    <div class="auth-logo-box" style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--cm-primary),var(--cm-accent));color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
-                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                        </svg>
-                    </div>
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo Cahaya Mulya Mart" style="height: 40px; width: auto; border-radius: 8px;">
                     <span>
                         <span class="cm-brand-title d-block fw-bold text-dark" style="font-size: 0.95rem; line-height: 1.2;">Cahaya Mulya</span>
                         <span class="cm-brand-sub d-block text-muted" style="font-size: 0.75rem;">Mart · Inventaris ROP</span>
