@@ -16,7 +16,20 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
-                <div class="card-header">Ringkasan</div>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Ringkasan</span>
+                    <form action="{{ route('analisis.show', $barang) }}" method="GET" class="d-flex align-items-center gap-2">
+                        <label for="periode" class="text-muted small mb-0 text-nowrap d-none d-sm-block">Periode:</label>
+                        <select name="periode" id="periode" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                            <option value="7" {{ $periodeHari == 7 ? 'selected' : '' }}>7 Hari</option>
+                            <option value="14" {{ $periodeHari == 14 ? 'selected' : '' }}>14 Hari</option>
+                            <option value="30" {{ $periodeHari == 30 ? 'selected' : '' }}>30 Hari</option>
+                            <option value="90" {{ $periodeHari == 90 ? 'selected' : '' }}>90 Hari</option>
+                            <option value="180" {{ $periodeHari == 180 ? 'selected' : '' }}>180 Hari</option>
+                            <option value="365" {{ $periodeHari == 365 ? 'selected' : '' }}>365 Hari</option>
+                        </select>
+                    </form>
+                </div>
                 <div class="card-body">
                     <p>Lead time pemasok: <strong>{{ $analisis['lead_time'] }} hari</strong></p>
                     <p>Total keluar ({{ $analisis['periode_hari'] }} hari): <strong>{{ $analisis['total_keluar_periode'] }}

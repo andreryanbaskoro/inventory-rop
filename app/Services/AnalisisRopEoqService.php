@@ -22,14 +22,12 @@ use Carbon\Carbon;
  */
 class AnalisisRopEoqService
 {
-    public const PERIODE_HARI = 90;
-
-    public function hitungUntukBarang(Barang $barang): array
+    public function hitungUntukBarang(Barang $barang, int $periodeHari = 90): array
     {
         $barang->loadMissing('pemasok');
 
         $sampai = Carbon::today();
-        $dari = (clone $sampai)->subDays(self::PERIODE_HARI);
+        $dari = (clone $sampai)->subDays($periodeHari);
 
         $perHari = Transaksi::query()
             ->where('id_barang', $barang->id_barang)
@@ -43,7 +41,7 @@ class AnalisisRopEoqService
         $totalKeluar = (int) $perHari->sum();
         $hariDenganData = $perHari->count();
 
-        $pemakaianRataHarian = $totalKeluar / self::PERIODE_HARI;
+        $pemakaianRataHarian = $totalKeluar / $periodeHari;
         $pemakaianMaksHarian = $perHari->isEmpty() ? 0.0 : (float) $perHari->max();
 
         $leadTime = max(1, (int) ($barang->pemasok?->rata_lead_time ?? 1));
@@ -63,7 +61,7 @@ class AnalisisRopEoqService
         $perluReorder = $barang->stok_saat_ini <= $rop;
 
         return [
-            'periode_hari' => self::PERIODE_HARI,
+            'periode_hari' => $periodeHari,
             'total_keluar_periode' => $totalKeluar,
             'hari_aktif_keluar' => $hariDenganData,
             'pemakaian_rata_harian' => $pemakaianRataHarian,
