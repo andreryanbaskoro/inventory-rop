@@ -1,0 +1,217 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Concerns\MengirimDataTablesJson;
+use App\Models\Barang;
+use App\Models\Transaksi;
+use App\Services\StokBarangService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
+
+class TransaksiController extends Controller
+{
+    use MengirimDataTablesJson;
+
+    public function __construct(
+        protected StokBarangService $stokBarangService
+    ) {}
+
+    public function index(Request $request): View
+    {
+        $filterJenis = $request->query('jenis');
+        if (! in_array($filterJenis, ['Masuk', 'Keluar'], true)) {
+            $filterJenis = null;
+        }
+
+        return view('transaksi.index', compact('filterJenis'));
+    }
+
+    public function data(Request $request): JsonResponse
+    {
+        $queryTanpa = Transaksi::query()->with('barang');
+
+        if ($request->filled('filter_jenis') && in_array($request->filter_jenis, ['Masuk', 'Keluar'], true)) {
+            $queryTanpa->where('jenis', $request->filter_jenis);
+        }
+
+        $query = Transaksi::query()->with('barang');
+        if ($request->filled('filter_jenis') && in_array($request->filter_jenis, ['Masuk', 'Keluar'], true)) {
+            $query->where('jenis', $request->filter_jenis);
+        }
+
+        $pencarian = $request->input('search.value');
+        if (is_string($pencarian) && $pencarian !== '') {
+            $like = '%'.$pencarian.'%';
+            $query->where(function ($q) use ($like) {
+                $q->where('id_transaksi', 'like', $like)
+                    ->orWhere('keterangan', 'like', $like)
+                    ->orWhereHas('barang', function ($b) use ($like) {
+                        $b->where('nama_barang', 'like', $like);
+                    });
+            });
+        }
+
+        $urutanKolom = [
+            0 => 'tanggal',
+            1 => 'id_transaksi',
+            2 => 'jenis',
+            3 => 'jumlah',
+        ];
+
+        return $this->responseDataTables(
+            $request,
+            $query,
+            $queryTanpa,
+            $urutanKolom,
+            function (Transaksi $transaksi) {
+                return [
+                    'tanggal' => $transaksi->tanggal->format('d/m/Y'),
+                    'id_transaksi' => $transaksi->id_transaksi,
+                    'barang' => $transaksi->barang?->nama_barang,
+                    'jenis' => $transaksi->jenis,
+                    'jumlah' => $transaksi->jumlah,
+                    'aksi' => view('transaksi._aksi', ['transaksi' => $transaksi])->render(),
+                ];
+            }
+        );
+    }
+
+    public function create(Request $request): View
+    {
+        $daftarBarang = Barang::query()->where('status_barang', 'Aktif')->orderBy('nama_barang')->get();
+        $jenisAwal = $request->query('jenis');
+        if (! in_array($jenisAwal, ['Masuk', 'Keluar'], true)) {
+            $jenisAwal = 'Masuk';
+        }
+
+        return view('transaksi.create', compact('daftarBarang', 'jenisAwal'));
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'id_barang' => ['required', 'exists:barang,id_barang'],
+            'tanggal' => ['required', 'date'],
+            'jenis' => ['required', 'in:Masuk,Keluar'],
+            'jumlah' => ['required', 'integer', 'min:1'],
+            'keterangan' => ['nullable', 'string', 'max:5000'],
+        ], [], [
+            'id_barang' => 'barang',
+        ]);
+
+        try {
+            DB::transaction(function () use ($data) {
+                $barang = Barang::query()->lockForUpdate()->findOrFail($data['id_barang']);
+
+                Transaksi::query()->create([
+                    'id_barang' => $data['id_barang'],
+                    'tanggal' => $data['tanggal'],
+                    'jenis' => $data['jenis'],
+                    'jumlah' => $data['jumlah'],
+                    'keterangan' => $data['keterangan'] ?? null,
+                ]);
+
+                if ($data['jenis'] === 'Masuk') {
+                    $this->stokBarangService->tambahStok($barang, $data['jumlah']);
+                } else {
+                    $this->stokBarangService->kurangiStok($barang, $data['jumlah']);
+                }
+            });
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        }
+
+        return redirect()->route('transaksi.index')->with('sukses', 'Transaksi berhasil disimpan.');
+    }
+
+    public function show(Transaksi $transaksi): View
+    {
+        $transaksi->load('barang.pemasok');
+
+        return view('transaksi.show', compact('transaksi'));
+    }
+
+    public function edit(Transaksi $transaksi): View
+    {
+        $daftarBarang = Barang::query()->where('status_barang', 'Aktif')->orderBy('nama_barang')->get();
+
+        return view('transaksi.edit', compact('transaksi', 'daftarBarang'));
+    }
+
+    public function update(Request $request, Transaksi $transaksi): RedirectResponse
+    {
+        if (str_starts_with((string) $transaksi->keterangan, '[OTOMATIS-PENGADAAN:')) {
+            return redirect()->route('transaksi.index')->with('error', 'Transaksi otomatis dari pengadaan tidak dapat diubah.');
+        }
+
+        $data = $request->validate([
+            'id_barang' => ['required', 'exists:barang,id_barang'],
+            'tanggal' => ['required', 'date'],
+            'jenis' => ['required', 'in:Masuk,Keluar'],
+            'jumlah' => ['required', 'integer', 'min:1'],
+            'keterangan' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        try {
+            DB::transaction(function () use ($data, $transaksi) {
+                $lamaBarangId = $transaksi->id_barang;
+                $lamaJenis = $transaksi->jenis;
+                $lamaJumlah = $transaksi->jumlah;
+
+                $barangLama = Barang::query()->lockForUpdate()->findOrFail($lamaBarangId);
+                if ($lamaJenis === 'Masuk') {
+                    $this->stokBarangService->kurangiStok($barangLama, $lamaJumlah);
+                } else {
+                    $this->stokBarangService->tambahStok($barangLama, $lamaJumlah);
+                }
+
+                $transaksi->update([
+                    'id_barang' => $data['id_barang'],
+                    'tanggal' => $data['tanggal'],
+                    'jenis' => $data['jenis'],
+                    'jumlah' => $data['jumlah'],
+                    'keterangan' => $data['keterangan'] ?? null,
+                ]);
+
+                $barangBaru = Barang::query()->lockForUpdate()->findOrFail($data['id_barang']);
+                if ($data['jenis'] === 'Masuk') {
+                    $this->stokBarangService->tambahStok($barangBaru, $data['jumlah']);
+                } else {
+                    $this->stokBarangService->kurangiStok($barangBaru, $data['jumlah']);
+                }
+            });
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        }
+
+        return redirect()->route('transaksi.index')->with('sukses', 'Transaksi berhasil diperbarui.');
+    }
+
+    public function destroy(Transaksi $transaksi): RedirectResponse
+    {
+        if (str_starts_with((string) $transaksi->keterangan, '[OTOMATIS-PENGADAAN:')) {
+            return redirect()->route('transaksi.index')->with('error', 'Transaksi otomatis dari pengadaan harus dihapus lewat pembatalan status pengadaan.');
+        }
+
+        try {
+            DB::transaction(function () use ($transaksi) {
+                $barang = Barang::query()->lockForUpdate()->findOrFail($transaksi->id_barang);
+                if ($transaksi->jenis === 'Masuk') {
+                    $this->stokBarangService->kurangiStok($barang, $transaksi->jumlah);
+                } else {
+                    $this->stokBarangService->tambahStok($barang, $transaksi->jumlah);
+                }
+                $transaksi->delete();
+            });
+        } catch (ValidationException $e) {
+            return redirect()->route('transaksi.index')->with('error', collect($e->errors())->flatten()->first());
+        }
+
+        return redirect()->route('transaksi.index')->with('sukses', 'Transaksi berhasil dihapus.');
+    }
+}

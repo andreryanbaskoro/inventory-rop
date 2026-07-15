@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Barang extends Model
+{
+    protected $table = 'barang';
+
+    protected $primaryKey = 'id_barang';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
+    protected $fillable = [
+        'id_barang',
+        'id_pemasok',
+        'nama_barang',
+        'satuan',
+        'stok_saat_ini',
+        'stok_minimum',
+        'harga_beli',
+        'harga_jual',
+        'biaya_pesan',
+        'biaya_simpan',
+        'status_barang',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'stok_saat_ini' => 'integer',
+            'stok_minimum' => 'integer',
+            'harga_beli' => 'decimal:2',
+            'harga_jual' => 'decimal:2',
+            'biaya_pesan' => 'decimal:2',
+            'biaya_simpan' => 'decimal:2',
+        ];
+    }
+
+    public function pemasok(): BelongsTo
+    {
+        return $this->belongsTo(Pemasok::class, 'id_pemasok', 'id_pemasok');
+    }
+
+    public function daftarTransaksi(): HasMany
+    {
+        return $this->hasMany(Transaksi::class, 'id_barang', 'id_barang');
+    }
+
+    public function daftarPengadaan(): HasMany
+    {
+        return $this->hasMany(PengadaanBarang::class, 'id_barang', 'id_barang');
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'id_barang';
+    }
+}
