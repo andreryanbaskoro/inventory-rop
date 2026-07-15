@@ -210,6 +210,42 @@ class PengadaanController extends Controller
         return redirect()->route('pengadaan.index')->with('sukses', 'Pengadaan berhasil diperbarui.');
     }
 
+    public function updateStatus(Request $request, PengadaanBarang $pengadaan): RedirectResponse
+    {
+        $data = $request->validate([
+            'status_pengadaan' => ['required', 'in:Dipesan,Dikirim,Selesai'],
+        ]);
+
+        $statusLama = $pengadaan->status_pengadaan;
+        $statusBaru = $data['status_pengadaan'];
+
+        if ($statusLama === $statusBaru) {
+            return back();
+        }
+
+        try {
+            DB::transaction(function () use ($pengadaan, $statusLama, $statusBaru) {
+                if ($statusLama === 'Selesai' && $statusBaru !== 'Selesai') {
+                    $this->batalkanSelesai($pengadaan);
+                }
+
+                $pengadaan->update([
+                    'status_pengadaan' => $statusBaru,
+                    'tanggal_datang' => $statusBaru === 'Selesai' ? now()->toDateString() : null,
+                ]);
+
+                if ($statusLama !== 'Selesai' && $statusBaru === 'Selesai') {
+                    $pengadaan->refresh();
+                    $this->selesaikanPengadaan($pengadaan);
+                }
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat memperbarui status.');
+        }
+
+        return back()->with('sukses', 'Status pengadaan berhasil diperbarui menjadi ' . $statusBaru . '.');
+    }
+
     public function destroy(PengadaanBarang $pengadaan): RedirectResponse
     {
         try {

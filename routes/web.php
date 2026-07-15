@@ -36,6 +36,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('transaksi', TransaksiController::class);
 
     Route::get('pengadaan/data', [PengadaanController::class, 'data'])->name('pengadaan.data');
+    Route::patch('pengadaan/{pengadaan}/status', [PengadaanController::class, 'updateStatus'])->name('pengadaan.status');
     Route::resource('pengadaan', PengadaanController::class);
 });
 
