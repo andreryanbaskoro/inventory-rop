@@ -73,7 +73,9 @@ class TransaksiController extends Controller
                     'tanggal' => $transaksi->tanggal->format('d/m/Y'),
                     'id_transaksi' => $transaksi->id_transaksi,
                     'barang' => $transaksi->barang?->nama_barang,
-                    'jenis' => $transaksi->jenis,
+                    'jenis' => $transaksi->jenis === 'Masuk'
+                        ? '<span class="badge bg-success">Masuk</span>'
+                        : '<span class="badge bg-warning text-dark">Keluar</span>',
                     'jumlah' => $transaksi->satuan_input != $transaksi->barang?->satuan 
                                     ? $transaksi->jumlah_input . ' ' . $transaksi->satuan_input . ' (' . $transaksi->jumlah . ' ' . $transaksi->barang?->satuan . ')'
                                     : $transaksi->jumlah . ' ' . $transaksi->barang?->satuan,
