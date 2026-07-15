@@ -110,7 +110,7 @@
             <div class="auth-left">
                 <div class="mb-4">
                     <a href="{{ route('login') }}" class="text-decoration-none d-inline-flex align-items-center gap-3">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo Cahaya Mulya Mart" style="height: 46px; width: auto; border-radius: 8px;">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo Cahaya Mulya Mart" style="height: 72px; width: auto; border-radius: 8px;">
                         <div>
                             <h5 class="mb-0 fw-bold text-dark" style="letter-spacing: -0.02em;">Cahaya Mulya Mart</h5>
                             <span class="d-block small" style="color: var(--cm-text-muted);">Sistem Inventaris ROP</span>

@@ -5,7 +5,7 @@
         <div class="sidebar-header cm-sidebar-header">
             <div class="d-flex justify-content-between align-items-start">
                 <a href="{{ route('dashboard.index') }}" class="cm-brand text-decoration-none d-flex align-items-center gap-2">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo Cahaya Mulya Mart" style="height: 40px; width: auto; border-radius: 8px;">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo Cahaya Mulya Mart" style="height: 52px; width: auto; border-radius: 8px;">
                     <span>
                         <span class="cm-brand-title d-block fw-bold text-dark" style="font-size: 0.95rem; line-height: 1.2;">Cahaya Mulya</span>
                         <span class="cm-brand-sub d-block text-muted" style="font-size: 0.75rem;">Mart · Inventaris ROP</span>
