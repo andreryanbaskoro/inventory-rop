@@ -10,7 +10,8 @@ class LaporanService
 {
     public const JENIS = [
         'stok' => 'Laporan Stok Barang',
-        'transaksi' => 'Laporan Transaksi',
+        'transaksi_masuk' => 'Laporan Transaksi Masuk',
+        'transaksi_keluar' => 'Laporan Transaksi Keluar',
         'pengadaan' => 'Laporan Pengadaan',
         'ringkasan' => 'Laporan Ringkasan Inventaris',
     ];
@@ -26,7 +27,8 @@ class LaporanService
     public function ambilData(string $jenis, ?string $dari = null, ?string $sampai = null): array
     {
         return match ($jenis) {
-            'transaksi' => $this->laporanTransaksi($dari, $sampai),
+            'transaksi_masuk' => $this->laporanTransaksi($dari, $sampai, 'Masuk'),
+            'transaksi_keluar' => $this->laporanTransaksi($dari, $sampai, 'Keluar'),
             'pengadaan' => $this->laporanPengadaan($dari, $sampai),
             'ringkasan' => $this->laporanRingkasan($dari, $sampai),
             default => $this->laporanStok(),
@@ -86,29 +88,37 @@ class LaporanService
     /**
      * @return array{judul: string, kolom: list<string>, baris: list<list<string|int|float>>}
      */
-    protected function laporanTransaksi(?string $dari, ?string $sampai): array
+    protected function laporanTransaksi(?string $dari, ?string $sampai, string $jenisTransaksi): array
     {
         [$awal, $akhir] = $this->rentangTanggal($dari, $sampai);
 
         $baris = Transaksi::query()
             ->with(['barang.pemasok'])
+            ->where('jenis', $jenisTransaksi)
             ->whereBetween('tanggal', [$awal->toDateString(), $akhir->toDateString()])
             ->orderByDesc('tanggal')
             ->orderBy('id_transaksi')
             ->get()
-            ->map(fn (Transaksi $t) => [
-                $t->id_transaksi,
-                $t->tanggal->format('d/m/Y'),
-                $t->barang?->nama_barang ?? '—',
-                $t->jenis,
-                $t->jumlah,
-                $t->keterangan ?? '—',
-            ])
+            ->map(function (Transaksi $t) {
+                $jumlahStr = $t->jumlah . ' ' . ($t->barang?->satuan ?? '');
+                if ($t->satuan_input && $t->satuan_input !== $t->barang?->satuan) {
+                    $jumlahStr = $t->jumlah_input . ' ' . $t->satuan_input . ' (' . $jumlahStr . ')';
+                }
+
+                return [
+                    $t->id_transaksi,
+                    $t->tanggal->format('d/m/Y'),
+                    $t->barang?->nama_barang ?? '—',
+                    $t->jenis,
+                    $jumlahStr,
+                    $t->keterangan ?? '—',
+                ];
+            })
             ->values()
             ->all();
 
         return [
-            'judul' => self::JENIS['transaksi'],
+            'judul' => self::JENIS['transaksi_' . strtolower($jenisTransaksi)],
             'kolom' => ['ID', 'Tanggal', 'Barang', 'Jenis', 'Jumlah', 'Keterangan'],
             'baris' => $baris,
             'periode' => $this->formatPeriode($awal, $akhir),
@@ -127,16 +137,23 @@ class LaporanService
             ->whereBetween('tanggal_pesan', [$awal->toDateString(), $akhir->toDateString()])
             ->orderByDesc('tanggal_pesan')
             ->get()
-            ->map(fn (PengadaanBarang $p) => [
-                $p->id_pengadaan,
-                $p->tanggal_pesan->format('d/m/Y'),
-                $p->tanggal_datang?->format('d/m/Y') ?? '—',
-                $p->barang?->nama_barang ?? '—',
-                $p->pemasok?->nama_pemasok ?? '—',
-                $p->jumlah_pesan,
-                $p->status_pengadaan,
-                $p->catatan ?? '—',
-            ])
+            ->map(function (PengadaanBarang $p) {
+                $jumlahStr = $p->jumlah_pesan . ' ' . ($p->barang?->satuan ?? '');
+                if ($p->satuan_pesan_input && $p->satuan_pesan_input !== $p->barang?->satuan) {
+                    $jumlahStr = $p->jumlah_pesan_input . ' ' . $p->satuan_pesan_input . ' (' . $jumlahStr . ')';
+                }
+
+                return [
+                    $p->id_pengadaan,
+                    $p->tanggal_pesan->format('d/m/Y'),
+                    $p->tanggal_datang?->format('d/m/Y') ?? '—',
+                    $p->barang?->nama_barang ?? '—',
+                    $p->pemasok?->nama_pemasok ?? '—',
+                    $jumlahStr,
+                    $p->status_pengadaan,
+                    $p->catatan ?? '—',
+                ];
+            })
             ->values()
             ->all();
 
