@@ -13,7 +13,7 @@
 @endsection
 
 @section('konten')
-    <div class="btn-group mb-3" role="group">
+    <div class="d-flex gap-2 mb-3">
         <a href="{{ route('transaksi.index') }}"
             class="btn btn-sm {{ $filterJenis ? 'btn-outline-primary' : 'btn-primary' }}">Semua</a>
         <a href="{{ route('transaksi.index', ['jenis' => 'Masuk']) }}"
