@@ -84,7 +84,8 @@ h1, h2, h3, h4, h5, h6, .fw-bold {
     font-weight: 600 !important;
 }
 
-.sidebar-item.active > .sidebar-link i {
+.sidebar-item.active > .sidebar-link i,
+.sidebar-item.active > .sidebar-link span {
     color: var(--cm-primary-dark) !important;
 }
 
