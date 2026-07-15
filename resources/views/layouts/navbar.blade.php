@@ -8,8 +8,8 @@
             <span class="cm-navbar-title d-xl-none fw-bold text-brand ms-2">Cahaya Mulya Mart</span>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="navbar-nav ms-auto align-items-center gap-3">
-                    <span class="text-muted small d-none d-md-inline">
-                        <i class="bi bi-calendar3 me-1"></i>{{ now()->translatedFormat('l, d F Y') }}
+                    <span class="d-none d-md-inline px-3 py-2 rounded-pill fw-semibold" style="background: var(--cm-surface); color: var(--cm-text-dark); border: 1px solid #e2e8f0; font-size: 0.85rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                        <i class="bi bi-calendar3 me-1" style="color: var(--cm-primary);"></i>{{ now()->translatedFormat('l, d F Y') }}
                     </span>
                     <div class="d-flex align-items-center gap-2">
                         <span class="cm-user-avatar">{{ strtoupper(substr($pengguna->nama_pengguna, 0, 1)) }}</span>
