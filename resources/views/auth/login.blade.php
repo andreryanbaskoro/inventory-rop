@@ -40,7 +40,7 @@
         }
         .auth-right {
             flex: 1;
-            background: linear-gradient(135deg, var(--cm-primary-dark), var(--cm-primary));
+            background: linear-gradient(rgba(30, 58, 95, 0.8), rgba(30, 58, 95, 0.8)), url('{{ asset('images/login-bg.jpg') }}') center/cover no-repeat, linear-gradient(135deg, var(--cm-primary-dark), var(--cm-primary));
             position: relative;
             display: flex;
             align-items: center;
