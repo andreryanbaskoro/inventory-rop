@@ -56,6 +56,7 @@
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
     <script>
         const filterJenis = @json($filterJenis);
+        $.fn.dataTable.ext.errMode = 'none';
         new DataTable('#tabelTransaksi', {
             processing: true,
             serverSide: true,

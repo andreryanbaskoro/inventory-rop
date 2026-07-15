@@ -53,6 +53,7 @@
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         });
+        $.fn.dataTable.ext.errMode = 'none';
         const tabel = new DataTable('#tabelBarang', {
             processing: true,
             serverSide: true,
