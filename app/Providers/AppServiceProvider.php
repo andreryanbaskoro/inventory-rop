@@ -9,7 +9,6 @@ use App\Models\Pengguna;
 use App\Models\Transaksi;
 use App\Observers\BarangObserver;
 use App\Observers\PemasokObserver;
-use App\Observers\PengadaanObserver;
 use App\Observers\PenggunaObserver;
 use App\Observers\TransaksiObserver;
 use Illuminate\Support\ServiceProvider;
@@ -35,6 +34,5 @@ class AppServiceProvider extends ServiceProvider
         Pemasok::observe(PemasokObserver::class);
         Barang::observe(BarangObserver::class);
         Transaksi::observe(TransaksiObserver::class);
-        PengadaanBarang::observe(PengadaanObserver::class);
     }
 }

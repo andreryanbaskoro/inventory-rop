@@ -57,12 +57,6 @@
                     </li>
 
                     <li class="sidebar-title">Transaksi</li>
-                    <li class="sidebar-item {{ request()->routeIs('pengadaan.*') ? 'active' : '' }}">
-                        <a href="{{ route('pengadaan.index') }}" class="sidebar-link">
-                            <i class="bi bi-cart-check"></i>
-                            <span>Pengadaan</span>
-                        </a>
-                    </li>
                     <li class="sidebar-item {{ request()->routeIs('transaksi.*') ? 'active' : '' }}">
                         <a href="{{ route('transaksi.index') }}" class="sidebar-link">
                             <i class="bi bi-arrow-left-right"></i>

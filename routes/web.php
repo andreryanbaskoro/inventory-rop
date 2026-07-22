@@ -6,7 +6,6 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PemasokController;
 use App\Http\Controllers\LaporanController;
-use App\Http\Controllers\PengadaanController;
 use App\Http\Controllers\TransaksiController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,9 +34,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('transaksi/data', [TransaksiController::class, 'data'])->name('transaksi.data');
     Route::resource('transaksi', TransaksiController::class);
 
-    Route::get('pengadaan/data', [PengadaanController::class, 'data'])->name('pengadaan.data');
-    Route::patch('pengadaan/{pengadaan}/status', [PengadaanController::class, 'updateStatus'])->name('pengadaan.status');
-    Route::resource('pengadaan', PengadaanController::class);
 });
 
 Route::middleware('auth')->group(function () {

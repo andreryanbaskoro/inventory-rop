@@ -36,7 +36,7 @@
                                 <td><span class="badge bg-danger">{{ $item['barang']->stok_saat_ini }} {{ $item['barang']->satuan }}</span></td>
                                 <td><strong>{{ ceil($item['rop']) }} {{ $item['barang']->satuan }}</strong></td>
                                 <td>
-                                    <a href="{{ route('pengadaan.create', ['id_barang' => $item['barang']->id_barang]) }}" class="btn btn-sm btn-primary py-0"><i class="bx bx-cart-add"></i> Order</a>
+                                    <a href="{{ route('transaksi.create', ['jenis' => 'Masuk', 'id_barang' => $item['barang']->id_barang]) }}" class="btn btn-sm btn-primary py-0"><i class="bx bx-cart-add"></i> Order</a>
                                     <a href="{{ route('analisis.show', $item['barang']->id_barang) }}" class="btn btn-sm btn-info py-0 text-white"><i class="bx bx-line-chart"></i> Analisis</a>
                                 </td>
                             </tr>

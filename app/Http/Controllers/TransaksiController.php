@@ -158,9 +158,6 @@ class TransaksiController extends Controller
 
     public function update(Request $request, Transaksi $transaksi): RedirectResponse
     {
-        if (str_starts_with((string) $transaksi->keterangan, '[OTOMATIS-PENGADAAN:')) {
-            return redirect()->route('transaksi.index')->with('error', 'Transaksi otomatis dari pengadaan tidak dapat diubah.');
-        }
 
         $data = $request->validate([
             'id_barang' => ['required', 'exists:barang,id_barang'],
@@ -216,9 +213,6 @@ class TransaksiController extends Controller
 
     public function destroy(Transaksi $transaksi): RedirectResponse
     {
-        if (str_starts_with((string) $transaksi->keterangan, '[OTOMATIS-PENGADAAN:')) {
-            return redirect()->route('transaksi.index')->with('error', 'Transaksi otomatis dari pengadaan harus dihapus lewat pembatalan status pengadaan.');
-        }
 
         try {
             DB::transaction(function () use ($transaksi) {

@@ -3,16 +3,15 @@
 namespace App\Services;
 
 use App\Models\Barang;
-use App\Models\PengadaanBarang;
 use App\Models\Transaksi;
 use Carbon\Carbon;
+
 class LaporanService
 {
     public const JENIS = [
         'stok' => 'Laporan Stok Barang',
         'transaksi_masuk' => 'Laporan Transaksi Masuk',
         'transaksi_keluar' => 'Laporan Transaksi Keluar',
-        'pengadaan' => 'Laporan Pengadaan',
         'ringkasan' => 'Laporan Ringkasan Inventaris',
     ];
 
@@ -29,7 +28,6 @@ class LaporanService
         return match ($jenis) {
             'transaksi_masuk' => $this->laporanTransaksi($dari, $sampai, 'Masuk'),
             'transaksi_keluar' => $this->laporanTransaksi($dari, $sampai, 'Keluar'),
-            'pengadaan' => $this->laporanPengadaan($dari, $sampai),
             'ringkasan' => $this->laporanRingkasan($dari, $sampai),
             default => $this->laporanStok(),
         };
@@ -126,55 +124,6 @@ class LaporanService
     }
 
     /**
-     * @return array{judul: string, kolom: list<string>, baris: list<list<string|int|float>>}
-     */
-    protected function laporanPengadaan(?string $dari, ?string $sampai): array
-    {
-        [$awal, $akhir] = $this->rentangTanggal($dari, $sampai);
-
-        $baris = PengadaanBarang::query()
-            ->with(['barang', 'pemasok'])
-            ->whereBetween('tanggal_pesan', [$awal->toDateString(), $akhir->toDateString()])
-            ->orderByDesc('tanggal_pesan')
-            ->get()
-            ->map(function (PengadaanBarang $p) {
-                $jumlahStr = $p->jumlah_pesan . ' ' . ($p->barang?->satuan ?? '');
-                if ($p->satuan_pesan_input && $p->satuan_pesan_input !== $p->barang?->satuan) {
-                    $jumlahStr = $p->jumlah_pesan_input . ' ' . $p->satuan_pesan_input . ' (' . $jumlahStr . ')';
-                }
-
-                return [
-                    $p->id_pengadaan,
-                    $p->tanggal_pesan->format('d/m/Y'),
-                    $p->tanggal_datang?->format('d/m/Y') ?? '—',
-                    $p->barang?->nama_barang ?? '—',
-                    $p->pemasok?->nama_pemasok ?? '—',
-                    $jumlahStr,
-                    $p->status_pengadaan,
-                    $p->catatan ?? '—',
-                ];
-            })
-            ->values()
-            ->all();
-
-        return [
-            'judul' => self::JENIS['pengadaan'],
-            'kolom' => [
-                'ID',
-                'Tgl Pesan',
-                'Tgl Datang',
-                'Barang',
-                'Pemasok',
-                'Jumlah',
-                'Status',
-                'Catatan',
-            ],
-            'baris' => $baris,
-            'periode' => $this->formatPeriode($awal, $akhir),
-        ];
-    }
-
-    /**
      * @return array{judul: string, kolom: list<string>, baris: list<list<string|int|float>>, ringkasan: array<string, string|int>}
      */
     protected function laporanRingkasan(?string $dari, ?string $sampai): array
@@ -197,11 +146,6 @@ class LaporanService
             ->whereBetween('tanggal', [$awal->toDateString(), $akhir->toDateString()])
             ->sum('jumlah');
 
-        $pengadaanSelesai = PengadaanBarang::query()
-            ->where('status_pengadaan', 'Selesai')
-            ->whereBetween('tanggal_pesan', [$awal->toDateString(), $akhir->toDateString()])
-            ->count();
-
         $nilaiInventaris = Barang::query()
             ->where('status_barang', 'Aktif')
             ->get()
@@ -213,7 +157,6 @@ class LaporanService
             'Barang stok kritis' => $stokKritis,
             'Total masuk (unit)' => $masuk,
             'Total keluar (unit)' => $keluar,
-            'Pengadaan selesai' => $pengadaanSelesai,
             'Nilai inventaris (Rp)' => number_format($nilaiInventaris, 0, ',', '.'),
         ];
 

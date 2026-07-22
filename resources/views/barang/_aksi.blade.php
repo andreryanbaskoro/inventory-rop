@@ -5,7 +5,7 @@
     <a href="{{ route('analisis.show', $barang) }}" class="btn btn-sm btn-outline-success" title="Analisis ROP">
         <i class="bi bi-graph-up"></i>
     </a>
-    <a href="{{ route('pengadaan.create', ['id_barang' => $barang->id_barang]) }}" class="btn btn-sm {{ isset($perlu_reorder) && $perlu_reorder ? 'btn-danger' : 'btn-outline-warning' }}" title="Order Barang">
+    <a href="{{ route('transaksi.create', ['jenis' => 'Masuk', 'id_barang' => $barang->id_barang]) }}" class="btn btn-sm {{ isset($perlu_reorder) && $perlu_reorder ? 'btn-danger' : 'btn-outline-warning' }}" title="Order Barang">
         <i class="bi bi-cart-plus"></i>
     </a>
     <a href="{{ route('barang.edit', $barang) }}" class="btn btn-sm btn-outline-primary" title="Edit">
