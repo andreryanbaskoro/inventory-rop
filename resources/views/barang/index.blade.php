@@ -13,6 +13,36 @@
 @endsection
 
 @section('konten')
+    @if(isset($peringatanReorder) && $peringatanReorder->isNotEmpty())
+        <div class="alert alert-warning alert-dismissible fade show mb-4 shadow-sm" role="alert">
+            <h5 class="alert-heading text-dark mb-2"><i class="bx bx-error-circle text-warning"></i> Perhatian: Barang Perlu Re-order!</h5>
+            <p class="mb-2">Beberapa barang telah mencapai atau berada di bawah titik <strong>Reorder Point (ROP)</strong>. Segera lakukan pengadaan.</p>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered bg-white mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Barang</th>
+                            <th>Pemasok</th>
+                            <th>Stok Saat Ini</th>
+                            <th>Batas ROP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($peringatanReorder as $item)
+                            <tr>
+                                <td>{{ $item['barang']->nama_barang }}</td>
+                                <td>{{ $item['barang']->pemasok?->nama_pemasok ?? '-' }}</td>
+                                <td><span class="badge bg-danger">{{ $item['barang']->stok_saat_ini }} {{ $item['barang']->satuan }}</span></td>
+                                <td><strong>{{ ceil($item['rop']) }} {{ $item['barang']->satuan }}</strong></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <span>Data Barang</span>
@@ -27,8 +57,9 @@
                             <th>Nama</th>
                             <th>Pemasok</th>
                             <th>Stok</th>
-                            <th>Min</th>
-                            <th>Harga Jual</th>
+                            <th>Lead Time</th>
+                            <th>Safety Stock</th>
+                            <th>ROP</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -71,10 +102,19 @@
                     data: 'stok_saat_ini'
                 },
                 {
-                    data: 'stok_minimum'
+                    data: 'lead_time',
+                    orderable: false,
+                    searchable: false
                 },
                 {
-                    data: 'harga_jual'
+                    data: 'safety_stock',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'rop',
+                    orderable: false,
+                    searchable: false
                 },
                 {
                     data: 'status_barang'

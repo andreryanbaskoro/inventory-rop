@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\MengirimDataTablesJson;
 use App\Models\Barang;
 use App\Models\Pemasok;
+use App\Services\AnalisisRopEoqService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,9 +15,32 @@ class BarangController extends Controller
 {
     use MengirimDataTablesJson;
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('barang.index');
+        /** @var \App\Models\Pengguna $pengguna */
+        $pengguna = $request->user();
+        $analisisService = app(AnalisisRopEoqService::class);
+        $peringatanReorder = collect();
+
+        if ($pengguna->isAdmin()) {
+            $peringatanReorder = Barang::query()
+                ->with('pemasok')
+                ->where('status_barang', 'Aktif')
+                ->get()
+                ->map(function (Barang $barang) use ($analisisService) {
+                    $hasil = $analisisService->hitungUntukBarang($barang);
+
+                    return [
+                        'barang' => $barang,
+                        'rop' => $hasil['rop'],
+                        'perlu_reorder' => $hasil['perlu_reorder'],
+                    ];
+                })
+                ->filter(fn (array $row) => $row['perlu_reorder'])
+                ->take(10);
+        }
+
+        return view('barang.index', compact('peringatanReorder'));
     }
 
     public function data(Request $request): JsonResponse
@@ -40,25 +64,32 @@ class BarangController extends Controller
         $urutanKolom = [
             0 => 'id_barang',
             1 => 'nama_barang',
-            2 => 'stok_saat_ini',
-            3 => 'stok_minimum',
-            4 => 'harga_jual',
-            5 => 'status_barang',
+            2 => 'id_barang',
+            3 => 'stok_saat_ini',
+            4 => 'id_barang',
+            5 => 'id_barang',
+            6 => 'id_barang',
+            7 => 'status_barang',
         ];
+
+        $analisisService = app(AnalisisRopEoqService::class);
 
         return $this->responseDataTables(
             $request,
             $query,
             $queryDasar,
             $urutanKolom,
-            function (Barang $barang) {
+            function (Barang $barang) use ($analisisService) {
+                $hasilRop = $analisisService->hitungUntukBarang($barang);
+
                 return [
                     'id_barang' => $barang->id_barang,
                     'nama_barang' => $barang->nama_barang,
                     'pemasok' => $barang->pemasok?->nama_pemasok,
                     'stok_saat_ini' => $barang->stok_saat_ini . ' ' . $barang->satuan,
-                    'stok_minimum' => $barang->stok_minimum,
-                    'harga_jual' => number_format((float) $barang->harga_jual, 0, ',', '.'),
+                    'lead_time' => number_format($hasilRop['lead_time_desimal'], 1) . ' Hr',
+                    'safety_stock' => ceil($hasilRop['safety_stock']),
+                    'rop' => ceil($hasilRop['rop']),
                     'status_barang' => $barang->status_barang,
                     'aksi' => view('barang._aksi', ['barang' => $barang])->render(),
                 ];
