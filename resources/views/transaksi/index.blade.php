@@ -25,6 +25,7 @@
         <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
             <span>Daftar Transaksi</span>
             <div class="d-flex gap-2">
+                <a href="{{ route('transaksi.create', ['jenis' => 'Masuk']) }}" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> Masuk</a>
                 <a href="{{ route('transaksi.create', ['jenis' => 'Keluar']) }}" class="btn btn-warning btn-sm"><i class="bi bi-plus"></i> Keluar</a>
             </div>
         </div>
