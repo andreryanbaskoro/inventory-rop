@@ -65,7 +65,7 @@
         </div>
     @endif
 
-    @if ($pengguna->isAdmin() && $peringatanReorder->isNotEmpty())
+    @if ($peringatanReorder->isNotEmpty())
         <div class="card border-0 mb-4 alert-soft-danger" style="border-radius: 16px;">
             <div class="card-header bg-transparent border-0 pt-4 pb-2">
                 <h5 class="card-title text-danger fw-bold mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Peringatan Reorder (ROP)</h5>

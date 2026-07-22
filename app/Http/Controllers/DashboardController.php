@@ -58,23 +58,21 @@ class DashboardController extends Controller
         $analisisService = app(AnalisisRopEoqService::class);
         $peringatanReorder = collect();
 
-        if ($pengguna->isAdmin()) {
-            $peringatanReorder = Barang::query()
-                ->with('pemasok')
-                ->where('status_barang', 'Aktif')
-                ->get()
-                ->map(function (Barang $barang) use ($analisisService) {
-                    $hasil = $analisisService->hitungUntukBarang($barang);
+        $peringatanReorder = Barang::query()
+            ->with('pemasok')
+            ->where('status_barang', 'Aktif')
+            ->get()
+            ->map(function (Barang $barang) use ($analisisService) {
+                $hasil = $analisisService->hitungUntukBarang($barang);
 
-                    return [
-                        'barang' => $barang,
-                        'rop' => $hasil['rop'],
-                        'perlu_reorder' => $hasil['perlu_reorder'],
-                    ];
-                })
-                ->filter(fn (array $row) => $row['perlu_reorder'])
-                ->take(10);
-        }
+                return [
+                    'barang' => $barang,
+                    'rop' => $hasil['rop'],
+                    'perlu_reorder' => $hasil['perlu_reorder'],
+                ];
+            })
+            ->filter(fn (array $row) => $row['perlu_reorder'])
+            ->take(10);
 
         return view('dashboard.index', compact(
             'pengguna',
