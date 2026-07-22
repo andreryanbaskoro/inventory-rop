@@ -93,7 +93,10 @@ class BarangController extends Controller
                     'safety_stock' => ceil($hasilRop['safety_stock']),
                     'rop' => ceil($hasilRop['rop']),
                     'status_barang' => $barang->status_barang,
-                    'aksi' => view('barang._aksi', ['barang' => $barang])->render(),
+                    'aksi' => view('barang._aksi', [
+                        'barang' => $barang, 
+                        'perlu_reorder' => $hasilRop['perlu_reorder']
+                    ])->render(),
                 ];
             }
         );
