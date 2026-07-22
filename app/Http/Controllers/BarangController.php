@@ -86,7 +86,9 @@ class BarangController extends Controller
                     'id_barang' => $barang->id_barang,
                     'nama_barang' => $barang->nama_barang,
                     'pemasok' => $barang->pemasok?->nama_pemasok,
-                    'stok_saat_ini' => $barang->stok_saat_ini . ' ' . $barang->satuan,
+                    'stok_saat_ini' => $hasilRop['perlu_reorder'] 
+                        ? '<span class="text-danger fw-bold">' . $barang->stok_saat_ini . ' ' . $barang->satuan . '</span>'
+                        : $barang->stok_saat_ini . ' ' . $barang->satuan,
                     'lead_time' => number_format($hasilRop['lead_time_desimal'], 1) . ' Hr',
                     'safety_stock' => ceil($hasilRop['safety_stock']),
                     'rop' => ceil($hasilRop['rop']),

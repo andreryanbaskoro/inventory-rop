@@ -24,7 +24,7 @@
                             <option value="{{ $b->id_barang }}"
                                 data-satuan="{{ $b->satuan }}" 
                                 data-satuan-besar="{{ $b->satuan_besar }}"
-                                @selected(old('id_barang') == $b->id_barang)>
+                                @selected(old('id_barang', request('id_barang')) == $b->id_barang)>
                                 {{ $b->nama_barang }}</option>
                         @endforeach
                     </select>
