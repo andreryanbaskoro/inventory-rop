@@ -48,6 +48,8 @@
                                 <th>Nama Barang</th>
                                 <th>Stok</th>
                                 <th>Lead Time</th>
+                                <th>ROP</th>
+                                <th>Safety Stock</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -138,22 +140,28 @@
                     
                     result.data.forEach(b => {
                         const stokClass = b.stok_saat_ini <= 0 ? 'text-danger fw-bold' : '';
-                        const statusBadge = b.status_barang === 'Aktif' 
-                            ? '<span class="badge bg-success">Aktif</span>' 
-                            : '<span class="badge bg-secondary">Nonaktif</span>';
+                        const rowClass = b.perlu_reorder ? 'table-danger' : '';
+                        const statusBadge = b.perlu_reorder
+                            ? '<span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>Reorder</span>'
+                            : '<span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Aman</span>';
+                        const aksiBtn = b.perlu_reorder
+                            ? `<a href="${b.url_masuk}" class="btn btn-sm btn-danger"><i class="bi bi-lightning-fill"></i> Order</a>`
+                            : `<a href="${b.url_masuk}" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Masuk</a>`;
                         
-                        tbody.innerHTML += `<tr>
+                        tbody.innerHTML += `<tr class="${rowClass}">
                             <td>${b.nama_barang}</td>
                             <td class="${stokClass}">${b.stok_saat_ini} ${b.satuan}</td>
                             <td>${b.lead_time}</td>
+                            <td>${b.rop}</td>
+                            <td>${b.safety_stock}</td>
                             <td>${statusBadge}</td>
-                            <td><a href="${b.url_masuk}" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Masuk</a></td>
+                            <td>${aksiBtn}</td>
                         </tr>`;
                     });
                 })
                 .catch(err => {
                     document.getElementById('loadingBarang').classList.add('d-none');
-                    document.getElementById('tabelBarangModal').querySelector('tbody').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Gagal memuat data</td></tr>';
+                    document.getElementById('tabelBarangModal').querySelector('tbody').innerHTML = '<tr><td colspan="7" class="text-center text-danger">Gagal memuat data</td></tr>';
                 });
         });
     </script>

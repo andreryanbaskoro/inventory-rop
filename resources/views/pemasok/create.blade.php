@@ -40,4 +40,17 @@
             </form>
         </div>
     </div>
+
+    <div class="card mt-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-box-seam me-2"></i>Barang dari pemasok ini</span>
+            <span class="badge bg-secondary rounded-pill">0 Barang</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="text-center py-4">
+                <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
+                <p class="mt-2 text-muted">Barang akan muncul setelah pemasok disimpan</p>
+            </div>
+        </div>
+    </div>
 @endsection

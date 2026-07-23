@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\MengirimDataTablesJson;
 use App\Models\Pemasok;
+use App\Services\AnalisisRopEoqService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,13 @@ use Illuminate\View\View;
 class PemasokController extends Controller
 {
     use MengirimDataTablesJson;
+
+    private AnalisisRopEoqService $analisisService;
+
+    public function __construct(AnalisisRopEoqService $analisisService)
+    {
+        $this->analisisService = $analisisService;
+    }
 
     public function index(): View
     {
@@ -67,12 +75,16 @@ class PemasokController extends Controller
                 if ($b->lead_time_menit > 0) {
                     $lt .= ' ' . $b->lead_time_menit . ' Menit';
                 }
+                $analisis = $this->analisisService->hitungUntukBarang($b);
                 return [
                     'id_barang' => $b->id_barang,
                     'nama_barang' => $b->nama_barang,
                     'stok_saat_ini' => $b->stok_saat_ini,
                     'satuan' => $b->satuan,
                     'lead_time' => $lt,
+                    'safety_stock' => round($analisis['safety_stock'], 2),
+                    'rop' => round($analisis['rop'], 2),
+                    'perlu_reorder' => $analisis['perlu_reorder'],
                     'status_barang' => $b->status_barang,
                     'url_masuk' => route('transaksi.create', ['jenis' => 'Masuk', 'id_barang' => $b->id_barang]),
                 ];
@@ -109,14 +121,24 @@ class PemasokController extends Controller
     {
         $pemasok->load(['daftarBarang' => fn ($q) => $q->orderBy('nama_barang')]);
 
-        return view('pemasok.show', compact('pemasok'));
+        $analisisBarang = [];
+        foreach ($pemasok->daftarBarang as $b) {
+            $analisisBarang[$b->id_barang] = $this->analisisService->hitungUntukBarang($b);
+        }
+
+        return view('pemasok.show', compact('pemasok', 'analisisBarang'));
     }
 
     public function edit(Pemasok $pemasok): View
     {
         $pemasok->load(['daftarBarang' => fn ($q) => $q->orderBy('nama_barang')]);
 
-        return view('pemasok.edit', compact('pemasok'));
+        $analisisBarang = [];
+        foreach ($pemasok->daftarBarang as $b) {
+            $analisisBarang[$b->id_barang] = $this->analisisService->hitungUntukBarang($b);
+        }
+
+        return view('pemasok.edit', compact('pemasok', 'analisisBarang'));
     }
 
     public function update(Request $request, Pemasok $pemasok): RedirectResponse

@@ -31,7 +31,15 @@
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <span><i class="bi bi-box-seam me-2"></i>Barang dari pemasok ini</span>
-            <span class="badge bg-primary rounded-pill">{{ $pemasok->daftarBarang->count() }} Barang</span>
+            <div>
+                @php
+                    $jumlahReorder = collect($analisisBarang)->where('perlu_reorder', true)->count();
+                @endphp
+                @if($jumlahReorder > 0)
+                    <span class="badge bg-danger rounded-pill me-1">{{ $jumlahReorder }} Perlu Reorder</span>
+                @endif
+                <span class="badge bg-primary rounded-pill">{{ $pemasok->daftarBarang->count() }} Barang</span>
+            </div>
         </div>
         <div class="card-body p-0">
             @if($pemasok->daftarBarang->isEmpty())
@@ -47,27 +55,43 @@
                                 <th>Nama Barang</th>
                                 <th>Stok</th>
                                 <th>Lead Time</th>
+                                <th>ROP</th>
+                                <th>Safety Stock</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($pemasok->daftarBarang as $b)
-                                <tr>
+                                @php
+                                    $a = $analisisBarang[$b->id_barang] ?? null;
+                                    $reorder = $a['perlu_reorder'] ?? false;
+                                @endphp
+                                <tr class="{{ $reorder ? 'table-danger' : '' }}">
                                     <td><a href="{{ route('barang.edit', $b) }}">{{ $b->nama_barang }}</a></td>
-                                    <td class="{{ $b->stok_saat_ini <= 0 ? 'text-danger fw-bold' : '' }}">{{ $b->stok_saat_ini }} {{ $b->satuan }}</td>
-                                    <td>{{ $b->lead_time_hari }} Hari{{ $b->lead_time_menit > 0 ? ' ' . $b->lead_time_menit . ' Menit' : '' }}</td>
+                                    <td class="{{ $b->stok_saat_ini <= 0 ? 'text-danger fw-bold' : '' }}">
+                                        {{ $b->stok_saat_ini }} {{ $b->satuan }}
+                                    </td>
+                                    <td>{{ $b->lead_time_hari }} Hari{{ $b->lead_time_menit > 0 ? ' ' . $b->lead_time_menit . ' Mnt' : '' }}</td>
+                                    <td>{{ $a ? number_format($a['rop'], 2) : '-' }}</td>
+                                    <td>{{ $a ? number_format($a['safety_stock'], 2) : '-' }}</td>
                                     <td>
-                                        @if($b->status_barang === 'Aktif')
-                                            <span class="badge bg-success">Aktif</span>
+                                        @if($reorder)
+                                            <span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>Reorder</span>
                                         @else
-                                            <span class="badge bg-secondary">Nonaktif</span>
+                                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Aman</span>
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('transaksi.create', ['jenis' => 'Masuk', 'id_barang' => $b->id_barang]) }}" class="btn btn-sm btn-success">
-                                            <i class="bi bi-plus-lg"></i> Masuk
-                                        </a>
+                                        @if($reorder)
+                                            <a href="{{ route('transaksi.create', ['jenis' => 'Masuk', 'id_barang' => $b->id_barang]) }}" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-lightning-fill"></i> Order
+                                            </a>
+                                        @else
+                                            <a href="{{ route('transaksi.create', ['jenis' => 'Masuk', 'id_barang' => $b->id_barang]) }}" class="btn btn-sm btn-success">
+                                                <i class="bi bi-plus-lg"></i> Masuk
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
