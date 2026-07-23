@@ -164,9 +164,11 @@
                     <ul class="list-unstyled mb-3 small text-dark bg-white p-3 rounded border">
                         <li class="mb-2">
                             <strong>Biaya Pesan (S):</strong> Rp {{ number_format($analisis['biaya_pesan_dipakai'], 0, ',', '.') }}
+                            @if($analisis['is_asumsi_s']) <span class="badge bg-warning text-dark" style="font-size: 0.6rem;">ESTIMASI ONGKIR STANDAR</span> @endif
                         </li>
                         <li class="mb-0">
                             <strong>Biaya Simpan (H):</strong> Rp {{ number_format($analisis['biaya_simpan_dipakai'], 0, ',', '.') }} <span class="text-muted">/ unit / tahun</span>
+                            @if($analisis['is_asumsi_h']) <span class="badge bg-warning text-dark" style="font-size: 0.6rem;">ESTIMASI (20% HARGA BELI)</span> @endif
                         </li>
                     </ul>
 
