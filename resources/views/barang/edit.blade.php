@@ -118,13 +118,13 @@
                     <label class="form-label">Biaya pesan (S)</label>
                     <input type="number" step="0.01" name="biaya_pesan" id="inputBiayaPesan" value="{{ old('biaya_pesan', $barang->biaya_pesan) }}"
                         class="form-control" min="0">
-                    <div class="form-text small text-muted" id="helpBiayaPesan">Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp 20.000</strong></div>
+                    <div id="containerBiayaPesan"></div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Biaya simpan per unit per tahun (H)</label>
                     <input type="number" step="0.01" name="biaya_simpan" id="inputBiayaSimpan"
                         value="{{ old('biaya_simpan', $barang->biaya_simpan) }}" class="form-control" min="0">
-                    <div class="form-text small text-muted" id="helpBiayaSimpan">Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp 2.000</strong></div>
+                    <div id="containerBiayaSimpan"></div>
                 </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">Perbarui</button>
@@ -149,10 +149,10 @@
             });
         });
 
-        // Fitur Pintar Estimasi EOQ
+        // Fitur Pintar Estimasi EOQ (UI Premium)
         const inputHargaBeli = document.querySelector('input[name="harga_beli"]');
-        const helpBiayaPesan = document.getElementById('helpBiayaPesan');
-        const helpBiayaSimpan = document.getElementById('helpBiayaSimpan');
+        const containerPesan = document.getElementById('containerBiayaPesan');
+        const containerSimpan = document.getElementById('containerBiayaSimpan');
 
         function updateEstimasi() {
             let harga = parseFloat(inputHargaBeli.value) || 0;
@@ -163,8 +163,18 @@
             let estimasiSimpan = harga * 0.20;
             if (estimasiSimpan <= 0) estimasiSimpan = 2000;
 
-            helpBiayaPesan.innerHTML = `Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp ${estimasiPesan.toLocaleString('id-ID')} (5% Harga Beli)</strong> <button type="button" class="btn btn-sm btn-link p-0 ms-1 text-decoration-none" onclick="document.getElementById('inputBiayaPesan').value = ${estimasiPesan}">[Isi ke Form]</button>`;
-            helpBiayaSimpan.innerHTML = `Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp ${estimasiSimpan.toLocaleString('id-ID')} (20% Harga Beli)</strong> <button type="button" class="btn btn-sm btn-link p-0 ms-1 text-decoration-none" onclick="document.getElementById('inputBiayaSimpan').value = ${estimasiSimpan}">[Isi ke Form]</button>`;
+            const renderUI = (nominal, persentase, inputId) => `
+                <div class="mt-2 p-2 rounded d-flex justify-content-between align-items-center" style="background-color: #f8f9fa; border: 1px dashed #ced4da; transition: all 0.2s ease;">
+                    <div class="small text-secondary" style="font-size: 0.8rem;">
+                        <i class="bi bi-stars text-warning me-1"></i> 
+                        Saran sistem: <strong class="text-dark">Rp ${nominal.toLocaleString('id-ID')}</strong> <span class="opacity-75">(${persentase}% harga)</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-light border shadow-sm rounded-pill px-3 py-1 text-primary fw-bold hover-lift" style="font-size: 0.7rem;" onclick="document.getElementById('${inputId}').value = ${nominal}">GUNAKAN</button>
+                </div>
+            `;
+
+            containerPesan.innerHTML = renderUI(estimasiPesan, 5, 'inputBiayaPesan');
+            containerSimpan.innerHTML = renderUI(estimasiSimpan, 20, 'inputBiayaSimpan');
         }
 
         if (inputHargaBeli) {
