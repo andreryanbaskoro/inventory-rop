@@ -53,21 +53,10 @@ class AnalisisRopEoqService
 
         $D = $pemakaianRataHarian * 365;
         $S = (float) $barang->biaya_pesan;
-        $isAsumsiS = false;
-        if ($S <= 0) {
-            $S = 20000.0;
-            $isAsumsiS = true;
-        }
-
         $H = (float) $barang->biaya_simpan;
-        $isAsumsiH = false;
-        if ($H <= 0) {
-            $H = 2000.0;
-            $isAsumsiH = true;
-        }
 
-        $eoq = null;
-        if ($D > 0) {
+        $eoq = 0;
+        if ($H > 0 && $D > 0 && $S > 0) {
             $eoq = sqrt((2 * $D * $S) / $H);
         }
 
@@ -87,8 +76,6 @@ class AnalisisRopEoqService
             'eoq' => $eoq,
             'biaya_pesan_dipakai' => $S,
             'biaya_simpan_dipakai' => $H,
-            'is_asumsi_s' => $isAsumsiS,
-            'is_asumsi_h' => $isAsumsiH,
             'perlu_reorder' => $perluReorder,
         ];
     }

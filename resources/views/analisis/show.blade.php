@@ -164,27 +164,18 @@
                     <ul class="list-unstyled mb-3 small text-dark bg-white p-3 rounded border">
                         <li class="mb-2">
                             <strong>Biaya Pesan (S):</strong> Rp {{ number_format($analisis['biaya_pesan_dipakai'], 0, ',', '.') }}
-                            @if($analisis['is_asumsi_s']) <span class="badge bg-warning text-dark" style="font-size: 0.6rem;">ASUMSI DEFAULT</span> @endif
                         </li>
                         <li class="mb-0">
                             <strong>Biaya Simpan (H):</strong> Rp {{ number_format($analisis['biaya_simpan_dipakai'], 0, ',', '.') }} <span class="text-muted">/ unit / tahun</span>
-                            @if($analisis['is_asumsi_h']) <span class="badge bg-warning text-dark" style="font-size: 0.6rem;">ASUMSI DEFAULT</span> @endif
                         </li>
                     </ul>
 
-                    @if($analisis['eoq'] !== null)
-                        <div class="font-monospace small text-muted">
-                            <div class="mb-1 text-dark"><i class="bi bi-braces text-success"></i> Rumus: EOQ = &radic;((2 &times; D &times; S) / H)</div>
-                            @php $estimasiTahunan = $analisis['pemakaian_rata_harian'] * 365; @endphp
-                            <div class="mb-1"><i class="bi bi-info-circle text-success"></i> D (Permintaan Tahunan) = <var>d<sub>avg</sub></var> &times; 365 = {{ number_format($estimasiTahunan, 2, ',', '.') }}</div>
-                            <div><i class="bi bi-arrow-return-right text-success"></i> Substitusi: EOQ = &radic;((2 &times; {{ number_format($estimasiTahunan, 2, ',', '.') }} &times; {{ number_format($analisis['biaya_pesan_dipakai'], 0, '', '') }}) / {{ number_format($analisis['biaya_simpan_dipakai'], 0, '', '') }})</div>
-                        </div>
-                    @else
-                        <div class="alert alert-warning mb-0 border-0 d-flex gap-2">
-                            <i class="bi bi-exclamation-triangle-fill"></i> 
-                            <div>EOQ tidak dapat dihitung. Pastikan Biaya Pesan dan Biaya Simpan diatur lebih dari 0.</div>
-                        </div>
-                    @endif
+                    <div class="font-monospace small text-muted">
+                        <div class="mb-1 text-dark"><i class="bi bi-braces text-success"></i> Rumus: EOQ = &radic;((2 &times; D &times; S) / H)</div>
+                        @php $estimasiTahunan = $analisis['pemakaian_rata_harian'] * 365; @endphp
+                        <div class="mb-1"><i class="bi bi-info-circle text-success"></i> D (Permintaan Tahunan) = <var>d<sub>avg</sub></var> &times; 365 = {{ number_format($estimasiTahunan, 2, ',', '.') }}</div>
+                        <div><i class="bi bi-arrow-return-right text-success"></i> Substitusi: EOQ = &radic;((2 &times; {{ number_format($estimasiTahunan, 2, ',', '.') }} &times; {{ number_format($analisis['biaya_pesan_dipakai'], 0, '', '') }}) / {{ number_format($analisis['biaya_simpan_dipakai'], 0, '', '') }})</div>
+                    </div>
                 </div>
             </div>
         </div>
