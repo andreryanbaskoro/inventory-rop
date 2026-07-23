@@ -101,19 +101,28 @@
                 <tbody class="align-middle">
                     <tr>
                         <td width="30%" class="fw-semibold">Total Pemakaian (<var>Total</var>)</td>
-                        <td class="fw-bold text-dark">{{ number_format($analisis['total_keluar_periode'], 0, ',', '.') }} unit</td>
+                        <td class="fw-bold text-dark">{{ number_format($analisis['total_keluar_periode'], 0, ',', '.') }} {{ $barang->satuan }}</td>
                     </tr>
                     <tr>
-                        <td class="fw-semibold">Pemakaian Rata-rata (<var>d<sub>avg</sub></var>)<br><small class="text-muted fw-normal"><var>Total</var> / {{ $periodeHari }}</small></td>
-                        <td class="fw-bold text-dark">{{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} unit/hari</td>
+                        <td class="fw-semibold">Pemakaian Rata-rata (<var>d<sub>avg</sub></var>)<br><small class="text-muted fw-normal"><var>Total</var> / {{ $periodeHari }} hari</small></td>
+                        <td class="fw-bold text-dark">{{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari</td>
                     </tr>
                     <tr>
                         <td class="fw-semibold">Pemakaian Maksimum (<var>d<sub>max</sub></var>)</td>
-                        <td class="fw-bold text-dark">{{ $analisis['pemakaian_maks_harian'] }} unit/hari</td>
+                        <td class="fw-bold text-dark">{{ $analisis['pemakaian_maks_harian'] }} {{ $barang->satuan }}/hari</td>
                     </tr>
                     <tr>
-                        <td class="fw-semibold">Lead Time (<var>L</var>)<br><small class="text-muted fw-normal">{{ $analisis['lead_time_hari'] }} hari + {{ $analisis['lead_time_menit'] }} menit</small></td>
-                        <td class="fw-bold text-dark">{{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} hari</td>
+                        <td class="fw-semibold">Lead Time (<var>L</var>)<br>
+                            <small class="text-muted fw-normal">
+                                @if($analisis['lead_time_hari'] > 0)
+                                    {{ $analisis['lead_time_hari'] }} Hari
+                                @endif
+                                @if($analisis['lead_time_menit'] > 0)
+                                    {{ $analisis['lead_time_menit'] }} Menit
+                                @endif
+                            </small>
+                        </td>
+                        <td class="fw-bold text-dark">{{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari</td>
                     </tr>
                 </tbody>
             </table>
@@ -131,7 +140,7 @@
                     </div>
                     <div class="font-monospace small text-muted">
                         <div class="mb-1 text-dark"><i class="bi bi-braces text-primary"></i> Rumus: SS = (<var>d<sub>max</sub></var> - <var>d<sub>avg</sub></var>) &times; <var>L</var></div>
-                        <div><i class="bi bi-arrow-return-right text-primary"></i> Substitusi: SS = ({{ str_replace('.', ',', round($analisis['pemakaian_maks_harian'], 2)) }} - {{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }}) &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }}</div>
+                        <div><i class="bi bi-arrow-return-right text-primary"></i> Substitusi: SS = ({{ str_replace('.', ',', round($analisis['pemakaian_maks_harian'], 2)) }} - {{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }}) &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari</div>
                     </div>
                 </div>
 
@@ -142,7 +151,7 @@
                     </div>
                     <div class="font-monospace small text-muted">
                         <div class="mb-1 text-dark"><i class="bi bi-braces text-danger"></i> Rumus: ROP = (<var>d<sub>avg</sub></var> &times; <var>L</var>) + SS</div>
-                        <div><i class="bi bi-arrow-return-right text-danger"></i> Substitusi: ROP = ({{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }}) + {{ $analisis['safety_stock'] }}</div>
+                        <div><i class="bi bi-arrow-return-right text-danger"></i> Substitusi: ROP = ({{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari) + {{ $analisis['safety_stock'] }}</div>
                     </div>
                 </div>
             </div>
