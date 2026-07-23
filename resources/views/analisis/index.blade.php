@@ -21,7 +21,9 @@
                 <select name="periode" id="periode" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
                     <option value="7" {{ $periodeHari == 7 ? 'selected' : '' }}>7 Hari (1 Minggu)</option>
                     <option value="14" {{ $periodeHari == 14 ? 'selected' : '' }}>14 Hari (2 Minggu)</option>
+                    <option value="21" {{ $periodeHari == 21 ? 'selected' : '' }}>21 Hari (3 Minggu)</option>
                     <option value="30" {{ $periodeHari == 30 ? 'selected' : '' }}>30 Hari (1 Bulan)</option>
+                    <option value="60" {{ $periodeHari == 60 ? 'selected' : '' }}>60 Hari (2 Bulan)</option>
                     <option value="90" {{ $periodeHari == 90 ? 'selected' : '' }}>90 Hari (3 Bulan)</option>
                     <option value="180" {{ $periodeHari == 180 ? 'selected' : '' }}>180 Hari (6 Bulan)</option>
                     <option value="365" {{ $periodeHari == 365 ? 'selected' : '' }}>365 Hari (1 Tahun)</option>
@@ -51,7 +53,14 @@
                             <tr>
                                 <td>{{ $b->nama_barang }}</td>
                                 <td>{{ $b->pemasok?->nama_pemasok }}</td>
-                                <td>{{ number_format($a['lead_time_desimal'], 1) }} Hari</td>
+                                <td>
+                                    @if($a['lead_time_hari'] > 0)
+                                        {{ $a['lead_time_hari'] }} Hari
+                                    @endif
+                                    @if($a['lead_time_menit'] > 0)
+                                        {{ $a['lead_time_menit'] }} Mnt
+                                    @endif
+                                </td>
                                 <td>{{ $a['safety_stock'] }} {{ $b->satuan }}</td>
                                 <td>
                                     @if ($a['perlu_reorder'])

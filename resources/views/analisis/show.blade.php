@@ -82,12 +82,15 @@
         
         <form method="GET" action="{{ route('analisis.show', $barang) }}" class="d-flex align-items-center bg-light p-1 rounded-3">
             <label for="periode" class="me-2 fw-semibold text-muted small ps-2 text-nowrap"><i class="bi bi-calendar3 me-1"></i>Periode:</label>
-            <select name="periode" id="periode" class="form-select form-select-sm border-0 bg-transparent fw-bold" onchange="this.form.submit()" style="width: 120px; cursor:pointer;">
-                <option value="30" {{ $periodeHari == 30 ? 'selected' : '' }}>30 Hari</option>
-                <option value="60" {{ $periodeHari == 60 ? 'selected' : '' }}>60 Hari</option>
-                <option value="90" {{ $periodeHari == 90 ? 'selected' : '' }}>90 Hari</option>
-                <option value="180" {{ $periodeHari == 180 ? 'selected' : '' }}>180 Hari</option>
-                <option value="365" {{ $periodeHari == 365 ? 'selected' : '' }}>365 Hari</option>
+            <select name="periode" id="periode" class="form-select form-select-sm border-0 bg-transparent fw-bold" onchange="this.form.submit()" style="width: auto; cursor:pointer;">
+                <option value="7" {{ $periodeHari == 7 ? 'selected' : '' }}>7 Hari (1 Minggu)</option>
+                <option value="14" {{ $periodeHari == 14 ? 'selected' : '' }}>14 Hari (2 Minggu)</option>
+                <option value="21" {{ $periodeHari == 21 ? 'selected' : '' }}>21 Hari (3 Minggu)</option>
+                <option value="30" {{ $periodeHari == 30 ? 'selected' : '' }}>30 Hari (1 Bulan)</option>
+                <option value="60" {{ $periodeHari == 60 ? 'selected' : '' }}>60 Hari (2 Bulan)</option>
+                <option value="90" {{ $periodeHari == 90 ? 'selected' : '' }}>90 Hari (3 Bulan)</option>
+                <option value="180" {{ $periodeHari == 180 ? 'selected' : '' }}>180 Hari (6 Bulan)</option>
+                <option value="365" {{ $periodeHari == 365 ? 'selected' : '' }}>365 Hari (1 Tahun)</option>
             </select>
         </form>
     </div>
