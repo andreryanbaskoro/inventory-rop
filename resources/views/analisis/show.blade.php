@@ -57,7 +57,7 @@
     <div class="card-header bg-light border-bottom-0 pt-3 pb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-calculator me-2"></i>Penjabaran Perhitungan</h5>
         
-        <form method="GET" action="{{ route('analisis.show', $barang->id) }}" class="d-flex align-items-center">
+        <form method="GET" action="{{ route('analisis.show', $barang) }}" class="d-flex align-items-center">
             <label for="periode" class="me-2 fw-semibold small text-muted text-nowrap">Periode Analisis:</label>
             <div class="input-group input-group-sm">
                 <select name="periode" id="periode" class="form-select form-select-sm" onchange="this.form.submit()">
