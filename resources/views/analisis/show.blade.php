@@ -7,7 +7,7 @@
 <!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}" class="text-decoration-none">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}" class="text-decoration-none">Dashboard</a></li>
         <li class="breadcrumb-item"><a href="{{ route('analisis.index') }}" class="text-decoration-none">Analisis</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{ $barang->nama_barang }}</li>
     </ol>
