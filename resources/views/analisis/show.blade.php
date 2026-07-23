@@ -20,8 +20,8 @@
     <div class="col-12 col-lg-4 col-md-6">
         <div class="card cm-stat-card h-100 hover-lift">
             <div class="card-body d-flex align-items-center gap-3 py-4">
-                <div class="cm-stat-icon" style="color: {{ $analisis['perlu_reorder'] ? '#dc2626' : '#16a34a' }}; background-color: {{ $analisis['perlu_reorder'] ? '#fee2e2' : '#dcfce7' }}; background-image: none; border-color: transparent;">
-                    <i class="bi {{ $analisis['perlu_reorder'] ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill' }} m-auto" style="display: block; text-align: center; width: 100%;"></i>
+                <div class="cm-stat-icon" style="color: {{ $analisis['perlu_reorder'] ? '#dc2626' : '#16a34a' }}; background-color: {{ $analisis['perlu_reorder'] ? '#fee2e2' : '#dcfce7' }}; background-image: none; border-color: transparent; display: block; line-height: 54px; text-align: center;">
+                    <i class="bi {{ $analisis['perlu_reorder'] ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill' }}" style="vertical-align: middle; display: inline-block;"></i>
                 </div>
                 <div>
                     <div class="cm-stat-label">Status Inventaris</div>
@@ -38,8 +38,8 @@
     <div class="col-12 col-lg-4 col-md-6">
         <div class="card cm-stat-card h-100 hover-lift">
             <div class="card-body d-flex align-items-center gap-3 py-4">
-                <div class="cm-stat-icon" style="color: #2563eb; background-color: #dbeafe; background-image: none; border-color: transparent;">
-                    <i class="bi bi-bullseye m-auto" style="display: block; text-align: center; width: 100%;"></i>
+                <div class="cm-stat-icon" style="color: #2563eb; background-color: #dbeafe; background-image: none; border-color: transparent; display: block; line-height: 54px; text-align: center;">
+                    <i class="bi bi-bullseye" style="vertical-align: middle; display: inline-block;"></i>
                 </div>
                 <div>
                     <div class="cm-stat-label">Reorder Point (ROP)</div>
@@ -54,8 +54,8 @@
     <div class="col-12 col-lg-4 col-md-6">
         <div class="card cm-stat-card h-100 hover-lift">
             <div class="card-body d-flex align-items-center gap-3 py-4">
-                <div class="cm-stat-icon" style="color: #0891b2; background-color: #cffafe; background-image: none; border-color: transparent;">
-                    <i class="bi bi-box-seam m-auto" style="display: block; text-align: center; width: 100%;"></i>
+                <div class="cm-stat-icon" style="color: #0891b2; background-color: #cffafe; background-image: none; border-color: transparent; display: block; line-height: 54px; text-align: center;">
+                    <i class="bi bi-box-seam" style="vertical-align: middle; display: inline-block;"></i>
                 </div>
                 <div>
                     <div class="cm-stat-label">Economic Order Qty</div>
