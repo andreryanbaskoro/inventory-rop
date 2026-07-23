@@ -20,7 +20,7 @@
     <div class="col-12 col-lg-4 col-md-6">
         <div class="card cm-stat-card h-100 hover-lift">
             <div class="card-body d-flex align-items-center gap-3 py-4">
-                <div class="cm-stat-icon" style="color: {{ $analisis['perlu_reorder'] ? '#e3342f' : '#38c172' }}; background: {{ $analisis['perlu_reorder'] ? '#fce4e4' : '#e0f8e9' }}; border-color: transparent; display: flex; align-items: center; justify-content: center;">
+                <div class="cm-stat-icon d-flex align-items-center justify-content-center" style="color: {{ $analisis['perlu_reorder'] ? '#dc3545' : '#198754' }}; background-color: {{ $analisis['perlu_reorder'] ? '#f8d7da' : '#d1e7dd' }}; background-image: none; border-color: transparent;">
                     <i class="bi {{ $analisis['perlu_reorder'] ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill' }}"></i>
                 </div>
                 <div>
@@ -38,7 +38,7 @@
     <div class="col-12 col-lg-4 col-md-6">
         <div class="card cm-stat-card h-100 hover-lift">
             <div class="card-body d-flex align-items-center gap-3 py-4">
-                <div class="cm-stat-icon text-primary" style="background: rgba(79, 70, 229, 0.1); border-color: transparent;">
+                <div class="cm-stat-icon d-flex align-items-center justify-content-center text-primary" style="background-color: #e0e7ff; background-image: none; border-color: transparent;">
                     <i class="bi bi-bullseye"></i>
                 </div>
                 <div>
@@ -54,7 +54,7 @@
     <div class="col-12 col-lg-4 col-md-6">
         <div class="card cm-stat-card h-100 hover-lift">
             <div class="card-body d-flex align-items-center gap-3 py-4">
-                <div class="cm-stat-icon text-info" style="background: rgba(13, 202, 240, 0.1); border-color: transparent;">
+                <div class="cm-stat-icon d-flex align-items-center justify-content-center text-info" style="background-color: #cff4fc; background-image: none; border-color: transparent;">
                     <i class="bi bi-box-seam"></i>
                 </div>
                 <div>
@@ -62,7 +62,7 @@
                     <div class="cm-stat-value {{ $analisis['eoq'] === null ? 'text-muted' : 'text-dark' }}">
                         {{ $analisis['eoq'] !== null ? number_format($analisis['eoq'], 2, ',', '.') : 'N/A' }}
                     </div>
-                    <span class="text-muted small">Rekomendasi jumlah pesanan</span>
+                    <span class="text-muted small">Rekomendasi pesanan</span>
                 </div>
             </div>
         </div>
