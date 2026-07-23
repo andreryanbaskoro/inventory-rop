@@ -56,7 +56,8 @@ class AnalisisRopEoqService
         $S = (float) $barang->biaya_pesan;
         $isAsumsiS = false;
         if ($S <= 0) {
-            $S = 20000.0; // Estimasi ongkir standar
+            $S = 0.05 * (float) $barang->harga_beli; // 5% dari harga beli
+            if ($S <= 0) $S = 20000.0; // Fallback darurat
             $isAsumsiS = true;
         }
 
