@@ -48,10 +48,10 @@ class AnalisisRopEoqService
         $menit = (float) ($barang->lead_time_menit ?? 0);
         $leadTime = max(0.0001, $hari + ($menit / 1440));
 
-        $ss = max(0.0, ($pemakaianMaksHarian - $pemakaianRataHarian) * $leadTime);
-        $rop = ($leadTime * $pemakaianRataHarian) + $ss;
+        $ss = ceil(max(0.0, ($pemakaianMaksHarian - $pemakaianRataHarian) * $leadTime));
+        $rop = ceil(($leadTime * $pemakaianRataHarian) + $ss);
 
-        $D = $pemakaianRataHarian * 365;
+        $D = ceil($pemakaianRataHarian * 365);
         
         $S = (float) $barang->biaya_pesan;
         $isAsumsiS = false;
@@ -71,11 +71,11 @@ class AnalisisRopEoqService
 
         $eoq = 0;
         if ($H > 0 && $D > 0 && $S > 0) {
-            $eoq = sqrt((2 * $D * $S) / $H);
+            $eoq = ceil(sqrt((2 * $D * $S) / $H));
         }
 
-        // Gunakan ceil() agar peringatan muncul di batas integer yang tepat
-        $perluReorder = $barang->stok_saat_ini <= ceil($rop);
+        // Karena ROP sudah integer, cukup bandingkan langsung
+        $perluReorder = $barang->stok_saat_ini <= $rop;
 
         return [
             'periode_hari' => $periodeHari,
@@ -88,6 +88,7 @@ class AnalisisRopEoqService
             'lead_time_desimal' => $leadTime,
             'safety_stock' => $ss,
             'rop' => $rop,
+            'permintaan_tahunan' => $D,
             'eoq' => $eoq,
             'biaya_pesan_dipakai' => $S,
             'biaya_simpan_dipakai' => $H,

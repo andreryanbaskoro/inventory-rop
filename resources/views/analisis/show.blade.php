@@ -154,11 +154,7 @@
                 <div class="p-4 rounded-3 h-100" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="fw-bold text-dark mb-0">Hasil EOQ</h6>
-                        @if($analisis['eoq'] !== null)
-                            <span class="badge bg-success fs-6">{{ number_format($analisis['eoq'], 4, ',', '.') }}</span>
-                        @else
-                            <span class="badge bg-secondary fs-6">N/A</span>
-                        @endif
+                        <span class="badge bg-success fs-6">{{ $analisis['eoq'] }}</span>
                     </div>
                     
                     <ul class="list-unstyled mb-3 small text-dark bg-white p-3 rounded border">
@@ -182,9 +178,8 @@
 
                     <div class="font-monospace small text-muted">
                         <div class="mb-1 text-dark"><i class="bi bi-braces text-success"></i> Rumus: EOQ = &radic;((2 &times; D &times; S) / H)</div>
-                        @php $estimasiTahunan = $analisis['pemakaian_rata_harian'] * 365; @endphp
-                        <div class="mb-1"><i class="bi bi-info-circle text-success"></i> D (Permintaan Tahunan) = <var>d<sub>avg</sub></var> &times; 365 = {{ number_format($estimasiTahunan, 2, ',', '.') }}</div>
-                        <div><i class="bi bi-arrow-return-right text-success"></i> Substitusi: EOQ = &radic;((2 &times; {{ number_format($estimasiTahunan, 2, ',', '.') }} &times; {{ number_format($analisis['biaya_pesan_dipakai'], 0, '', '') }}) / {{ number_format($analisis['biaya_simpan_dipakai'], 0, '', '') }})</div>
+                        <div class="mb-1"><i class="bi bi-info-circle text-success"></i> D (Permintaan Tahunan) = <var>d<sub>avg</sub></var> &times; 365 = {{ $analisis['permintaan_tahunan'] }}</div>
+                        <div><i class="bi bi-arrow-return-right text-success"></i> Substitusi: EOQ = &radic;((2 &times; {{ $analisis['permintaan_tahunan'] }} &times; {{ number_format($analisis['biaya_pesan_dipakai'], 0, '', '') }}) / {{ number_format($analisis['biaya_simpan_dipakai'], 0, '', '') }})</div>
                     </div>
                 </div>
             </div>

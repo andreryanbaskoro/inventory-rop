@@ -52,7 +52,7 @@
                                 <td>{{ $b->nama_barang }}</td>
                                 <td>{{ $b->pemasok?->nama_pemasok }}</td>
                                 <td>{{ number_format($a['lead_time_desimal'], 1) }} Hari</td>
-                                <td>{{ ceil($a['safety_stock']) }} {{ $b->satuan }}</td>
+                                <td>{{ $a['safety_stock'] }} {{ $b->satuan }}</td>
                                 <td>
                                     @if ($a['perlu_reorder'])
                                         <span class="text-danger fw-bold">{{ $b->stok_saat_ini }} {{ $b->satuan }}</span>
@@ -60,10 +60,10 @@
                                         {{ $b->stok_saat_ini }} {{ $b->satuan }}
                                     @endif
                                 </td>
-                                <td><strong>{{ ceil($a['rop']) }} {{ $b->satuan }}</strong></td>
+                                <td><strong>{{ $a['rop'] }} {{ $b->satuan }}</strong></td>
                                 <td>
                                     @if ($a['eoq'] !== null)
-                                        {{ ceil($a['eoq']) }} {{ $b->satuan }}
+                                        {{ $a['eoq'] }} {{ $b->satuan }}
                                     @else
                                         <span class="text-muted">—</span>
                                     @endif
