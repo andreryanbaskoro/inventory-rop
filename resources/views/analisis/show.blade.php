@@ -114,15 +114,23 @@
                     <tr>
                         <td class="fw-semibold">Lead Time (<var>L</var>)<br>
                             <small class="text-muted fw-normal">
-                                @if($analisis['lead_time_hari'] > 0)
-                                    {{ $analisis['lead_time_hari'] }} Hari
-                                @endif
-                                @if($analisis['lead_time_menit'] > 0)
-                                    {{ $analisis['lead_time_menit'] }} Menit
-                                @endif
+                                Waktu tunggu pesanan tiba
                             </small>
                         </td>
-                        <td class="fw-bold text-dark">{{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari</td>
+                        <td class="fw-bold text-dark">
+                            @if($analisis['lead_time_hari'] > 0)
+                                {{ $analisis['lead_time_hari'] }} Hari
+                            @endif
+                            @if($analisis['lead_time_menit'] > 0)
+                                {{ $analisis['lead_time_menit'] }} Menit
+                            @endif
+                            
+                            @if($analisis['lead_time_menit'] > 0)
+                            <div class="text-muted small fw-normal mt-1">
+                                <i class="bi bi-arrow-right-short"></i> Dikonversi ke desimal: <strong>{{ str_replace('.', ',', round($analisis['lead_time_desimal'], 4)) }} Hari</strong>
+                            </div>
+                            @endif
+                        </td>
                     </tr>
                 </tbody>
             </table>
