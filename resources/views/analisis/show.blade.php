@@ -31,7 +31,7 @@
                     </form>
                 </div>
                 <div class="card-body">
-                    <p>Lead time pemasok: <strong>{{ $analisis['lead_time_hari'] }} hari {{ $analisis['lead_time_menit'] }} menit</strong> (≈ {{ number_format($analisis['lead_time_desimal'], 4, ',', '.') }} hari)</p>
+                    <p>Lead Time Barang: <strong>{{ $analisis['lead_time_hari'] }} hari {{ $analisis['lead_time_menit'] }} menit</strong> (≈ {{ number_format($analisis['lead_time_desimal'], 4, ',', '.') }} hari)</p>
                     <p>Total keluar ({{ $analisis['periode_hari'] }} hari): <strong>{{ $analisis['total_keluar_periode'] }}
                             unit</strong></p>
                     <p>Pemakaian rata-rata harian: <strong>{{ number_format($analisis['pemakaian_rata_harian'], 4, ',', '.') }}</strong>

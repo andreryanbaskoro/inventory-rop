@@ -25,7 +25,7 @@
                         <th>ID</th>
                         <th>Nama</th>
                         <th>Telepon</th>
-                        <th>Lead time</th>
+
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -57,9 +57,7 @@
                 {
                     data: 'telepon'
                 },
-                {
-                    data: 'rata_lead_time'
-                },
+
                 {
                     data: 'aksi',
                     orderable: false,

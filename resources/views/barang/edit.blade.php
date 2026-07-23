@@ -18,7 +18,7 @@
             <form action="{{ route('barang.update', $barang) }}" method="post" class="row g-3">
                 @csrf
                 @method('PUT')
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Pemasok</label>
                     <select name="id_pemasok" class="form-select @error('id_pemasok') is-invalid @enderror" required>
                         @foreach ($daftarPemasok as $p)
@@ -30,13 +30,40 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Nama Barang</label>
                     <input type="text" name="nama_barang" value="{{ old('nama_barang', $barang->nama_barang) }}"
                         class="form-control @error('nama_barang') is-invalid @enderror" required>
                     @error('nama_barang')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Lead Time</label>
+                    <div class="card bg-light-secondary border-0 mb-0">
+                        <div class="card-body p-2">
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label text-secondary small fw-bold mb-0">Hari</label>
+                                    <input type="number" id="inputHari" name="lead_time_hari" value="{{ old('lead_time_hari', $barang->lead_time_hari) }}"
+                                        class="form-control form-control-sm" min="0" placeholder="0">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-secondary small fw-bold mb-0">Menit</label>
+                                    <input type="number" id="inputMenit" name="lead_time_menit" value="{{ old('lead_time_menit', $barang->lead_time_menit) }}"
+                                        class="form-control form-control-sm" min="0" placeholder="0">
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill btn-cepat py-0 px-2" style="font-size: 0.75rem;" data-hari="0" data-menit="15">15 Menit</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill btn-cepat py-0 px-2" style="font-size: 0.75rem;" data-hari="0" data-menit="30">30 Menit</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill btn-cepat py-0 px-2" style="font-size: 0.75rem;" data-hari="0" data-menit="60">1 Jam</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill btn-cepat py-0 px-2" style="font-size: 0.75rem;" data-hari="1" data-menit="0">1 Hari</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill btn-cepat py-0 px-2" style="font-size: 0.75rem;" data-hari="3" data-menit="0">3 Hari</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill btn-cepat py-0 px-2" style="font-size: 0.75rem;" data-hari="7" data-menit="0">1 Minggu</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-12">
                     <div class="card bg-light-secondary border-0 mt-2 mb-3">
@@ -62,20 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Stok saat ini</label>
-                    <input type="number" name="stok_saat_ini" value="{{ old('stok_saat_ini', $barang->stok_saat_ini) }}"
-                        class="form-control @error('stok_saat_ini') is-invalid @enderror" min="0" required>
-                    @error('stok_saat_ini')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Stok minimum</label>
-                    <input type="number" name="stok_minimum" value="{{ old('stok_minimum', $barang->stok_minimum) }}"
-                        class="form-control" min="0">
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-12">
                     <label class="form-label">Status</label>
                     <select name="status_barang" class="form-select">
                         <option value="Aktif" @selected(old('status_barang', $barang->status_barang) == 'Aktif')>Aktif
@@ -118,3 +132,20 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputHari = document.getElementById('inputHari');
+        const inputMenit = document.getElementById('inputMenit');
+        const btnCepat = document.querySelectorAll('.btn-cepat');
+
+        btnCepat.forEach(btn => {
+            btn.addEventListener('click', function() {
+                inputHari.value = this.dataset.hari;
+                inputMenit.value = this.dataset.menit;
+            });
+        });
+    });
+</script>
+@endpush

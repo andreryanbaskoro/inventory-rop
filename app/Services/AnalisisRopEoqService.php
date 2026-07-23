@@ -44,8 +44,8 @@ class AnalisisRopEoqService
         $pemakaianRataHarian = $totalKeluar / $periodeHari;
         $pemakaianMaksHarian = $perHari->isEmpty() ? 0.0 : (float) $perHari->max();
 
-        $hari = (float) ($barang->pemasok?->rata_lead_time ?? 1);
-        $menit = (float) ($barang->pemasok?->rata_lead_time_menit ?? 0);
+        $hari = (float) ($barang->lead_time_hari ?? 1);
+        $menit = (float) ($barang->lead_time_menit ?? 0);
         $leadTime = max(0.0001, $hari + ($menit / 1440));
 
         $ss = max(0.0, ($pemakaianMaksHarian - $pemakaianRataHarian) * $leadTime);

@@ -20,26 +20,16 @@ class Pemasok extends Model
         'nama_pemasok',
         'alamat',
         'telepon',
-        'rata_lead_time',
-        'rata_lead_time_menit',
     ];
 
     protected function casts(): array
     {
-        return [
-            'rata_lead_time' => 'integer',
-            'rata_lead_time_menit' => 'integer',
-        ];
+        return [];
     }
 
     public function daftarBarang(): HasMany
     {
         return $this->hasMany(Barang::class, 'id_pemasok', 'id_pemasok');
-    }
-
-    public function daftarPengadaan(): HasMany
-    {
-        return $this->hasMany(PengadaanBarang::class, 'id_pemasok', 'id_pemasok');
     }
 
     public function getRouteKeyName(): string

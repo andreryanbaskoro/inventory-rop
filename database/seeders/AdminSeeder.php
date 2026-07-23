@@ -40,7 +40,6 @@ class AdminSeeder extends Seeder
             [
                 'alamat' => 'Jakarta',
                 'telepon' => '081234567890',
-                'rata_lead_time' => 7,
             ]
         );
 
@@ -48,6 +47,8 @@ class AdminSeeder extends Seeder
             ['nama_barang' => 'Contoh Barang A'],
             [
                 'id_pemasok' => $pemasok->id_pemasok,
+                'lead_time_hari' => 7,
+                'lead_time_menit' => 0,
                 'satuan' => 'PCS',
                 'stok_saat_ini' => 100,
                 'stok_minimum' => 20,

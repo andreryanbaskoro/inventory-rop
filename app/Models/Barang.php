@@ -19,6 +19,8 @@ class Barang extends Model
     protected $fillable = [
         'id_barang',
         'id_pemasok',
+        'lead_time_hari',
+        'lead_time_menit',
         'nama_barang',
         'satuan',
         'satuan_besar',
@@ -35,6 +37,8 @@ class Barang extends Model
     protected function casts(): array
     {
         return [
+            'lead_time_hari' => 'integer',
+            'lead_time_menit' => 'integer',
             'stok_saat_ini' => 'integer',
             'stok_minimum' => 'integer',
             'isi_per_satuan_besar' => 'integer',
@@ -53,11 +57,6 @@ class Barang extends Model
     public function daftarTransaksi(): HasMany
     {
         return $this->hasMany(Transaksi::class, 'id_barang', 'id_barang');
-    }
-
-    public function daftarPengadaan(): HasMany
-    {
-        return $this->hasMany(PengadaanBarang::class, 'id_barang', 'id_barang');
     }
 
     public function getRouteKeyName(): string
