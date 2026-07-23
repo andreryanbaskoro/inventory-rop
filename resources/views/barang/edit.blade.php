@@ -116,13 +116,15 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Biaya pesan (S)</label>
-                    <input type="number" step="0.01" name="biaya_pesan" value="{{ old('biaya_pesan', $barang->biaya_pesan) }}"
+                    <input type="number" step="0.01" name="biaya_pesan" id="inputBiayaPesan" value="{{ old('biaya_pesan', $barang->biaya_pesan) }}"
                         class="form-control" min="0">
+                    <div class="form-text small text-muted" id="helpBiayaPesan">Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp 20.000</strong></div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Biaya simpan per unit per tahun (H)</label>
-                    <input type="number" step="0.01" name="biaya_simpan"
+                    <input type="number" step="0.01" name="biaya_simpan" id="inputBiayaSimpan"
                         value="{{ old('biaya_simpan', $barang->biaya_simpan) }}" class="form-control" min="0">
+                    <div class="form-text small text-muted" id="helpBiayaSimpan">Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp 2.000</strong></div>
                 </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">Perbarui</button>
@@ -146,6 +148,29 @@
                 inputMenit.value = this.dataset.menit;
             });
         });
+
+        // Fitur Pintar Estimasi EOQ
+        const inputHargaBeli = document.querySelector('input[name="harga_beli"]');
+        const helpBiayaPesan = document.getElementById('helpBiayaPesan');
+        const helpBiayaSimpan = document.getElementById('helpBiayaSimpan');
+
+        function updateEstimasi() {
+            let harga = parseFloat(inputHargaBeli.value) || 0;
+            
+            let estimasiPesan = harga * 0.05;
+            if (estimasiPesan <= 0) estimasiPesan = 20000;
+            
+            let estimasiSimpan = harga * 0.20;
+            if (estimasiSimpan <= 0) estimasiSimpan = 2000;
+
+            helpBiayaPesan.innerHTML = `Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp ${estimasiPesan.toLocaleString('id-ID')} (5% Harga Beli)</strong>`;
+            helpBiayaSimpan.innerHTML = `Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp ${estimasiSimpan.toLocaleString('id-ID')} (20% Harga Beli)</strong>`;
+        }
+
+        if (inputHargaBeli) {
+            inputHargaBeli.addEventListener('input', updateEstimasi);
+            updateEstimasi();
+        }
     });
 </script>
 @endpush
