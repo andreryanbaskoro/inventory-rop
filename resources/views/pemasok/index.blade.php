@@ -25,13 +25,48 @@
                         <th>ID</th>
                         <th>Nama</th>
                         <th>Telepon</th>
-
+                        <th>Barang</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
             </table>
         </div>
     </div>
+
+<div class="modal fade" id="modalBarang" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-box-seam me-2"></i>Barang dari <span id="namaPemasokModal"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="tabelBarangModal">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nama Barang</th>
+                                <th>Stok</th>
+                                <th>Lead Time</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="loadingBarang" class="text-center py-4 d-none">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">Memuat data barang...</p>
+                </div>
+                <div id="emptyBarang" class="text-center py-4 d-none">
+                    <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
+                    <p class="mt-2 text-muted">Belum ada barang dari pemasok ini</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('styles')
@@ -57,7 +92,12 @@
                 {
                     data: 'telepon'
                 },
-
+                {
+                    data: 'jumlah_barang',
+                    render: function(data, type, row) {
+                        return `<button class="btn btn-sm btn-outline-primary rounded-pill btn-lihat-barang" data-id="${row.id_pemasok}" data-nama="${row.nama_pemasok}"><i class="bi bi-box-seam"></i> ${data} Barang</button>`;
+                    }
+                },
                 {
                     data: 'aksi',
                     orderable: false,
@@ -67,6 +107,54 @@
             language: {
                 url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/id.json'
             }
+        });
+
+        // Modal Barang Handler
+        const modalBarang = new bootstrap.Modal(document.getElementById('modalBarang'));
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-lihat-barang');
+            if (!btn) return;
+            
+            const idPemasok = btn.dataset.id;
+            const namaPemasok = btn.dataset.nama;
+            
+            document.getElementById('namaPemasokModal').textContent = namaPemasok;
+            document.getElementById('loadingBarang').classList.remove('d-none');
+            document.getElementById('emptyBarang').classList.add('d-none');
+            document.getElementById('tabelBarangModal').querySelector('tbody').innerHTML = '';
+            
+            modalBarang.show();
+            
+            fetch('/pemasok/' + idPemasok + '/barang')
+                .then(r => r.json())
+                .then(result => {
+                    document.getElementById('loadingBarang').classList.add('d-none');
+                    const tbody = document.getElementById('tabelBarangModal').querySelector('tbody');
+                    
+                    if (result.data.length === 0) {
+                        document.getElementById('emptyBarang').classList.remove('d-none');
+                        return;
+                    }
+                    
+                    result.data.forEach(b => {
+                        const stokClass = b.stok_saat_ini <= 0 ? 'text-danger fw-bold' : '';
+                        const statusBadge = b.status_barang === 'Aktif' 
+                            ? '<span class="badge bg-success">Aktif</span>' 
+                            : '<span class="badge bg-secondary">Nonaktif</span>';
+                        
+                        tbody.innerHTML += `<tr>
+                            <td>${b.nama_barang}</td>
+                            <td class="${stokClass}">${b.stok_saat_ini} ${b.satuan}</td>
+                            <td>${b.lead_time}</td>
+                            <td>${statusBadge}</td>
+                            <td><a href="${b.url_masuk}" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Masuk</a></td>
+                        </tr>`;
+                    });
+                })
+                .catch(err => {
+                    document.getElementById('loadingBarang').classList.add('d-none');
+                    document.getElementById('tabelBarangModal').querySelector('tbody').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Gagal memuat data</td></tr>';
+                });
         });
     </script>
 @endpush

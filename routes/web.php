@@ -29,6 +29,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('barang', BarangController::class)->except(['show']);
 
     Route::get('pemasok/data', [PemasokController::class, 'data'])->name('pemasok.data');
+    Route::get('pemasok/{pemasok}/barang', [PemasokController::class, 'barang'])->name('pemasok.barang');
     Route::resource('pemasok', PemasokController::class);
 
     Route::get('transaksi/data', [TransaksiController::class, 'data'])->name('transaksi.data');

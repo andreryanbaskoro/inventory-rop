@@ -20,7 +20,7 @@ class PemasokController extends Controller
 
     public function data(Request $request): JsonResponse
     {
-        $queryDasar = Pemasok::query();
+        $queryDasar = Pemasok::withCount('daftarBarang');
 
         $query = clone $queryDasar;
 
@@ -38,8 +38,6 @@ class PemasokController extends Controller
             0 => 'id_pemasok',
             1 => 'nama_pemasok',
             2 => 'telepon',
-            3 => 'rata_lead_time',
-            4 => 'rata_lead_time_menit',
         ];
 
         return $this->responseDataTables(
@@ -52,11 +50,35 @@ class PemasokController extends Controller
                     'id_pemasok' => $pemasok->id_pemasok,
                     'nama_pemasok' => $pemasok->nama_pemasok,
                     'telepon' => $pemasok->telepon ?? '-',
-                    'rata_lead_time' => $pemasok->rata_lead_time . ' Hari ' . $pemasok->rata_lead_time_menit . ' Menit',
+                    'jumlah_barang' => $pemasok->daftar_barang_count,
                     'aksi' => view('pemasok._aksi', ['pemasok' => $pemasok])->render(),
                 ];
             }
         );
+    }
+
+    public function barang(Pemasok $pemasok): JsonResponse
+    {
+        $barang = $pemasok->daftarBarang()
+            ->orderBy('nama_barang')
+            ->get()
+            ->map(function ($b) {
+                $lt = $b->lead_time_hari . ' Hari';
+                if ($b->lead_time_menit > 0) {
+                    $lt .= ' ' . $b->lead_time_menit . ' Menit';
+                }
+                return [
+                    'id_barang' => $b->id_barang,
+                    'nama_barang' => $b->nama_barang,
+                    'stok_saat_ini' => $b->stok_saat_ini,
+                    'satuan' => $b->satuan,
+                    'lead_time' => $lt,
+                    'status_barang' => $b->status_barang,
+                    'url_masuk' => route('transaksi.create', ['jenis' => 'Masuk', 'id_barang' => $b->id_barang]),
+                ];
+            });
+
+        return response()->json(['data' => $barang]);
     }
 
     public function create(): View
@@ -92,6 +114,8 @@ class PemasokController extends Controller
 
     public function edit(Pemasok $pemasok): View
     {
+        $pemasok->load(['daftarBarang' => fn ($q) => $q->orderBy('nama_barang')]);
+
         return view('pemasok.edit', compact('pemasok'));
     }
 
