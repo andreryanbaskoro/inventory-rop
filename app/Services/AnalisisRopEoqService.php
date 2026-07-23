@@ -74,7 +74,8 @@ class AnalisisRopEoqService
             $eoq = sqrt((2 * $D * $S) / $H);
         }
 
-        $perluReorder = $barang->stok_saat_ini <= $rop;
+        // Gunakan ceil() agar peringatan muncul di batas integer yang tepat
+        $perluReorder = $barang->stok_saat_ini <= ceil($rop);
 
         return [
             'periode_hari' => $periodeHari,
