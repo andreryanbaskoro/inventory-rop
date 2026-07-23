@@ -105,15 +105,15 @@
                     </tr>
                     <tr>
                         <td class="fw-semibold">Pemakaian Rata-rata (<var>d<sub>avg</sub></var>)<br><small class="text-muted fw-normal"><var>Total</var> / {{ $periodeHari }}</small></td>
-                        <td class="fw-bold text-dark">{{ number_format($analisis['pemakaian_rata_harian'], 4, ',', '.') }} unit/hari</td>
+                        <td class="fw-bold text-dark">{{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} unit/hari</td>
                     </tr>
                     <tr>
                         <td class="fw-semibold">Pemakaian Maksimum (<var>d<sub>max</sub></var>)</td>
-                        <td class="fw-bold text-dark">{{ number_format($analisis['pemakaian_maks_harian'], 2, ',', '.') }} unit/hari</td>
+                        <td class="fw-bold text-dark">{{ $analisis['pemakaian_maks_harian'] }} unit/hari</td>
                     </tr>
                     <tr>
                         <td class="fw-semibold">Lead Time (<var>L</var>)<br><small class="text-muted fw-normal">{{ $analisis['lead_time_hari'] }} hari + {{ $analisis['lead_time_menit'] }} menit</small></td>
-                        <td class="fw-bold text-dark">{{ number_format($analisis['lead_time_desimal'], 4, ',', '.') }} hari</td>
+                        <td class="fw-bold text-dark">{{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} hari</td>
                     </tr>
                 </tbody>
             </table>
@@ -127,22 +127,22 @@
                 <div class="p-4 rounded-3 mb-4" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h6 class="fw-bold text-dark mb-0">Safety Stock (SS)</h6>
-                        <span class="badge bg-primary fs-6">{{ number_format($analisis['safety_stock'], 4, ',', '.') }}</span>
+                        <span class="badge bg-primary fs-6">{{ $analisis['safety_stock'] }}</span>
                     </div>
                     <div class="font-monospace small text-muted">
                         <div class="mb-1 text-dark"><i class="bi bi-braces text-primary"></i> Rumus: SS = (<var>d<sub>max</sub></var> - <var>d<sub>avg</sub></var>) &times; <var>L</var></div>
-                        <div><i class="bi bi-arrow-return-right text-primary"></i> Substitusi: SS = ({{ number_format($analisis['pemakaian_maks_harian'], 2, ',', '.') }} - {{ number_format($analisis['pemakaian_rata_harian'], 2, ',', '.') }}) &times; {{ number_format($analisis['lead_time_desimal'], 2, ',', '.') }}</div>
+                        <div><i class="bi bi-arrow-return-right text-primary"></i> Substitusi: SS = ({{ str_replace('.', ',', round($analisis['pemakaian_maks_harian'], 2)) }} - {{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }}) &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }}</div>
                     </div>
                 </div>
 
                 <div class="p-4 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h6 class="fw-bold text-dark mb-0">Reorder Point (ROP)</h6>
-                        <span class="badge bg-danger fs-6">{{ number_format($analisis['rop'], 4, ',', '.') }}</span>
+                        <span class="badge bg-danger fs-6">{{ $analisis['rop'] }}</span>
                     </div>
                     <div class="font-monospace small text-muted">
                         <div class="mb-1 text-dark"><i class="bi bi-braces text-danger"></i> Rumus: ROP = (<var>d<sub>avg</sub></var> &times; <var>L</var>) + SS</div>
-                        <div><i class="bi bi-arrow-return-right text-danger"></i> Substitusi: ROP = ({{ number_format($analisis['pemakaian_rata_harian'], 2, ',', '.') }} &times; {{ number_format($analisis['lead_time_desimal'], 2, ',', '.') }}) + {{ number_format($analisis['safety_stock'], 2, ',', '.') }}</div>
+                        <div><i class="bi bi-arrow-return-right text-danger"></i> Substitusi: ROP = ({{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }}) + {{ $analisis['safety_stock'] }}</div>
                     </div>
                 </div>
             </div>
