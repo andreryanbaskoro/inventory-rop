@@ -20,8 +20,8 @@
     <div class="col-12 col-lg-4 col-md-6">
         <div class="card cm-stat-card h-100 hover-lift">
             <div class="card-body d-flex align-items-center gap-3 py-4">
-                <div class="cm-stat-icon" style="color: {{ $analisis['perlu_reorder'] ? '#dc3545' : '#198754' }}; background: {{ $analisis['perlu_reorder'] ? '#f8d7da' : '#d1e7dd' }}; border-color: transparent;">
-                    <i class="bi {{ $analisis['perlu_reorder'] ? 'bi-exclamation-triangle-fill' : 'bi-shield-check-fill' }}"></i>
+                <div class="cm-stat-icon" style="color: {{ $analisis['perlu_reorder'] ? '#e3342f' : '#38c172' }}; background: {{ $analisis['perlu_reorder'] ? '#fce4e4' : '#e0f8e9' }}; border-color: transparent; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi {{ $analisis['perlu_reorder'] ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill' }}"></i>
                 </div>
                 <div>
                     <div class="cm-stat-label">Status Inventaris</div>
