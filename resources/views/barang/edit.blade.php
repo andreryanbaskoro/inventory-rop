@@ -163,8 +163,8 @@
             let estimasiSimpan = harga * 0.20;
             if (estimasiSimpan <= 0) estimasiSimpan = 2000;
 
-            helpBiayaPesan.innerHTML = `Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp ${estimasiPesan.toLocaleString('id-ID')} (5% Harga Beli)</strong>`;
-            helpBiayaSimpan.innerHTML = `Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp ${estimasiSimpan.toLocaleString('id-ID')} (20% Harga Beli)</strong>`;
+            helpBiayaPesan.innerHTML = `Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp ${estimasiPesan.toLocaleString('id-ID')} (5% Harga Beli)</strong> <button type="button" class="btn btn-sm btn-link p-0 ms-1 text-decoration-none" onclick="document.getElementById('inputBiayaPesan').value = ${estimasiPesan}">[Isi ke Form]</button>`;
+            helpBiayaSimpan.innerHTML = `Biarkan 0 untuk otomatis estimasi: <strong class="text-primary">Rp ${estimasiSimpan.toLocaleString('id-ID')} (20% Harga Beli)</strong> <button type="button" class="btn btn-sm btn-link p-0 ms-1 text-decoration-none" onclick="document.getElementById('inputBiayaSimpan').value = ${estimasiSimpan}">[Isi ke Form]</button>`;
         }
 
         if (inputHargaBeli) {
