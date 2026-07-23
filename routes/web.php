@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnalisisController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PemasokController;
 use App\Http\Controllers\LaporanController;
@@ -35,6 +36,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('transaksi/data', [TransaksiController::class, 'data'])->name('transaksi.data');
     Route::resource('transaksi', TransaksiController::class);
 
+    Route::get('backup', [BackupController::class, 'index'])->name('backup.index');
+    Route::get('backup/download', [BackupController::class, 'download'])->name('backup.download');
 });
 
 Route::middleware('auth')->group(function () {
