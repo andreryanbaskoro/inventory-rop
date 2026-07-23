@@ -104,12 +104,14 @@
                         <td class="fw-bold text-dark">{{ number_format($analisis['total_keluar_periode'], 0, ',', '.') }} {{ $barang->satuan }}</td>
                     </tr>
                     <tr>
-                        <td class="fw-semibold">Pemakaian Rata-rata (<var>d<sub>avg</sub></var>)<br>
-                            <small class="text-muted fw-normal">
-                                {{ number_format($analisis['total_keluar_periode'], 0, ',', '.') }} / {{ $periodeHari }} hari
-                            </small>
+                        <td class="fw-semibold">Pemakaian Rata-rata (<var>d<sub>avg</sub></var>)</td>
+                        <td class="fw-bold text-dark">
+                            {{ number_format($analisis['total_keluar_periode'], 0, ',', '.') }} {{ $barang->satuan }} per {{ $periodeHari }} Hari
+                            
+                            <div class="text-muted small fw-normal mt-1">
+                                <i class="bi bi-arrow-right-short"></i> Dikonversi ke desimal: <strong>{{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 4)) }} {{ $barang->satuan }}/hari</strong>
+                            </div>
                         </td>
-                        <td class="fw-bold text-dark">{{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari</td>
                     </tr>
                     <tr>
                         <td class="fw-semibold">Pemakaian Maksimum (<var>d<sub>max</sub></var>)</td>
