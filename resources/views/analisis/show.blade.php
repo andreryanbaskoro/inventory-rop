@@ -15,22 +15,20 @@
 
 @section('konten')
 <!-- 1. HEADER WIDGETS -->
-<div class="row">
+<div class="row g-3 mb-4">
     <!-- Status Card -->
     <div class="col-12 col-lg-4 col-md-6">
-        <div class="card {{ $analisis['perlu_reorder'] ? 'bg-danger' : 'bg-success' }}">
-            <div class="card-body px-4 py-4-5">
-                <div class="row">
-                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-3 d-flex justify-content-start">
-                        <div class="stats-icon white mb-2">
-                            <i class="bi {{ $analisis['perlu_reorder'] ? 'bi-exclamation-triangle-fill' : 'bi-shield-check-fill' }} text-white fs-3"></i>
-                        </div>
+        <div class="card cm-stat-card h-100 hover-lift">
+            <div class="card-body d-flex align-items-center gap-3 py-4">
+                <div class="cm-stat-icon" style="color: {{ $analisis['perlu_reorder'] ? '#dc3545' : '#198754' }}; background: {{ $analisis['perlu_reorder'] ? '#f8d7da' : '#d1e7dd' }}; border-color: transparent;">
+                    <i class="bi {{ $analisis['perlu_reorder'] ? 'bi-exclamation-triangle-fill' : 'bi-shield-check-fill' }}"></i>
+                </div>
+                <div>
+                    <div class="cm-stat-label">Status Inventaris</div>
+                    <div class="cm-stat-value" style="font-size: 1.25rem; {{ $analisis['perlu_reorder'] ? 'color: #dc3545;' : 'color: #198754;' }}">
+                        {{ $analisis['perlu_reorder'] ? 'PERLU REORDER' : 'STOK AMAN' }}
                     </div>
-                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-9">
-                        <h6 class="text-white font-semibold">Status Inventaris</h6>
-                        <h6 class="font-extrabold text-white mb-0">{{ $analisis['perlu_reorder'] ? 'PERLU REORDER' : 'STOK AMAN' }}</h6>
-                        <small class="text-white mt-1 d-block">Stok Riil: {{ number_format($barang->stok_saat_ini ?? 0, 0, ',', '.') }} {{ $barang->satuan }}</small>
-                    </div>
+                    <span class="text-muted small">Stok Riil: {{ number_format($barang->stok_saat_ini ?? 0, 0, ',', '.') }} {{ $barang->satuan }}</span>
                 </div>
             </div>
         </div>
@@ -38,19 +36,15 @@
     
     <!-- ROP Card -->
     <div class="col-12 col-lg-4 col-md-6">
-        <div class="card">
-            <div class="card-body px-4 py-4-5">
-                <div class="row">
-                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-3 d-flex justify-content-start">
-                        <div class="stats-icon blue mb-2">
-                            <i class="bi bi-bullseye text-primary fs-3"></i>
-                        </div>
-                    </div>
-                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-9">
-                        <h6 class="text-muted font-semibold">Reorder Point (ROP)</h6>
-                        <h6 class="font-extrabold mb-0">{{ number_format($analisis['rop'], 2, ',', '.') }}</h6>
-                        <small class="text-muted mt-1 d-block">Titik pemesanan kembali</small>
-                    </div>
+        <div class="card cm-stat-card h-100 hover-lift">
+            <div class="card-body d-flex align-items-center gap-3 py-4">
+                <div class="cm-stat-icon text-primary" style="background: rgba(79, 70, 229, 0.1); border-color: transparent;">
+                    <i class="bi bi-bullseye"></i>
+                </div>
+                <div>
+                    <div class="cm-stat-label">Reorder Point (ROP)</div>
+                    <div class="cm-stat-value text-dark">{{ number_format($analisis['rop'], 2, ',', '.') }}</div>
+                    <span class="text-muted small">Titik pemesanan kembali</span>
                 </div>
             </div>
         </div>
@@ -58,23 +52,17 @@
 
     <!-- EOQ Card -->
     <div class="col-12 col-lg-4 col-md-6">
-        <div class="card">
-            <div class="card-body px-4 py-4-5">
-                <div class="row">
-                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-3 d-flex justify-content-start">
-                        <div class="stats-icon purple mb-2">
-                            <i class="bi bi-box-seam text-info fs-3"></i>
-                        </div>
+        <div class="card cm-stat-card h-100 hover-lift">
+            <div class="card-body d-flex align-items-center gap-3 py-4">
+                <div class="cm-stat-icon text-info" style="background: rgba(13, 202, 240, 0.1); border-color: transparent;">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div>
+                    <div class="cm-stat-label">Economic Order Qty</div>
+                    <div class="cm-stat-value {{ $analisis['eoq'] === null ? 'text-muted' : 'text-dark' }}">
+                        {{ $analisis['eoq'] !== null ? number_format($analisis['eoq'], 2, ',', '.') : 'N/A' }}
                     </div>
-                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-9">
-                        <h6 class="text-muted font-semibold">Economic Order Qty</h6>
-                        @if($analisis['eoq'] !== null)
-                            <h6 class="font-extrabold mb-0">{{ number_format($analisis['eoq'], 2, ',', '.') }}</h6>
-                        @else
-                            <h6 class="font-extrabold text-muted mb-0">N/A</h6>
-                        @endif
-                        <small class="text-muted mt-1 d-block">Rekomendasi jumlah pesanan</small>
-                    </div>
+                    <span class="text-muted small">Rekomendasi jumlah pesanan</span>
                 </div>
             </div>
         </div>
@@ -82,13 +70,13 @@
 </div>
 
 <!-- 2. DETAIL PERHITUNGAN -->
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="card-title mb-0"><i class="bi bi-calculator text-primary me-2"></i>Penjabaran Langkah Perhitungan</h5>
+<div class="card mb-4 border-0">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <h5 class="mb-0 fw-bold"><i class="bi bi-calculator me-2 text-primary"></i>Penjabaran Langkah Perhitungan</h5>
         
-        <form method="GET" action="{{ route('analisis.show', $barang) }}" class="d-flex align-items-center">
-            <label for="periode" class="me-2 fw-bold text-muted small text-nowrap">Periode Analisis:</label>
-            <select name="periode" id="periode" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+        <form method="GET" action="{{ route('analisis.show', $barang) }}" class="d-flex align-items-center bg-light p-1 rounded-3">
+            <label for="periode" class="me-2 fw-semibold text-muted small ps-2 text-nowrap"><i class="bi bi-calendar3 me-1"></i>Periode:</label>
+            <select name="periode" id="periode" class="form-select form-select-sm border-0 bg-transparent fw-bold" onchange="this.form.submit()" style="width: 120px; cursor:pointer;">
                 <option value="30" {{ $periodeHari == 30 ? 'selected' : '' }}>30 Hari</option>
                 <option value="60" {{ $periodeHari == 60 ? 'selected' : '' }}>60 Hari</option>
                 <option value="90" {{ $periodeHari == 90 ? 'selected' : '' }}>90 Hari</option>
@@ -98,81 +86,91 @@
         </form>
     </div>
     
-    <div class="card-body">
+    <div class="card-body pt-3">
         
         <!-- Variabel Historis -->
-        <h6 class="font-bold mb-3 text-uppercase text-secondary">1. Variabel Historis ({{ $periodeHari }} Hari Terakhir)</h6>
+        <h6 class="fw-bold mb-3 text-uppercase" style="color: var(--cm-text-muted); font-size: 0.8rem; letter-spacing: 0.5px;">1. Variabel Historis ({{ $periodeHari }} Hari Terakhir)</h6>
         <div class="table-responsive mb-4">
             <table class="table table-bordered table-striped mb-0">
-                <tbody>
+                <tbody class="align-middle">
                     <tr>
-                        <td width="30%"><strong>Total Pemakaian (<var>Total</var>)</strong></td>
-                        <td>{{ number_format($analisis['total_keluar_periode'], 0, ',', '.') }} unit</td>
+                        <td width="30%" class="fw-semibold">Total Pemakaian (<var>Total</var>)</td>
+                        <td class="fw-bold text-dark">{{ number_format($analisis['total_keluar_periode'], 0, ',', '.') }} unit</td>
                     </tr>
                     <tr>
-                        <td><strong>Pemakaian Rata-rata (<var>d<sub>avg</sub></var>)</strong><br><small class="text-muted"><var>Total</var> / {{ $periodeHari }}</small></td>
-                        <td>{{ number_format($analisis['pemakaian_rata_harian'], 4, ',', '.') }} unit/hari</td>
+                        <td class="fw-semibold">Pemakaian Rata-rata (<var>d<sub>avg</sub></var>)<br><small class="text-muted fw-normal"><var>Total</var> / {{ $periodeHari }}</small></td>
+                        <td class="fw-bold text-dark">{{ number_format($analisis['pemakaian_rata_harian'], 4, ',', '.') }} unit/hari</td>
                     </tr>
                     <tr>
-                        <td><strong>Pemakaian Maksimum (<var>d<sub>max</sub></var>)</strong></td>
-                        <td>{{ number_format($analisis['pemakaian_maks_harian'], 2, ',', '.') }} unit/hari</td>
+                        <td class="fw-semibold">Pemakaian Maksimum (<var>d<sub>max</sub></var>)</td>
+                        <td class="fw-bold text-dark">{{ number_format($analisis['pemakaian_maks_harian'], 2, ',', '.') }} unit/hari</td>
                     </tr>
                     <tr>
-                        <td><strong>Lead Time (<var>L</var>)</strong><br><small class="text-muted">{{ $analisis['lead_time_hari'] }} hari + {{ $analisis['lead_time_menit'] }} menit</small></td>
-                        <td>{{ number_format($analisis['lead_time_desimal'], 4, ',', '.') }} hari</td>
+                        <td class="fw-semibold">Lead Time (<var>L</var>)<br><small class="text-muted fw-normal">{{ $analisis['lead_time_hari'] }} hari + {{ $analisis['lead_time_menit'] }} menit</small></td>
+                        <td class="fw-bold text-dark">{{ number_format($analisis['lead_time_desimal'], 4, ',', '.') }} hari</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="row">
+        <div class="row g-4">
             <!-- SS & ROP (Kiri) -->
             <div class="col-lg-6">
-                <h6 class="font-bold mb-3 text-uppercase text-secondary">2. Safety Stock & ROP</h6>
+                <h6 class="fw-bold mb-3 text-uppercase" style="color: var(--cm-text-muted); font-size: 0.8rem; letter-spacing: 0.5px;">2. Safety Stock & ROP</h6>
                 
-                <div class="alert alert-secondary">
-                    <h6 class="alert-heading font-bold text-dark mb-2">Safety Stock (SS)</h6>
-                    <div class="font-monospace small mb-2 text-dark">
-                        <div><i class="bi bi-braces"></i> Rumus: SS = (<var>d<sub>max</sub></var> - <var>d<sub>avg</sub></var>) &times; <var>L</var></div>
-                        <div><i class="bi bi-arrow-right-short"></i> Substitusi: SS = ({{ number_format($analisis['pemakaian_maks_harian'], 2, ',', '.') }} - {{ number_format($analisis['pemakaian_rata_harian'], 2, ',', '.') }}) &times; {{ number_format($analisis['lead_time_desimal'], 2, ',', '.') }}</div>
+                <div class="p-4 rounded-3 mb-4" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="fw-bold text-dark mb-0">Safety Stock (SS)</h6>
+                        <span class="badge bg-primary fs-6">{{ number_format($analisis['safety_stock'], 4, ',', '.') }}</span>
                     </div>
-                    <span class="badge bg-primary fs-6">Hasil SS = {{ number_format($analisis['safety_stock'], 4, ',', '.') }}</span>
+                    <div class="font-monospace small text-muted">
+                        <div class="mb-1 text-dark"><i class="bi bi-braces text-primary"></i> Rumus: SS = (<var>d<sub>max</sub></var> - <var>d<sub>avg</sub></var>) &times; <var>L</var></div>
+                        <div><i class="bi bi-arrow-return-right text-primary"></i> Substitusi: SS = ({{ number_format($analisis['pemakaian_maks_harian'], 2, ',', '.') }} - {{ number_format($analisis['pemakaian_rata_harian'], 2, ',', '.') }}) &times; {{ number_format($analisis['lead_time_desimal'], 2, ',', '.') }}</div>
+                    </div>
                 </div>
 
-                <div class="alert alert-secondary">
-                    <h6 class="alert-heading font-bold text-dark mb-2">Reorder Point (ROP)</h6>
-                    <div class="font-monospace small mb-2 text-dark">
-                        <div><i class="bi bi-braces"></i> Rumus: ROP = (<var>d<sub>avg</sub></var> &times; <var>L</var>) + SS</div>
-                        <div><i class="bi bi-arrow-right-short"></i> Substitusi: ROP = ({{ number_format($analisis['pemakaian_rata_harian'], 2, ',', '.') }} &times; {{ number_format($analisis['lead_time_desimal'], 2, ',', '.') }}) + {{ number_format($analisis['safety_stock'], 2, ',', '.') }}</div>
+                <div class="p-4 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="fw-bold text-dark mb-0">Reorder Point (ROP)</h6>
+                        <span class="badge bg-danger fs-6">{{ number_format($analisis['rop'], 4, ',', '.') }}</span>
                     </div>
-                    <span class="badge bg-danger fs-6">Hasil ROP = {{ number_format($analisis['rop'], 4, ',', '.') }}</span>
+                    <div class="font-monospace small text-muted">
+                        <div class="mb-1 text-dark"><i class="bi bi-braces text-danger"></i> Rumus: ROP = (<var>d<sub>avg</sub></var> &times; <var>L</var>) + SS</div>
+                        <div><i class="bi bi-arrow-return-right text-danger"></i> Substitusi: ROP = ({{ number_format($analisis['pemakaian_rata_harian'], 2, ',', '.') }} &times; {{ number_format($analisis['lead_time_desimal'], 2, ',', '.') }}) + {{ number_format($analisis['safety_stock'], 2, ',', '.') }}</div>
+                    </div>
                 </div>
             </div>
 
             <!-- EOQ (Kanan) -->
             <div class="col-lg-6">
-                <h6 class="font-bold mb-3 text-uppercase text-secondary">3. Economic Order Quantity</h6>
+                <h6 class="fw-bold mb-3 text-uppercase" style="color: var(--cm-text-muted); font-size: 0.8rem; letter-spacing: 0.5px;">3. Economic Order Quantity</h6>
                 
-                <div class="alert alert-secondary h-100">
-                    <h6 class="alert-heading font-bold text-dark mb-3">Hasil EOQ</h6>
+                <div class="p-4 rounded-3 h-100" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold text-dark mb-0">Hasil EOQ</h6>
+                        @if($analisis['eoq'] !== null)
+                            <span class="badge bg-success fs-6">{{ number_format($analisis['eoq'], 4, ',', '.') }}</span>
+                        @else
+                            <span class="badge bg-secondary fs-6">N/A</span>
+                        @endif
+                    </div>
                     
-                    <ul class="list-unstyled mb-3 small text-dark">
-                        <li><strong>Biaya Pesan (S):</strong> Rp {{ number_format($barang->biaya_pesan, 0, ',', '.') }}</li>
-                        <li><strong>Biaya Simpan (H):</strong> Rp {{ number_format($barang->biaya_simpan, 0, ',', '.') }} / unit / tahun</li>
+                    <ul class="list-unstyled mb-3 small text-dark bg-white p-3 rounded border">
+                        <li class="mb-2"><strong>Biaya Pesan (S):</strong> Rp {{ number_format($barang->biaya_pesan, 0, ',', '.') }}</li>
+                        <li class="mb-0"><strong>Biaya Simpan (H):</strong> Rp {{ number_format($barang->biaya_simpan, 0, ',', '.') }} <span class="text-muted">/ unit / tahun</span></li>
                     </ul>
 
                     @if($analisis['eoq'] !== null)
-                        <div class="font-monospace small mb-3 text-dark bg-white p-2 rounded">
-                            <div class="mb-1"><i class="bi bi-braces"></i> Rumus: EOQ = &radic;((2 &times; D &times; S) / H)</div>
+                        <div class="font-monospace small text-muted">
+                            <div class="mb-1 text-dark"><i class="bi bi-braces text-success"></i> Rumus: EOQ = &radic;((2 &times; D &times; S) / H)</div>
                             @php $estimasiTahunan = $analisis['pemakaian_rata_harian'] * 365; @endphp
-                            <div class="mb-1"><i class="bi bi-info-circle"></i> D (Permintaan Tahunan) = <var>d<sub>avg</sub></var> &times; 365 = {{ number_format($estimasiTahunan, 2, ',', '.') }}</div>
-                            <div><i class="bi bi-arrow-right-short"></i> Substitusi: EOQ = &radic;((2 &times; {{ number_format($estimasiTahunan, 2, ',', '.') }} &times; {{ number_format($barang->biaya_pesan, 0, '', '') }}) / {{ number_format($barang->biaya_simpan, 0, '', '') }})</div>
+                            <div class="mb-1"><i class="bi bi-info-circle text-success"></i> D (Permintaan Tahunan) = <var>d<sub>avg</sub></var> &times; 365 = {{ number_format($estimasiTahunan, 2, ',', '.') }}</div>
+                            <div><i class="bi bi-arrow-return-right text-success"></i> Substitusi: EOQ = &radic;((2 &times; {{ number_format($estimasiTahunan, 2, ',', '.') }} &times; {{ number_format($barang->biaya_pesan, 0, '', '') }}) / {{ number_format($barang->biaya_simpan, 0, '', '') }})</div>
                         </div>
-                        <span class="badge bg-success fs-6">Hasil EOQ = {{ number_format($analisis['eoq'], 4, ',', '.') }}</span>
                     @else
-                        <div class="alert alert-warning mb-0 border-0">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> 
-                            EOQ tidak dapat dihitung. Pastikan Biaya Pesan dan Biaya Simpan diatur lebih dari 0.
+                        <div class="alert alert-warning mb-0 border-0 d-flex gap-2">
+                            <i class="bi bi-exclamation-triangle-fill"></i> 
+                            <div>EOQ tidak dapat dihitung. Pastikan Biaya Pesan dan Biaya Simpan diatur lebih dari 0.</div>
                         </div>
                     @endif
                 </div>
