@@ -157,10 +157,10 @@
         function updateEstimasi() {
             let harga = parseFloat(inputHargaBeli.value) || 0;
             
-            let estimasiPesan = harga * 0.05;
+            let estimasiPesan = Math.ceil((harga * 0.05) / 100) * 100;
             if (estimasiPesan <= 0) estimasiPesan = 20000;
             
-            let estimasiSimpan = harga * 0.20;
+            let estimasiSimpan = Math.ceil((harga * 0.20) / 100) * 100;
             if (estimasiSimpan <= 0) estimasiSimpan = 2000;
 
             const renderUI = (nominal, persentase, inputId) => `

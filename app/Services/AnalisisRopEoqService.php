@@ -56,7 +56,7 @@ class AnalisisRopEoqService
         $S = (float) $barang->biaya_pesan;
         $isAsumsiS = false;
         if ($S <= 0) {
-            $S = 0.05 * (float) $barang->harga_beli; // 5% dari harga beli
+            $S = ceil((0.05 * (float) $barang->harga_beli) / 100) * 100; // 5% dari harga beli, bulatkan ke ratusan terdekat
             if ($S <= 0) $S = 20000.0; // Fallback darurat
             $isAsumsiS = true;
         }
@@ -64,7 +64,7 @@ class AnalisisRopEoqService
         $H = (float) $barang->biaya_simpan;
         $isAsumsiH = false;
         if ($H <= 0) {
-            $H = 0.20 * (float) $barang->harga_beli; // 20% dari harga beli
+            $H = ceil((0.20 * (float) $barang->harga_beli) / 100) * 100; // 20% dari harga beli, bulatkan ke ratusan terdekat
             if ($H <= 0) $H = 2000.0; // Fallback darurat jika harga beli juga 0
             $isAsumsiH = true;
         }
