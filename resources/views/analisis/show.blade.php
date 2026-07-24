@@ -48,7 +48,10 @@
                     <i class="bi bi-bullseye"></i>
                 </div>
                 <div>
-                    <div class="cm-stat-label">Reorder Point (ROP)</div>
+                    <div class="cm-stat-label">
+                        Reorder Point (ROP)
+                        <i class="bi bi-question-circle-fill ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Titik batas. Jika sisa stok mencapai angka ini, Anda harus segera pesan ke Pemasok!"></i>
+                    </div>
                     <div class="cm-stat-value text-dark">{{ number_format($analisis['rop'], 2, ',', '.') }}</div>
                     <span class="text-muted small">Titik pemesanan kembali</span>
                 </div>
@@ -64,11 +67,14 @@
                     <i class="bi bi-box-seam"></i>
                 </div>
                 <div>
-                    <div class="cm-stat-label">Economic Order Qty</div>
+                    <div class="cm-stat-label">
+                        Economic Order Qty
+                        <i class="bi bi-question-circle-fill ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Jumlah pemesanan paling ideal & hemat biaya (biaya pesan + simpan)."></i>
+                    </div>
                     <div class="cm-stat-value {{ $analisis['eoq'] === null ? 'text-muted' : 'text-dark' }}">
                         {{ $analisis['eoq'] !== null ? number_format($analisis['eoq'], 2, ',', '.') : 'N/A' }}
                     </div>
-                    <span class="text-muted small">Rekomendasi pesanan</span>
+                    <span class="text-muted small">Rekomendasi jumlah pesanan</span>
                 </div>
             </div>
         </div>
@@ -152,7 +158,10 @@
                 
                 <div class="p-4 rounded-3 mb-4" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="fw-bold text-dark mb-0">Safety Stock (SS)</h6>
+                        <h6 class="fw-bold text-dark mb-0">
+                            Safety Stock (SS)
+                            <i class="bi bi-question-circle-fill ms-1 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Stok cadangan pengaman (Safety Stock) agar toko tidak kehabisan barang jika pengiriman terlambat."></i>
+                        </h6>
                         <span class="badge bg-primary fs-6">{{ $analisis['safety_stock'] }}</span>
                     </div>
                     <div class="font-monospace small text-muted">

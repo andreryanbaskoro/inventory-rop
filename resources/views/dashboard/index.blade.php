@@ -65,6 +65,42 @@
         </div>
     @endif
 
+    <div class="card mb-4 border-0 shadow-sm" style="background-color: #f8fafc;">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-journal-bookmark-fill text-primary me-2"></i>Panduan Singkat Penggunaan Sistem</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="p-3 bg-white rounded shadow-sm h-100 border">
+                        <div class="text-primary fw-bold mb-1"><i class="bi bi-1-circle-fill me-1"></i> Langkah 1</div>
+                        <strong class="d-block mb-1">Tambah Pemasok</strong>
+                        <p class="small text-muted mb-0">Daftarkan supplier tempat Anda biasa membeli barang kulakan.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 bg-white rounded shadow-sm h-100 border">
+                        <div class="text-primary fw-bold mb-1"><i class="bi bi-2-circle-fill me-1"></i> Langkah 2</div>
+                        <strong class="d-block mb-1">Tambah Barang</strong>
+                        <p class="small text-muted mb-0">Daftarkan barang dagangan dan hubungkan ke Pemasoknya. Tentukan juga lead time-nya.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 bg-white rounded shadow-sm h-100 border">
+                        <div class="text-primary fw-bold mb-1"><i class="bi bi-3-circle-fill me-1"></i> Langkah 3</div>
+                        <strong class="d-block mb-1">Input Transaksi</strong>
+                        <p class="small text-muted mb-0">Catat setiap ada barang masuk (dari supplier) atau keluar (terjual).</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 bg-white rounded shadow-sm h-100 border">
+                        <div class="text-primary fw-bold mb-1"><i class="bi bi-4-circle-fill me-1"></i> Langkah 4</div>
+                        <strong class="d-block mb-1">Pantau Analisis</strong>
+                        <p class="small text-muted mb-0">Buka menu Analisis ROP & EOQ untuk melihat status stok dan kapan harus reorder secara otomatis.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @if ($peringatanReorder->isNotEmpty())
         <div class="card border-0 mb-4 alert-soft-danger" style="border-radius: 16px;">
             <div class="card-header bg-transparent border-0 pt-4 pb-2">

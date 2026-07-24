@@ -39,7 +39,10 @@
                     @enderror
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Lead Time</label>
+                    <label class="form-label">
+                        Lead Time
+                        <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Waktu tunggu sejak barang dipesan ke supplier hingga barang tiba di gudang."></i>
+                    </label>
                     <div class="card bg-light-secondary border-0 mb-0">
                         <div class="card-body p-2">
                             <div class="row g-2 mb-2">
@@ -68,7 +71,10 @@
                 <div class="col-12">
                     <div class="card bg-light-secondary border-0 mt-2 mb-3">
                         <div class="card-body p-3">
-                            <h6 class="mb-2 text-brand"><i class="bi bi-box-seam me-2"></i>Pengaturan Satuan Barang</h6>
+                            <h6 class="mb-2 text-brand">
+                                <i class="bi bi-box-seam me-2"></i>Pengaturan Satuan Barang
+                                <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Tentukan satuan dasar untuk perhitungan stok, dan satuan besar jika barang sering dibeli dalam dus/karton."></i>
+                            </h6>
                             <p class="text-muted small mb-3">
                                 Tentukan satuan dasar/terkecil (wajib) dan satuan besar opsional (misal: Karton) jika Anda membeli barang ini dalam jumlah besar.
                             </p>
@@ -90,7 +96,10 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">
+                        Status
+                        <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Aktif: Bisa ditransaksikan. Nonaktif: Diarsipkan dan berhenti dijual."></i>
+                    </label>
                     <select name="status_barang" class="form-select">
                         <option value="Aktif" @selected(old('status_barang', $barang->status_barang) == 'Aktif')>Aktif
                         </option>
@@ -99,7 +108,10 @@
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Harga beli</label>
+                    <label class="form-label">
+                        Harga beli
+                        <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Harga modal Anda membeli barang ini dari supplier."></i>
+                    </label>
                     <input type="number" step="0.01" name="harga_beli" value="{{ old('harga_beli', $barang->harga_beli) }}"
                         class="form-control @error('harga_beli') is-invalid @enderror" min="0" required>
                     @error('harga_beli')
@@ -107,7 +119,10 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Harga jual</label>
+                    <label class="form-label">
+                        Harga jual
+                        <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Harga jual barang ini kepada konsumen."></i>
+                    </label>
                     <input type="number" step="0.01" name="harga_jual" value="{{ old('harga_jual', $barang->harga_jual) }}"
                         class="form-control @error('harga_jual') is-invalid @enderror" min="0" required>
                     @error('harga_jual')
@@ -115,13 +130,19 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Biaya pesan (S)</label>
+                    <label class="form-label">
+                        Biaya pesan (S)
+                        <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Total biaya (ongkir, admin, parkir, dll) yang dikeluarkan SETIAP KALI Anda memesan barang ini ke Pemasok."></i>
+                    </label>
                     <input type="number" step="0.01" name="biaya_pesan" id="inputBiayaPesan" value="{{ old('biaya_pesan', $barang->biaya_pesan) }}"
                         class="form-control" min="0">
                     <div id="containerBiayaPesan"></div>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Biaya simpan per unit per tahun (H)</label>
+                    <label class="form-label">
+                        Biaya simpan per unit per tahun (H)
+                        <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Biaya perawatan, gudang, asuransi, dll untuk merawat 1 unit barang ini selama SETAHUN."></i>
+                    </label>
                     <input type="number" step="0.01" name="biaya_simpan" id="inputBiayaSimpan"
                         value="{{ old('biaya_simpan', $barang->biaya_simpan) }}" class="form-control" min="0">
                     <div id="containerBiayaSimpan"></div>
