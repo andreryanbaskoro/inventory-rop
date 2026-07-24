@@ -30,7 +30,29 @@
                             <dd class="col-sm-8">{{ $barang->satuan_besar }} (1 {{ $barang->satuan_besar }} = {{ $barang->isi_per_satuan_besar }} {{ $barang->satuan }})</dd>
                         @endif
                         <dt class="col-sm-4">Stok</dt>
-                        <dd class="col-sm-8">{{ $barang->stok_saat_ini }} {{ $barang->satuan }} (min {{ $barang->stok_minimum }} {{ $barang->satuan }})</dd>
+                        <dd class="col-sm-8">
+                            @php
+                                $stok = $barang->stok_saat_ini;
+                                $satuan = $barang->satuan;
+                                $satuanBesar = $barang->satuan_besar;
+                                $isi = $barang->isi_per_satuan_besar;
+                                
+                                $stokTeks = "<strong>{$stok}</strong> {$satuan}";
+                                if ($satuanBesar && $isi > 0 && $stok > 0) {
+                                    $qtyBesar = floor($stok / $isi);
+                                    $qtyKecil = $stok % $isi;
+                                    
+                                    $teksB = [];
+                                    if ($qtyBesar > 0) $teksB[] = "{$qtyBesar} {$satuanBesar}";
+                                    if ($qtyKecil > 0) $teksB[] = "{$qtyKecil} {$satuan}";
+                                    
+                                    if (count($teksB) > 0) {
+                                        $stokTeks .= " <span class='text-muted small'>(Setara dengan " . implode(' + ', $teksB) . ")</span>";
+                                    }
+                                }
+                            @endphp
+                            {!! $stokTeks !!}
+                        </dd>
                         <dt class="col-sm-4">Harga beli / jual</dt>
                         <dd class="col-sm-8">Rp {{ number_format($barang->harga_beli, 0, ',', '.') }} /
                             Rp {{ number_format($barang->harga_jual, 0, ',', '.') }}</dd>

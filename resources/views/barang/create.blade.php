@@ -75,21 +75,29 @@
                                 <i class="bi bi-box-seam me-2"></i>Pengaturan Satuan Barang
                                 <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Tentukan satuan dasar untuk perhitungan stok, dan satuan besar jika barang sering dibeli dalam dus/karton."></i>
                             </h6>
-                            <p class="text-muted small mb-3">
-                                Tentukan satuan dasar/terkecil (wajib) dan satuan besar opsional (misal: Karton) jika Anda membeli barang ini dalam jumlah besar.
-                            </p>
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <label class="form-label text-secondary small fw-bold">Satuan Dasar/Terkecil <span class="text-danger">*</span></label>
-                                    <input type="text" name="satuan" value="{{ old('satuan', 'PCS') }}" class="form-control" placeholder="Contoh: PCS">
+                            <div class="row g-2 mt-2">
+                                <div class="col-md-12">
+                                    <label class="form-label text-secondary small fw-bold">Barang ini disimpan/dijual secara eceran dalam satuan: <span class="text-danger">*</span></label>
+                                    <input type="text" name="satuan" id="inputSatuanDasar" value="{{ old('satuan', 'PCS') }}" class="form-control border-2" placeholder="Contoh: PCS / BUNGKUS / KILOGRAM" required>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label text-secondary small fw-bold">Satuan Besar (Opsional)</label>
-                                    <input type="text" name="satuan_besar" value="{{ old('satuan_besar') }}" class="form-control" placeholder="Contoh: KARTON">
+                                <div class="col-md-12 mt-3">
+                                    <div class="form-check form-switch form-switch-lg">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="toggleSatuanBesar" style="cursor:pointer;" {{ old('satuan_besar') ? 'checked' : '' }}>
+                                        <label class="form-check-label text-dark ms-2 mt-1" for="toggleSatuanBesar" style="cursor:pointer;">
+                                            Barang ini juga dibeli/disimpan dalam kemasan besar (seperti Dus/Karton)
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label text-secondary small fw-bold">Isi per Satuan Besar</label>
-                                    <input type="number" name="isi_per_satuan_besar" value="{{ old('isi_per_satuan_besar') }}" class="form-control" min="1" placeholder="Contoh: 24">
+                                
+                                <div class="col-md-12" id="containerSatuanBesar" style="display: {{ old('satuan_besar') ? 'block' : 'none' }};">
+                                    <div class="p-3 bg-white border-2 rounded d-flex flex-wrap align-items-center gap-3 shadow-sm mt-1">
+                                        <span class="fw-bold fs-5">1</span>
+                                        <input type="text" name="satuan_besar" id="inputSatuanBesar" value="{{ old('satuan_besar') }}" class="form-control text-center fw-bold border-2 text-primary" style="width: 140px; text-transform: uppercase;" placeholder="Contoh: DUS">
+                                        <span class="fw-bold fs-5 text-muted">berisi</span>
+                                        <input type="number" name="isi_per_satuan_besar" id="inputIsi" value="{{ old('isi_per_satuan_besar') }}" class="form-control text-center fw-bold border-2 text-primary" style="width: 100px;" min="2" placeholder="24">
+                                        <span class="fw-bold fs-5" id="labelSatuanEceran">PCS</span>
+                                    </div>
+                                    <small class="text-success mt-2 d-block fw-bold"><i class="bi bi-info-circle-fill me-1"></i>Sistem akan otomatis memecah satuan besar menjadi satuan eceran di dalam gudang.</small>
                                 </div>
                             </div>
                         </div>
@@ -151,6 +159,34 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const inputSatuanDasar = document.getElementById('inputSatuanDasar');
+        const toggleSatuanBesar = document.getElementById('toggleSatuanBesar');
+        const containerSatuanBesar = document.getElementById('containerSatuanBesar');
+        const inputSatuanBesar = document.getElementById('inputSatuanBesar');
+        const inputIsi = document.getElementById('inputIsi');
+        const labelSatuanEceran = document.getElementById('labelSatuanEceran');
+
+        function updateSatuanLabel() {
+            labelSatuanEceran.textContent = inputSatuanDasar.value || '...';
+        }
+
+        inputSatuanDasar.addEventListener('input', updateSatuanLabel);
+        updateSatuanLabel();
+
+        toggleSatuanBesar.addEventListener('change', function() {
+            if (this.checked) {
+                containerSatuanBesar.style.display = 'block';
+                inputSatuanBesar.required = true;
+                inputIsi.required = true;
+            } else {
+                containerSatuanBesar.style.display = 'none';
+                inputSatuanBesar.required = false;
+                inputIsi.required = false;
+                inputSatuanBesar.value = '';
+                inputIsi.value = '';
+            }
+        });
+
         const inputHari = document.getElementById('inputHari');
         const inputMenit = document.getElementById('inputMenit');
         const btnCepat = document.querySelectorAll('.btn-cepat');

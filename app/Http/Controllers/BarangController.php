@@ -82,13 +82,32 @@ class BarangController extends Controller
             function (Barang $barang) use ($analisisService) {
                 $hasilRop = $analisisService->hitungUntukBarang($barang);
 
+                $stok = $barang->stok_saat_ini;
+                $satuan = $barang->satuan;
+                $satuanBesar = $barang->satuan_besar;
+                $isi = $barang->isi_per_satuan_besar;
+                
+                $stokTeks = $stok . ' ' . $satuan;
+                if ($satuanBesar && $isi > 0 && $stok > 0) {
+                    $qtyBesar = floor($stok / $isi);
+                    $qtyKecil = $stok % $isi;
+                    
+                    $teksB = [];
+                    if ($qtyBesar > 0) $teksB[] = "{$qtyBesar} {$satuanBesar}";
+                    if ($qtyKecil > 0) $teksB[] = "{$qtyKecil} {$satuan}";
+                    
+                    if (count($teksB) > 0) {
+                        $stokTeks .= "<br><small class='text-muted'>(Setara " . implode(' + ', $teksB) . ")</small>";
+                    }
+                }
+
                 return [
                     'id_barang' => $barang->id_barang,
                     'nama_barang' => $barang->nama_barang,
                     'pemasok' => $barang->pemasok?->nama_pemasok,
                     'stok_saat_ini' => $hasilRop['perlu_reorder'] 
-                        ? '<span class="text-danger fw-bold">' . $barang->stok_saat_ini . ' ' . $barang->satuan . '</span>'
-                        : $barang->stok_saat_ini . ' ' . $barang->satuan,
+                        ? '<span class="text-danger fw-bold">' . $stokTeks . '</span>'
+                        : $stokTeks,
                     'lead_time' => number_format($hasilRop['lead_time_desimal'], 1) . ' Hr',
                     'safety_stock' => ceil($hasilRop['safety_stock']),
                     'rop' => ceil($hasilRop['rop']),

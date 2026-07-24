@@ -120,18 +120,32 @@
                                 </div>
                             </div>
                             <div class="col-md-7">
-                                <div class="d-flex gap-2 align-items-center input-area" id="input_area_${item.id_barang}" style="opacity: 0.3; pointer-events: none; transition: 0.3s all;">
-                                    <!-- Hidden field for ID so it only submits when checked -->
-                                    <input type="hidden" name="items[${index}][id_barang]" class="hidden-id-input" value="" disabled>
-                                    
-                                    <span class="text-muted small w-25 text-end">Stok saat ini: <strong>${item.stok_saat_ini}</strong></span>
-                                    
-                                    <input type="number" name="items[${index}][jumlah_input]" class="form-control form-control-sm qty-input border-2 fw-bold text-center" style="width: 100px;" placeholder="Jumlah" min="1" disabled>
-                                    
-                                    <select name="items[${index}][satuan_input]" class="form-select form-select-sm satuan-input border-2" style="width: 120px;" disabled>
-                                        <option value="${item.satuan}">${item.satuan}</option>
-                                        ${item.satuan_besar ? `<option value="${item.satuan_besar}">${item.satuan_besar}</option>` : ''}
-                                    </select>
+                                <div class="d-flex flex-column w-100">
+                                    <div class="d-flex gap-2 align-items-center input-area" id="input_area_${item.id_barang}" style="opacity: 0.3; pointer-events: none; transition: 0.3s all;">
+                                        <!-- Hidden field for ID so it only submits when checked -->
+                                        <input type="hidden" name="items[${index}][id_barang]" class="hidden-id-input" value="" disabled>
+                                        
+                                        <span class="text-muted small w-25 text-end">Stok saat ini: <strong>${item.stok_saat_ini}</strong></span>
+                                        
+                                        <input type="number" name="items[${index}][jumlah_input]" class="form-control form-control-sm qty-input border-2 fw-bold text-center" style="width: 100px;" placeholder="Jumlah" min="1" disabled>
+                                        
+                                        ${item.satuan_besar ? `
+                                        <div class="btn-group btn-group-sm satuan-toggle-group" style="width:150px;" role="group">
+                                            <input type="radio" class="btn-check satuan-input" name="items[${index}][satuan_input]" id="satuan_dasar_${item.id_barang}" value="${item.satuan}" autocomplete="off" checked disabled>
+                                            <label class="btn btn-outline-primary fw-bold" for="satuan_dasar_${item.id_barang}">${item.satuan}</label>
+                                          
+                                            <input type="radio" class="btn-check satuan-input" name="items[${index}][satuan_input]" id="satuan_besar_${item.id_barang}" value="${item.satuan_besar}" autocomplete="off" disabled>
+                                            <label class="btn btn-outline-primary fw-bold" for="satuan_besar_${item.id_barang}">${item.satuan_besar}</label>
+                                        </div>
+                                        ` : `
+                                        <select name="items[${index}][satuan_input]" class="form-select form-select-sm satuan-input border-2 fw-bold" style="width: 150px;" disabled>
+                                            <option value="${item.satuan}">${item.satuan}</option>
+                                        </select>
+                                        `}
+                                    </div>
+                                    <div class="text-end mt-1 conversion-text-container" id="conv_container_${item.id_barang}" style="display:none; padding-right: 5px;">
+                                        <small class="text-success fw-bold bg-success-subtle px-2 py-1 rounded" id="conv_text_${item.id_barang}"></small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -142,14 +156,40 @@
 
             // Attach event listeners to new checkboxes
             document.querySelectorAll('.item-checkbox').forEach(box => {
-                box.addEventListener('change', function() {
-                    const id = this.dataset.id;
-                    const row = document.getElementById(`row-barang-${id}`);
-                    const inputArea = document.getElementById(`input_area_${id}`);
-                    const hiddenId = inputArea.querySelector('.hidden-id-input');
-                    const qtyInput = inputArea.querySelector('.qty-input');
-                    const satuanInput = inputArea.querySelector('.satuan-input');
+                const id = box.dataset.id;
+                const item = items.find(i => i.id_barang == id);
+                
+                const row = document.getElementById(`row-barang-${id}`);
+                const inputArea = document.getElementById(`input_area_${id}`);
+                const hiddenId = inputArea.querySelector('.hidden-id-input');
+                const qtyInput = inputArea.querySelector('.qty-input');
+                const satuanInputs = inputArea.querySelectorAll('.satuan-input'); // Select or Radios
+                const convContainer = document.getElementById(`conv_container_${id}`);
+                const convText = document.getElementById(`conv_text_${id}`);
 
+                function updateConversionText() {
+                    if (!item.satuan_besar) return;
+                    let selectedSatuan = '';
+                    if (satuanInputs.length > 1) { // Radios
+                        satuanInputs.forEach(radio => { if (radio.checked) selectedSatuan = radio.value; });
+                    } else { // Select
+                        selectedSatuan = satuanInputs[0].value;
+                    }
+
+                    const qty = parseInt(qtyInput.value) || 0;
+                    if (selectedSatuan === item.satuan_besar && qty > 0) {
+                        const total = qty * item.isi_per_satuan_besar;
+                        convText.innerHTML = `<i class="bi bi-info-circle me-1"></i>Konversi otomatis: ${qty} ${item.satuan_besar} = <strong>${total} ${item.satuan}</strong> (sistem akan mencatat ${total} ${item.satuan})`;
+                        convContainer.style.display = 'block';
+                    } else {
+                        convContainer.style.display = 'none';
+                    }
+                }
+
+                qtyInput.addEventListener('input', updateConversionText);
+                satuanInputs.forEach(input => input.addEventListener('change', updateConversionText));
+
+                box.addEventListener('change', function() {
                     if (this.checked) {
                         row.classList.add('bg-primary-subtle');
                         inputArea.style.opacity = '1';
@@ -162,7 +202,8 @@
                         qtyInput.required = true;
                         if (!qtyInput.value) qtyInput.value = 1;
                         
-                        satuanInput.disabled = false;
+                        satuanInputs.forEach(input => input.disabled = false);
+                        updateConversionText();
                     } else {
                         row.classList.remove('bg-primary-subtle');
                         inputArea.style.opacity = '0.3';
@@ -171,7 +212,8 @@
                         hiddenId.disabled = true;
                         qtyInput.disabled = true;
                         qtyInput.required = false;
-                        satuanInput.disabled = true;
+                        satuanInputs.forEach(input => input.disabled = true);
+                        convContainer.style.display = 'none';
                     }
                 });
             });
