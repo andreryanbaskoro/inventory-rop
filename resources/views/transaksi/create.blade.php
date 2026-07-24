@@ -69,7 +69,7 @@
                         </div>
                         <div id="emptyState" class="text-center py-5 text-muted" style="display:none;">
                             <i class="bi bi-box-seam fs-1 mb-2 d-block opacity-50"></i>
-                            <p class="mb-0">Silakan pilih Pemasok terlebih dahulu untuk melihat daftar barang.</p>
+                            <p class="mb-0" id="emptyStateMessage">Silakan pilih Pemasok terlebih dahulu untuk melihat daftar barang.</p>
                         </div>
                     </div>
                 </div>
@@ -98,10 +98,12 @@
         const allBarang = @json($daftarBarang);
         const dataPemasok = @json($daftarPemasok);
 
-        function renderBarangList(items) {
+        function renderBarangList(items, customEmptyMessage = '') {
             containerBarangList.innerHTML = '';
             
             if (items.length === 0) {
+                const msg = customEmptyMessage || 'Silakan pilih Pemasok terlebih dahulu untuk melihat daftar barang.';
+                document.getElementById('emptyStateMessage').textContent = msg;
                 emptyState.style.display = 'block';
                 return;
             }
@@ -182,17 +184,16 @@
                 // Trigger pemasok change logic
                 const pId = selectPemasok.value;
                 if (!pId) {
-                    renderBarangList([]);
-                    emptyState.innerHTML = '<i class="bi bi-box-seam fs-1 mb-2 d-block opacity-50"></i><p class="mb-0">Silakan pilih Pemasok terlebih dahulu untuk memunculkan daftar barangnya.</p>';
-                    emptyState.style.display = 'block';
+                    renderBarangList([], 'Silakan pilih Pemasok terlebih dahulu untuk melihat daftar barang.');
                 } else {
                     const selectedPemasok = dataPemasok.find(p => p.id_pemasok == pId);
-                    renderBarangList(selectedPemasok ? (selectedPemasok.daftar_barang || selectedPemasok.daftarBarang || []) : []);
+                    const barangDariPemasok = selectedPemasok ? (selectedPemasok.daftar_barang || selectedPemasok.daftarBarang || []) : [];
+                    renderBarangList(barangDariPemasok, 'Wah, Pemasok ini belum memiliki barang apapun di sistem!');
                 }
             } else {
                 containerPemasok.style.display = 'none';
                 // For 'Keluar', show all items
-                renderBarangList(allBarang);
+                renderBarangList(allBarang, 'Tidak ada satupun barang yang aktif di sistem.');
             }
         }
 
