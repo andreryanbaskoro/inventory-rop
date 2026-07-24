@@ -88,58 +88,68 @@ class TransaksiController extends Controller
     public function create(Request $request): View
     {
         $daftarBarang = Barang::query()->where('status_barang', 'Aktif')->orderBy('nama_barang')->get();
+        $daftarPemasok = \App\Models\Pemasok::query()
+            ->with(['barang' => function($q) {
+                $q->where('status_barang', 'Aktif')->orderBy('nama_barang');
+            }])
+            ->orderBy('nama_pemasok')
+            ->get();
+            
         $jenisAwal = $request->query('jenis');
         if (! in_array($jenisAwal, ['Masuk', 'Keluar'], true)) {
             $jenisAwal = 'Masuk';
         }
 
-        return view('transaksi.create', compact('daftarBarang', 'jenisAwal'));
+        return view('transaksi.create', compact('daftarBarang', 'daftarPemasok', 'jenisAwal'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'id_barang' => ['required', 'exists:barang,id_barang'],
             'tanggal' => ['required', 'date'],
             'jenis' => ['required', 'in:Masuk,Keluar'],
-            'jumlah_input' => ['required', 'integer', 'min:1'],
-            'satuan_input' => ['required', 'string'],
             'keterangan' => ['nullable', 'string', 'max:5000'],
-        ], [], [
-            'id_barang' => 'barang',
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.id_barang' => ['required', 'exists:barang,id_barang'],
+            'items.*.jumlah_input' => ['required', 'integer', 'min:1'],
+            'items.*.satuan_input' => ['required', 'string'],
+        ], [
+            'items.required' => 'Silakan ceklis minimal 1 barang.',
         ]);
 
         try {
             DB::transaction(function () use ($data) {
-                $barang = Barang::query()->lockForUpdate()->findOrFail($data['id_barang']);
+                foreach ($data['items'] as $item) {
+                    $barang = Barang::query()->lockForUpdate()->findOrFail($item['id_barang']);
 
-                // Hitung jumlah sebenarnya (base unit)
-                $jumlahReal = $data['jumlah_input'];
-                if ($barang->satuan_besar && $data['satuan_input'] === $barang->satuan_besar) {
-                    $jumlahReal = $data['jumlah_input'] * $barang->isi_per_satuan_besar;
-                }
+                    // Hitung jumlah sebenarnya (base unit)
+                    $jumlahReal = $item['jumlah_input'];
+                    if ($barang->satuan_besar && $item['satuan_input'] === $barang->satuan_besar) {
+                        $jumlahReal = $item['jumlah_input'] * $barang->isi_per_satuan_besar;
+                    }
 
-                Transaksi::query()->create([
-                    'id_barang' => $data['id_barang'],
-                    'tanggal' => $data['tanggal'],
-                    'jenis' => $data['jenis'],
-                    'jumlah' => $jumlahReal,
-                    'satuan_input' => $data['satuan_input'],
-                    'jumlah_input' => $data['jumlah_input'],
-                    'keterangan' => $data['keterangan'] ?? null,
-                ]);
+                    Transaksi::query()->create([
+                        'id_barang' => $item['id_barang'],
+                        'tanggal' => $data['tanggal'],
+                        'jenis' => $data['jenis'],
+                        'jumlah' => $jumlahReal,
+                        'satuan_input' => $item['satuan_input'],
+                        'jumlah_input' => $item['jumlah_input'],
+                        'keterangan' => $data['keterangan'] ?? null,
+                    ]);
 
-                if ($data['jenis'] === 'Masuk') {
-                    $this->stokBarangService->tambahStok($barang, $jumlahReal);
-                } else {
-                    $this->stokBarangService->kurangiStok($barang, $jumlahReal);
+                    if ($data['jenis'] === 'Masuk') {
+                        $this->stokBarangService->tambahStok($barang, $jumlahReal);
+                    } else {
+                        $this->stokBarangService->kurangiStok($barang, $jumlahReal);
+                    }
                 }
             });
         } catch (ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         }
 
-        return redirect()->route('transaksi.index')->with('sukses', 'Transaksi berhasil disimpan.');
+        return redirect()->route('transaksi.index')->with('sukses', 'Transaksi masal berhasil disimpan.');
     }
 
     public function show(Transaksi $transaksi): View
