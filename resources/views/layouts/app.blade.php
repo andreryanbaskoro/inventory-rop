@@ -94,17 +94,6 @@
             });
         });
     </script>
-    <script>
-        // Initialize tooltips safely (avoid double init)
-        document.addEventListener('DOMContentLoaded', function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                if (!bootstrap.Tooltip.getInstance(tooltipTriggerEl)) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl);
-                }
-            });
-        });
-    </script>
     @stack('scripts')
     @if (session('sukses'))
         <script>
