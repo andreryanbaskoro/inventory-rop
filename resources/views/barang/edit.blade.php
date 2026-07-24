@@ -73,7 +73,7 @@
                         <div class="card-body p-3">
                             <h6 class="mb-2 text-brand">
                                 <i class="bi bi-box-seam me-2"></i>Pengaturan Satuan Barang
-                                <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Tentukan satuan dasar untuk perhitungan stok, dan satuan besar jika barang sering dibeli dalam dus/karton."></i>
+                                <i class="bi bi-question-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Tentukan satuan dasar untuk perhitungan stok, dan satuan besar jika barang sering dibeli dalam dus/karton."></i>
                             </h6>
                             <p class="text-muted small mb-3">
                                 Tentukan satuan dasar/terkecil (wajib) dan satuan besar opsional (misal: Karton) jika Anda membeli barang ini dalam jumlah besar.
