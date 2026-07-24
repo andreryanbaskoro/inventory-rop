@@ -89,7 +89,7 @@ class TransaksiController extends Controller
     {
         $daftarBarang = Barang::query()->where('status_barang', 'Aktif')->orderBy('nama_barang')->get();
         $daftarPemasok = \App\Models\Pemasok::query()
-            ->with(['barang' => function($q) {
+            ->with(['daftarBarang' => function($q) {
                 $q->where('status_barang', 'Aktif')->orderBy('nama_barang');
             }])
             ->orderBy('nama_pemasok')

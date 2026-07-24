@@ -187,7 +187,7 @@
                     emptyState.style.display = 'block';
                 } else {
                     const selectedPemasok = dataPemasok.find(p => p.id_pemasok == pId);
-                    renderBarangList(selectedPemasok ? selectedPemasok.barang : []);
+                    renderBarangList(selectedPemasok ? (selectedPemasok.daftar_barang || selectedPemasok.daftarBarang || []) : []);
                 }
             } else {
                 containerPemasok.style.display = 'none';
