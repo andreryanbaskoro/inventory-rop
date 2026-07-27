@@ -91,6 +91,7 @@
                             <th>Nama</th>
                             <th>Pemasok</th>
                             <th>Stok</th>
+                            <th>Stok Min.</th>
                             <th>Lead Time</th>
                             <th>Safety Stock</th>
                             <th>ROP</th>
@@ -134,6 +135,9 @@
                 },
                 {
                     data: 'stok_saat_ini'
+                },
+                {
+                    data: 'stok_minimum'
                 },
                 {
                     data: 'lead_time',

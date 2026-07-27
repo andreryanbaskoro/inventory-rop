@@ -32,18 +32,19 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover" id="tabelAnalisis" style="width:100%">
                     <thead>
                         <tr>
                             <th>Barang</th>
                             <th>Pemasok</th>
                             <th>Lead Time</th>
                             <th>Safety Stock</th>
-                            <th>Stok</th>
+                            <th>Stok Saat Ini</th>
+                            <th>Stok Min.</th>
                             <th>ROP</th>
                             <th>EOQ</th>
                             <th>Status</th>
-                            <th></th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +52,7 @@
                             @php($b = $baris['barang'])
                             @php($a = $baris['analisis'])
                             <tr>
-                                <td>{{ $b->nama_barang }}</td>
+                                <td class="fw-medium">{{ $b->nama_barang }}</td>
                                 <td>{{ $b->pemasok?->nama_pemasok }}</td>
                                 <td>
                                     @if($a['lead_time_hari'] > 0)
@@ -69,6 +70,7 @@
                                         {{ $b->stok_saat_ini }} {{ $b->satuan }}
                                     @endif
                                 </td>
+                                <td><span class="badge bg-light text-dark border">{{ $b->stok_minimum }} {{ $b->satuan }}</span></td>
                                 <td><strong>{{ $a['rop'] }} {{ $b->satuan }}</strong></td>
                                 <td>
                                     @if ($a['eoq'] !== null)
@@ -84,7 +86,7 @@
                                         <span class="badge bg-success">Aman</span>
                                     @endif
                                 </td>
-                                <td><a href="{{ route('analisis.show', ['barang' => $b->id_barang, 'periode' => $periodeHari]) }}" class="btn btn-sm btn-outline-primary">Rincian</a>
+                                <td><a href="{{ route('analisis.show', ['barang' => $b->id_barang, 'periode' => $periodeHari]) }}" class="btn btn-sm btn-outline-primary py-0">Rincian</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -94,3 +96,29 @@
         </div>
     </div>
 @endsection
+
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css">
+@endpush
+
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            new DataTable('#tabelAnalisis', {
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/id.json'
+                },
+                pageLength: 10,
+                lengthMenu: [10, 25, 50, 100],
+                ordering: true,
+                columnDefs: [
+                    { orderable: false, targets: [9] }
+                ]
+            });
+        });
+    </script>
+@endpush
+

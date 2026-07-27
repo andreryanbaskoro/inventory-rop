@@ -79,10 +79,11 @@ class BarangController extends Controller
             1 => 'nama_barang',
             2 => 'id_barang',
             3 => 'stok_saat_ini',
-            4 => 'id_barang',
+            4 => 'stok_minimum',
             5 => 'id_barang',
             6 => 'id_barang',
-            7 => 'status_barang',
+            7 => 'id_barang',
+            8 => 'status_barang',
         ];
 
         $orderIndex = (int) data_get($request->input('order'), '0.column', 0);
@@ -131,6 +132,7 @@ class BarangController extends Controller
                 'stok_saat_ini' => $hasilRop['perlu_reorder']
                     ? '<span class="text-danger fw-bold">' . $stokTeks . '</span>'
                     : $stokTeks,
+                'stok_minimum' => '<span class="badge bg-light text-dark border">' . $barang->stok_minimum . ' ' . $satuan . '</span>',
                 'lead_time' => number_format($hasilRop['lead_time_desimal'], 1) . ' Hr',
                 'safety_stock' => ceil($hasilRop['safety_stock']),
                 'rop' => ceil($hasilRop['rop']),
