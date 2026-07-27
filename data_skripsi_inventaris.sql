@@ -2,9 +2,9 @@
 -- Ditujukan untuk database MySQL: db_inventory_rop (tanpa tabel pengadaan_barang yang sudah dihapus)
 
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE `transaksi`;
-TRUNCATE TABLE `barang`;
-TRUNCATE TABLE `pemasok`;
+DELETE FROM `transaksi`;
+DELETE FROM `barang`;
+DELETE FROM `pemasok`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. INPUT DATA PEMASOK / SUPPLIER
