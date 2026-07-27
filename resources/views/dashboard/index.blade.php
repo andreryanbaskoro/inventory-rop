@@ -65,62 +65,91 @@
         </div>
     @endif
 
-    <div class="card mb-4 border-0 shadow-sm" style="background-color: #f8fafc;">
-        <div class="card-body p-4">
-            <h5 class="fw-bold mb-3"><i class="bi bi-journal-bookmark-fill text-primary me-2"></i>Panduan Singkat Penggunaan Sistem</h5>
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <div class="p-3 bg-white rounded shadow-sm h-100 border">
-                        <div class="text-primary fw-bold mb-1"><i class="bi bi-1-circle-fill me-1"></i> Langkah 1</div>
-                        <strong class="d-block mb-1">Tambah Pemasok</strong>
-                        <p class="small text-muted mb-0">Daftarkan supplier tempat Anda biasa membeli barang kulakan.</p>
-                    </div>
+    <div class="card mb-4 border-0 shadow-sm overflow-hidden" style="border-radius: 16px;">
+        @if ($peringatanReorder->isNotEmpty())
+            <div class="card-header bg-danger text-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background-color: #dc3545 !important;">
+                <h5 class="card-title text-white mb-0 fw-bold d-flex align-items-center">
+                    <i class="bi bi-bell-fill fs-4 me-2"></i> 
+                    Pemberitahuan Reorder Stok (ROP Triggered)
+                    <span class="badge bg-white text-danger ms-3 fw-bold">{{ $peringatanReorder->count() }} Barang Perlu Perhatian</span>
+                </h5>
+                <a href="{{ route('analisis.index') }}" class="btn btn-sm btn-light text-danger fw-bold shadow-sm">
+                    <i class="bi bi-graph-up me-1"></i> Lihat Semua Analisis
+                </a>
+            </div>
+            <div class="card-body p-4" style="background-color: #fdf2f2;">
+                <p class="text-dark mb-3">
+                    <strong>Perhatian bagi Pemilik & Admin:</strong> Sistem mendeteksi barang-barang di bawah ini telah menembus batas <strong>Reorder Point (ROP)</strong> atau berada di bawah stok minimum. Disarankan segera melakukan pengadaan/order ke Pemasok untuk mencegah kehabisan stok (<em>stockout</em>).
+                </p>
+                <div class="table-responsive bg-white rounded shadow-sm border">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID Barang</th>
+                                <th>Nama Barang</th>
+                                <th>Pemasok</th>
+                                <th>Stok Saat Ini</th>
+                                <th>Stok Minimum</th>
+                                <th>Batas ROP</th>
+                                <th>Saran Order (EOQ)</th>
+                                <th>Status & Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($peringatanReorder as $item)
+                                <tr>
+                                    <td><span class="fw-medium text-secondary">{{ $item['barang']->id_barang }}</span></td>
+                                    <td><strong>{{ $item['barang']->nama_barang }}</strong></td>
+                                    <td>{{ $item['barang']->pemasok?->nama_pemasok ?? '-' }}</td>
+                                    <td><span class="badge bg-danger fs-6">{{ $item['barang']->stok_saat_ini }} {{ $item['barang']->satuan }}</span></td>
+                                    <td><span class="badge bg-light text-dark border">{{ $item['barang']->stok_minimum }} {{ $item['barang']->satuan }}</span></td>
+                                    <td><strong class="text-danger">{{ ceil($item['rop']) }} {{ $item['barang']->satuan }}</strong></td>
+                                    <td>
+                                        @if ($item['eoq'] !== null)
+                                            <span class="badge bg-success fs-6">{{ $item['eoq'] }} {{ $item['barang']->satuan }}</span>
+                                        @else
+                                            <span class="text-muted">—</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <a href="{{ route('analisis.show', $item['barang']) }}" class="btn btn-sm btn-outline-info text-dark py-1" title="Rincian Analisis"><i class="bi bi-graph-up me-1"></i>Analisis</a>
+                                            @if ($pengguna->isAdmin())
+                                                <a href="{{ route('transaksi.create', ['jenis' => 'Masuk', 'id_barang' => $item['barang']->id_barang]) }}" class="btn btn-sm btn-primary py-1" title="Order Barang Masuk"><i class="bi bi-cart-plus me-1"></i>Order</a>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-3">
-                    <div class="p-3 bg-white rounded shadow-sm h-100 border">
-                        <div class="text-primary fw-bold mb-1"><i class="bi bi-2-circle-fill me-1"></i> Langkah 2</div>
-                        <strong class="d-block mb-1">Tambah Barang</strong>
-                        <p class="small text-muted mb-0">Daftarkan barang dagangan dan hubungkan ke Pemasoknya. Tentukan juga lead time-nya.</p>
+            </div>
+        @else
+            <div class="card-header bg-success text-white py-3 d-flex align-items-center justify-content-between" style="background-color: #198754 !important;">
+                <h5 class="card-title text-white mb-0 fw-bold d-flex align-items-center">
+                    <i class="bi bi-shield-check fs-4 me-2"></i> 
+                    Pemberitahuan Status Inventaris: Stok Dalam Kondisi Aman
+                </h5>
+                <a href="{{ route('analisis.index') }}" class="btn btn-sm btn-light text-success fw-bold shadow-sm">
+                    <i class="bi bi-graph-up me-1"></i> Analisis ROP & EOQ
+                </a>
+            </div>
+            <div class="card-body p-4 bg-white">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center bg-light text-success border" style="width: 55px; height: 55px; min-width: 55px;">
+                        <i class="bi bi-check-circle-fill fs-2 text-success"></i>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="p-3 bg-white rounded shadow-sm h-100 border">
-                        <div class="text-primary fw-bold mb-1"><i class="bi bi-3-circle-fill me-1"></i> Langkah 3</div>
-                        <strong class="d-block mb-1">Input Transaksi</strong>
-                        <p class="small text-muted mb-0">Catat setiap ada barang masuk (dari supplier) atau keluar (terjual).</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="p-3 bg-white rounded shadow-sm h-100 border">
-                        <div class="text-primary fw-bold mb-1"><i class="bi bi-4-circle-fill me-1"></i> Langkah 4</div>
-                        <strong class="d-block mb-1">Pantau Analisis</strong>
-                        <p class="small text-muted mb-0">Buka menu Analisis ROP & EOQ untuk melihat status stok dan kapan harus reorder secara otomatis.</p>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark">Seluruh Barang Mencegah Risiko Stockout!</h6>
+                        <p class="text-muted mb-0 small">
+                            Saat ini tidak ada barang yang berada di bawah titik <strong>Reorder Point (ROP)</strong> atau stok minimum. Seluruh persediaan toko terpantau aman dan cukup untuk memenuhi proyeksi permintaan pelanggan.
+                        </p>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
-
-    @if ($peringatanReorder->isNotEmpty())
-        <div class="card border-0 mb-4 alert-soft-danger" style="border-radius: 16px;">
-            <div class="card-header bg-transparent border-0 pt-4 pb-2">
-                <h5 class="card-title text-danger fw-bold mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Peringatan Reorder (ROP)</h5>
-            </div>
-            <div class="card-body">
-                <ul class="mb-0 ps-3 text-danger">
-                    @foreach ($peringatanReorder as $item)
-                        <li class="mb-2">
-                            <strong>{{ $item['barang']->nama_barang }}</strong> — stok
-                            {{ $item['barang']->stok_saat_ini }}, ROP
-                            {{ number_format($item['rop'], 2, ',', '.') }}
-                            <span class="badge bg-danger">REORDER</span>
-                            <a href="{{ route('analisis.show', $item['barang']) }}" class="ms-1">Detail</a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    @endif
 
     <div class="row g-3">
         <div class="col-lg-8">

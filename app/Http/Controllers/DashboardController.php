@@ -71,6 +71,8 @@ class DashboardController extends Controller
             return [
                 'barang' => $barang,
                 'rop' => $hasil['rop'],
+                'safety_stock' => $hasil['safety_stock'] ?? 0,
+                'eoq' => $hasil['eoq'] ?? null,
                 'perlu_reorder' => $hasil['perlu_reorder'],
             ];
         })
