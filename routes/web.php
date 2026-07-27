@@ -27,6 +27,8 @@ Route::post('keluar', [LoginController::class, 'keluar'])
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('barang/data', [BarangController::class, 'data'])->name('barang.data');
+    Route::post('barang/{id}/restore', [BarangController::class, 'restore'])->name('barang.restore');
+    Route::delete('barang/{id}/force-delete', [BarangController::class, 'forceDelete'])->name('barang.forceDelete');
     Route::resource('barang', BarangController::class)->except(['show']);
 
     Route::get('pemasok/data', [PemasokController::class, 'data'])->name('pemasok.data');

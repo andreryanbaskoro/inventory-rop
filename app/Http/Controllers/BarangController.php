@@ -40,12 +40,19 @@ class BarangController extends Controller
                 ->take(10);
         }
 
-        return view('barang.index', compact('peringatanReorder'));
+        $jumlahAktif = Barang::query()->count();
+        $jumlahArsip = Barang::onlyTrashed()->count();
+        $statusFilter = $request->query('status', 'aktif');
+
+        return view('barang.index', compact('peringatanReorder', 'jumlahAktif', 'jumlahArsip', 'statusFilter'));
     }
 
     public function data(Request $request): JsonResponse
     {
-        $queryDasar = Barang::query()->with('pemasok');
+        $statusFilter = $request->query('status', 'aktif');
+        $queryDasar = $statusFilter === 'arsip'
+            ? Barang::onlyTrashed()->with('pemasok')
+            : Barang::query()->with('pemasok');
 
         $query = clone $queryDasar;
 
@@ -114,7 +121,8 @@ class BarangController extends Controller
                     'status_barang' => $barang->status_barang,
                     'aksi' => view('barang._aksi', [
                         'barang' => $barang, 
-                        'perlu_reorder' => $hasilRop['perlu_reorder']
+                        'perlu_reorder' => $hasilRop['perlu_reorder'],
+                        'statusFilter' => $statusFilter
                     ])->render(),
                 ];
             }
@@ -224,12 +232,30 @@ class BarangController extends Controller
 
     public function destroy(Barang $barang): RedirectResponse
     {
+        $barang->delete();
+
+        return redirect()->route('barang.index')->with('sukses', 'Barang berhasil dipindahkan ke Tong Sampah (Recycle Bin) beserta seluruh riwayat transaksinya.');
+    }
+
+    public function restore(string $id): RedirectResponse
+    {
+        $barang = Barang::onlyTrashed()->findOrFail($id);
+        $barang->restore();
+
+        return redirect()->route('barang.index', ['status' => 'arsip'])->with('sukses', 'Barang dan seluruh riwayat transaksinya berhasil dipulihkan!');
+    }
+
+    public function forceDelete(string $id): RedirectResponse
+    {
+        $barang = Barang::onlyTrashed()->findOrFail($id);
+
         try {
-            $barang->delete();
+            \App\Models\Transaksi::withoutGlobalScopes()->where('id_barang', $barang->id_barang)->delete();
+            $barang->forceDelete();
         } catch (\Throwable $e) {
-            return redirect()->route('barang.index')->with('error', 'Barang tidak dapat dihapus karena masih memiliki data terkait.');
+            return redirect()->route('barang.index', ['status' => 'arsip'])->with('error', 'Gagal memusnahkan barang: ' . $e->getMessage());
         }
 
-        return redirect()->route('barang.index')->with('sukses', 'Barang berhasil dihapus.');
+        return redirect()->route('barang.index', ['status' => 'arsip'])->with('sukses', 'Barang beserta seluruh riwayat transaksinya telah dimusnahkan secara permanen.');
     }
 }

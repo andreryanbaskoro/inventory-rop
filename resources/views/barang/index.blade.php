@@ -48,10 +48,39 @@
         </div>
     @endif
 
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Data Barang</span>
-            <a href="{{ route('barang.create') }}" class="btn btn-primary btn-sm">Tambah Barang</a>
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <ul class="nav nav-pills">
+            <li class="nav-item me-2">
+                <a class="nav-link {{ ($statusFilter ?? 'aktif') === 'aktif' ? 'active bg-primary shadow-sm' : 'bg-white text-dark border' }}" href="{{ route('barang.index', ['status' => 'aktif']) }}">
+                    <i class="bi bi-box-seam me-1"></i> Daftar Barang <span class="badge {{ ($statusFilter ?? 'aktif') === 'aktif' ? 'bg-white text-primary' : 'bg-secondary text-white' }} ms-1">{{ $jumlahAktif ?? 0 }}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'active bg-danger shadow-sm' : 'bg-white text-danger border' }}" href="{{ route('barang.index', ['status' => 'arsip']) }}">
+                    <i class="bi bi-trash3 me-1"></i> Tong Sampah (Recycle Bin) <span class="badge {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'bg-white text-danger' : 'bg-danger text-white' }} ms-1">{{ $jumlahArsip ?? 0 }}</span>
+                </a>
+            </li>
+        </ul>
+        @if(($statusFilter ?? 'aktif') === 'aktif')
+            <a href="{{ route('barang.create') }}" class="btn btn-primary shadow-sm">
+                <i class="bi bi-plus-circle me-1"></i> Tambah Barang
+            </a>
+        @endif
+    </div>
+
+    @if(($statusFilter ?? 'aktif') === 'arsip')
+        <div class="alert alert-info border-0 shadow-sm d-flex align-items-center mb-3">
+            <i class="bi bi-info-circle-fill fs-4 me-3 text-info"></i>
+            <div>
+                <strong>Informasi Arsip Tong Sampah:</strong> Barang di halaman ini adalah barang yang telah dihapus sementara. 
+                Selama barang berada di sini, <strong>seluruh riwayat transaksinya juga disembunyikan otomatis</strong> dari menu Transaksi dan Laporan. Klik <strong>Pulihkan</strong> jika ingin mengembalikan barang & riwayat transaksinya seperti semula.
+            </div>
+        </div>
+    @endif
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'bg-danger text-white' : 'bg-white' }} py-3">
+            <h6 class="m-0 font-weight-bold">{{ ($statusFilter ?? 'aktif') === 'arsip' ? '📦 Daftar Barang Terhapus Sementara (Tong Sampah)' : '📦 Daftar Master Data Barang' }}</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -93,7 +122,7 @@
         const tabel = new DataTable('#tabelBarang', {
             processing: true,
             serverSide: true,
-            ajax: '{{ route('barang.data') }}',
+            ajax: '{!! route("barang.data", ["status" => $statusFilter ?? "aktif"]) !!}',
             columns: [{
                     data: 'id_barang'
                 },

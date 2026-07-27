@@ -13,7 +13,15 @@ class KodeGenerator
      */
     public static function berikutnya(string $modelClass, string $primaryKeyColumn, string $prefix): string
     {
-        $maks = $modelClass::query()
+        $query = $modelClass::query();
+        if (method_exists($modelClass, 'withTrashed')) {
+            $query = $query->withTrashed();
+        }
+        if (method_exists($modelClass, 'withoutGlobalScopes')) {
+            $query = $query->withoutGlobalScopes();
+        }
+
+        $maks = $query
             ->where($primaryKeyColumn, 'like', $prefix.'%')
             ->pluck($primaryKeyColumn)
             ->map(function (string $nilai) use ($prefix) {

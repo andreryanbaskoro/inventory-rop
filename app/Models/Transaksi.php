@@ -2,11 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transaksi extends Model
 {
+    protected static function booted(): void
+    {
+        static::addGlobalScope('excludeTrashedBarang', function (Builder $builder) {
+            $builder->whereHas('barang');
+        });
+    }
+
     protected $table = 'transaksi';
 
     protected $primaryKey = 'id_transaksi';
