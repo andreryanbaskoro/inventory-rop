@@ -54,13 +54,29 @@
     </div>
 
     @if ($pengguna->isPemilik())
-        <div class="card mb-4 border-0" style="background: linear-gradient(135deg, #1e3a5f, #2d5a87);">
-            <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3 text-white">
+        <div class="card mb-4 border-0 shadow-sm" style="background: linear-gradient(135deg, #1e3a5f, #2d5a87); border-radius: 16px;">
+            <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center gap-3 text-white">
                 <div>
-                    <h5 class="mb-1 fw-bold"><i class="bi bi-file-earmark-bar-graph me-2"></i>Laporan Inventaris</h5>
-                    <p class="mb-0 small opacity-75">Ekspor Excel, PDF, atau cetak data stok, transaksi, dan pengadaan.</p>
+                    <h5 class="mb-1 fw-bold text-white"><i class="bi bi-file-earmark-bar-graph me-2"></i>Laporan Inventaris & Analisis Eksekutif</h5>
+                    <p class="mb-0 small opacity-75">Ekspor Excel, PDF, atau cetak laporan stok dan transaksi untuk keputusan bisnis strategis.</p>
                 </div>
-                <a href="{{ route('laporan.index') }}" class="btn btn-light btn-sm fw-semibold">Buka Laporan</a>
+                <a href="{{ route('laporan.index') }}" class="btn btn-light btn-sm fw-bold px-3 py-2 text-dark shadow-sm"><i class="bi bi-printer me-1"></i> Buka Laporan</a>
+            </div>
+        </div>
+    @endif
+
+    @if ($pengguna->isAdmin())
+        <div class="card mb-4 border-0 shadow-sm" style="background: linear-gradient(135deg, #0d6efd, #084298); border-radius: 16px;">
+            <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center gap-3 text-white">
+                <div>
+                    <h5 class="mb-1 fw-bold text-white"><i class="bi bi-lightning-charge-fill text-warning me-2"></i>Akses Cepat Operasional Admin</h5>
+                    <p class="mb-0 small opacity-75">Catat penerimaan barang masuk dari supplier atau mutasi penjualan harian secara langsung.</p>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ route('transaksi.create', ['jenis' => 'Masuk']) }}" class="btn btn-light btn-sm fw-bold px-3 py-2 text-primary shadow-sm"><i class="bi bi-box-arrow-in-down me-1"></i> + Input Barang Masuk</a>
+                    <a href="{{ route('transaksi.create', ['jenis' => 'Keluar']) }}" class="btn btn-warning btn-sm fw-bold px-3 py-2 text-dark shadow-sm"><i class="bi bi-box-arrow-up me-1"></i> - Input Barang Keluar</a>
+                    <a href="{{ route('barang.create') }}" class="btn btn-outline-light btn-sm fw-semibold px-3 py-2"><i class="bi bi-plus-circle me-1"></i> + Master Barang</a>
+                </div>
             </div>
         </div>
     @endif
