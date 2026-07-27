@@ -29,7 +29,7 @@ class AnalisisRopEoqService
         $sampai = Carbon::today();
         $dari = (clone $sampai)->subDays($periodeHari);
 
-        $perHari = Transaksi::query()
+        $perHari = Transaksi::withoutGlobalScopes()
             ->where('id_barang', $barang->id_barang)
             ->where('jenis', 'Keluar')
             ->whereBetween('tanggal', [$dari->toDateString(), $sampai->toDateString()])
@@ -96,5 +96,97 @@ class AnalisisRopEoqService
             'is_asumsi_h' => $isAsumsiH,
             'perlu_reorder' => $perluReorder,
         ];
+    }
+
+    /**
+     * Optimasi performa tinggi: Menghitung ROP dan EOQ untuk banyak barang sekaligus dalam 1x query database.
+     */
+    public function hitungBatch(iterable $daftarBarang, int $periodeHari = 90): array
+    {
+        $sampai = Carbon::today();
+        $dari = (clone $sampai)->subDays($periodeHari);
+
+        $ids = [];
+        foreach ($daftarBarang as $b) {
+            $ids[] = $b->id_barang;
+        }
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        // HANYA 1x QUERY DATABASE untuk seluruh list barang!
+        $transaksiGroup = Transaksi::withoutGlobalScopes()
+            ->whereIn('id_barang', $ids)
+            ->where('jenis', 'Keluar')
+            ->whereBetween('tanggal', [$dari->toDateString(), $sampai->toDateString()])
+            ->selectRaw('id_barang, DATE(tanggal) as tanggal_harian, SUM(jumlah) as total_keluar')
+            ->groupBy('id_barang', 'tanggal_harian')
+            ->get()
+            ->groupBy('id_barang');
+
+        $hasilBatch = [];
+        foreach ($daftarBarang as $barang) {
+            $dataBarang = $transaksiGroup->get($barang->id_barang) ?? collect();
+            $totalKeluar = (int) $dataBarang->sum('total_keluar');
+            $hariDenganData = $dataBarang->count();
+
+            $pemakaianRataHarian = $totalKeluar / $periodeHari;
+            $pemakaianMaksHarian = $dataBarang->isEmpty() ? 0.0 : (float) $dataBarang->max('total_keluar');
+
+            $hari = (float) ($barang->lead_time_hari ?? 1);
+            $menit = (float) ($barang->lead_time_menit ?? 0);
+            $leadTime = max(0.0001, $hari + ($menit / 1440));
+
+            $ss = ceil(max(0.0, ($pemakaianMaksHarian - $pemakaianRataHarian) * $leadTime));
+            $rop = ceil(($leadTime * $pemakaianRataHarian) + $ss);
+
+            $D = ceil($pemakaianRataHarian * 365);
+
+            $S = (float) $barang->biaya_pesan;
+            $isAsumsiS = false;
+            if ($S <= 0) {
+                $S = ceil((0.05 * (float) $barang->harga_beli) / 100) * 100;
+                if ($S <= 0) $S = 20000.0;
+                $isAsumsiS = true;
+            }
+
+            $H = (float) $barang->biaya_simpan;
+            $isAsumsiH = false;
+            if ($H <= 0) {
+                $H = ceil((0.20 * (float) $barang->harga_beli) / 100) * 100;
+                if ($H <= 0) $H = 2000.0;
+                $isAsumsiH = true;
+            }
+
+            $eoq = 0;
+            if ($H > 0 && $D > 0 && $S > 0) {
+                $eoq = ceil(sqrt((2 * $D * $S) / $H));
+            }
+
+            $perluReorder = $barang->stok_saat_ini <= $rop;
+
+            $hasilBatch[$barang->id_barang] = [
+                'periode_hari' => $periodeHari,
+                'total_keluar_periode' => $totalKeluar,
+                'hari_aktif_keluar' => $hariDenganData,
+                'pemakaian_rata_harian' => $pemakaianRataHarian,
+                'pemakaian_maks_harian' => $pemakaianMaksHarian,
+                'lead_time_hari' => $hari,
+                'lead_time_menit' => $menit,
+                'lead_time_desimal' => $leadTime,
+                'safety_stock' => $ss,
+                'rop' => $rop,
+                'permintaan_tahunan' => $D,
+                'eoq' => $eoq,
+                'biaya_pesan_dipakai' => $S,
+                'biaya_simpan_dipakai' => $H,
+                'is_asumsi_s' => $isAsumsiS,
+                'is_asumsi_h' => $isAsumsiH,
+                'perlu_reorder' => $perluReorder,
+            ];
+        }
+
+        return $hasilBatch;
     }
 }
