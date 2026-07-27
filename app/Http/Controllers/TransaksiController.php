@@ -161,9 +161,11 @@ class TransaksiController extends Controller
 
     public function edit(Transaksi $transaksi): View
     {
+        $transaksi->load('barang');
         $daftarBarang = Barang::query()->where('status_barang', 'Aktif')->orderBy('nama_barang')->get();
+        $daftarPemasok = \App\Models\Pemasok::query()->orderBy('nama_pemasok')->get();
 
-        return view('transaksi.edit', compact('transaksi', 'daftarBarang'));
+        return view('transaksi.edit', compact('transaksi', 'daftarBarang', 'daftarPemasok'));
     }
 
     public function update(Request $request, Transaksi $transaksi): RedirectResponse

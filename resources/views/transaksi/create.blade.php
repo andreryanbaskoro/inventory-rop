@@ -40,9 +40,9 @@
                             class="form-control border-2 @error('tanggal') is-invalid @enderror" required>
                     </div>
                     <div class="col-md-6" id="containerPemasok">
-                        <label class="form-label fw-bold text-dark">Pilih Pemasok <span class="text-muted fw-normal small">(Filter Barang)</span></label>
+                        <label class="form-label fw-bold text-dark">Filter Pemasok <span class="text-muted fw-normal small">(Opsional: Saring daftar barang berdasarkan supplier)</span></label>
                         <select id="selectPemasok" class="form-select border-2">
-                            <option value="">— Pilih Pemasok —</option>
+                            <option value="">— Semua Pemasok (Tampilkan Semua Barang) —</option>
                             @foreach ($daftarPemasok as $p)
                                 <option value="{{ $p->id_pemasok }}">{{ $p->nama_pemasok }}</option>
                             @endforeach
@@ -220,22 +220,13 @@
         }
 
         function updateViewLogic() {
-            const jenis = selectJenis.value;
-            if (jenis === 'Masuk') {
-                containerPemasok.style.display = 'block';
-                // Trigger pemasok change logic
-                const pId = selectPemasok.value;
-                if (!pId) {
-                    renderBarangList([], 'Silakan pilih Pemasok terlebih dahulu untuk melihat daftar barang.');
-                } else {
-                    const selectedPemasok = dataPemasok.find(p => p.id_pemasok == pId);
-                    const barangDariPemasok = selectedPemasok ? (selectedPemasok.daftar_barang || selectedPemasok.daftarBarang || []) : [];
-                    renderBarangList(barangDariPemasok, 'Wah, Pemasok ini belum memiliki barang apapun di sistem!');
-                }
-            } else {
-                containerPemasok.style.display = 'none';
-                // For 'Keluar', show all items
+            containerPemasok.style.display = 'block';
+            const pId = selectPemasok.value;
+            if (!pId) {
                 renderBarangList(allBarang, 'Tidak ada satupun barang yang aktif di sistem.');
+            } else {
+                const barangDariPemasok = allBarang.filter(b => b.id_pemasok == pId);
+                renderBarangList(barangDariPemasok, 'Wah, Pemasok ini belum memiliki barang aktif di sistem.');
             }
         }
 
