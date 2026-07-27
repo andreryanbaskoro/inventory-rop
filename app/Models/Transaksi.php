@@ -11,7 +11,10 @@ class Transaksi extends Model
     protected static function booted(): void
     {
         static::addGlobalScope('excludeTrashedBarang', function (Builder $builder) {
-            $builder->whereHas('barang');
+            $trashedIds = \App\Models\Barang::onlyTrashed()->pluck('id_barang')->toArray();
+            if (!empty($trashedIds)) {
+                $builder->whereNotIn('transaksi.id_barang', $trashedIds);
+            }
         });
     }
 

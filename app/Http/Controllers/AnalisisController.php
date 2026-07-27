@@ -14,17 +14,20 @@ class AnalisisController extends Controller
         $periodeHari = (int) $request->get('periode', 90);
         $layanan = app(AnalisisRopEoqService::class);
 
-        $daftarBarang = Barang::query()
+        $daftarBarangMentah = Barang::query()
             ->with('pemasok')
             ->where('status_barang', 'Aktif')
             ->orderBy('nama_barang')
-            ->get()
-            ->map(function (Barang $barang) use ($layanan, $periodeHari) {
-                return [
-                    'barang' => $barang,
-                    'analisis' => $layanan->hitungUntukBarang($barang, $periodeHari),
-                ];
-            });
+            ->get();
+
+        $hasilBatch = $layanan->hitungBatch($daftarBarangMentah, $periodeHari);
+
+        $daftarBarang = $daftarBarangMentah->map(function (Barang $barang) use ($hasilBatch) {
+            return [
+                'barang' => $barang,
+                'analisis' => $hasilBatch[$barang->id_barang],
+            ];
+        });
 
         return view('analisis.index', compact('daftarBarang', 'periodeHari'));
     }

@@ -56,8 +56,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'active bg-danger shadow-sm' : 'bg-white text-danger border' }}" href="{{ route('barang.index', ['status' => 'arsip']) }}">
-                    <i class="bi bi-trash3 me-1"></i> Tong Sampah (Recycle Bin) <span class="badge {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'bg-white text-danger' : 'bg-danger text-white' }} ms-1">{{ $jumlahArsip ?? 0 }}</span>
+                <a class="nav-link {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'active bg-danger text-white fw-bold shadow-sm' : 'bg-white text-danger border' }}" style="{{ ($statusFilter ?? 'aktif') === 'arsip' ? 'color: #ffffff !important;' : '' }}" href="{{ route('barang.index', ['status' => 'arsip']) }}">
+                    <i class="bi bi-trash3 me-1"></i> Tong Sampah (Recycle Bin) <span class="badge {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'bg-white text-danger fw-bold' : 'bg-danger text-white' }} ms-1">{{ $jumlahArsip ?? 0 }}</span>
                 </a>
             </li>
         </ul>
@@ -79,8 +79,8 @@
     @endif
 
     <div class="card shadow-sm border-0">
-        <div class="card-header {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'bg-danger text-white' : 'bg-white' }} py-3">
-            <h6 class="m-0 font-weight-bold">{{ ($statusFilter ?? 'aktif') === 'arsip' ? '📦 Daftar Barang Terhapus Sementara (Tong Sampah)' : '📦 Daftar Master Data Barang' }}</h6>
+        <div class="card-header {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'bg-danger' : 'bg-white' }} py-3" style="{{ ($statusFilter ?? 'aktif') === 'arsip' ? 'background-color: #dc3545 !important; color: #ffffff !important;' : '' }}">
+            <h6 class="m-0 font-weight-bold {{ ($statusFilter ?? 'aktif') === 'arsip' ? 'text-white' : '' }}" style="{{ ($statusFilter ?? 'aktif') === 'arsip' ? 'color: #ffffff !important;' : '' }}">{{ ($statusFilter ?? 'aktif') === 'arsip' ? '📦 Daftar Barang Terhapus Sementara (Tong Sampah)' : '📦 Daftar Master Data Barang' }}</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">

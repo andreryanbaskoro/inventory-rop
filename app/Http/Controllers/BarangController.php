@@ -54,9 +54,10 @@ class BarangController extends Controller
     {
         $statusFilter = $request->query('status', 'aktif');
         $queryDasar = $statusFilter === 'arsip'
-            ? Barang::onlyTrashed()->with('pemasok')
-            : Barang::query()->with('pemasok');
+            ? Barang::onlyTrashed()
+            : Barang::query();
 
+        $recordsTotal = (clone $queryDasar)->count();
         $query = clone $queryDasar;
 
         $pencarian = $request->input('search.value');
@@ -71,6 +72,8 @@ class BarangController extends Controller
             });
         }
 
+        $recordsFiltered = (clone $query)->count();
+
         $urutanKolom = [
             0 => 'id_barang',
             1 => 'nama_barang',
@@ -82,54 +85,70 @@ class BarangController extends Controller
             7 => 'status_barang',
         ];
 
+        $orderIndex = (int) data_get($request->input('order'), '0.column', 0);
+        $orderDir = data_get($request->input('order'), '0.dir', 'asc');
+        $kolomUrut = $urutanKolom[$orderIndex] ?? $urutanKolom[0];
+
+        $mulai = max(0, (int) $request->input('start', 0));
+        $panjang = min(100, max(10, (int) $request->input('length', 10)));
+
+        $daftarBarang = (clone $query)
+            ->with('pemasok')
+            ->orderBy($kolomUrut, $orderDir === 'desc' ? 'desc' : 'asc')
+            ->skip($mulai)
+            ->take($panjang)
+            ->get();
+
         $analisisService = app(AnalisisRopEoqService::class);
+        $hasilBatch = $analisisService->hitungBatch($daftarBarang);
 
-        return $this->responseDataTables(
-            $request,
-            $query,
-            $queryDasar,
-            $urutanKolom,
-            function (Barang $barang) use ($analisisService) {
-                $hasilRop = $analisisService->hitungUntukBarang($barang);
+        $baris = $daftarBarang->map(function (Barang $barang) use ($hasilBatch, $statusFilter) {
+            $hasilRop = $hasilBatch[$barang->id_barang];
 
-                $stok = $barang->stok_saat_ini;
-                $satuan = $barang->satuan;
-                $satuanBesar = $barang->satuan_besar;
-                $isi = $barang->isi_per_satuan_besar;
-                
-                $stokTeks = $stok . ' ' . $satuan;
-                if ($satuanBesar && $isi > 0 && $stok > 0) {
-                    $qtyBesar = floor($stok / $isi);
-                    $qtyKecil = $stok % $isi;
-                    
-                    $teksB = [];
-                    if ($qtyBesar > 0) $teksB[] = "{$qtyBesar} {$satuanBesar}";
-                    if ($qtyKecil > 0) $teksB[] = "{$qtyKecil} {$satuan}";
-                    
-                    if (count($teksB) > 0) {
-                        $stokTeks .= "<br><small class='text-muted'>(Setara " . implode(' + ', $teksB) . ")</small>";
-                    }
+            $stok = $barang->stok_saat_ini;
+            $satuan = $barang->satuan;
+            $satuanBesar = $barang->satuan_besar;
+            $isi = $barang->isi_per_satuan_besar;
+
+            $stokTeks = $stok . ' ' . $satuan;
+            if ($satuanBesar && $isi > 0 && $stok > 0) {
+                $qtyBesar = floor($stok / $isi);
+                $qtyKecil = $stok % $isi;
+
+                $teksB = [];
+                if ($qtyBesar > 0) $teksB[] = "{$qtyBesar} {$satuanBesar}";
+                if ($qtyKecil > 0) $teksB[] = "{$qtyKecil} {$satuan}";
+
+                if (count($teksB) > 0) {
+                    $stokTeks .= "<br><small class='text-muted'>(Setara " . implode(' + ', $teksB) . ")</small>";
                 }
-
-                return [
-                    'id_barang' => $barang->id_barang,
-                    'nama_barang' => $barang->nama_barang,
-                    'pemasok' => $barang->pemasok?->nama_pemasok,
-                    'stok_saat_ini' => $hasilRop['perlu_reorder'] 
-                        ? '<span class="text-danger fw-bold">' . $stokTeks . '</span>'
-                        : $stokTeks,
-                    'lead_time' => number_format($hasilRop['lead_time_desimal'], 1) . ' Hr',
-                    'safety_stock' => ceil($hasilRop['safety_stock']),
-                    'rop' => ceil($hasilRop['rop']),
-                    'status_barang' => $barang->status_barang,
-                    'aksi' => view('barang._aksi', [
-                        'barang' => $barang, 
-                        'perlu_reorder' => $hasilRop['perlu_reorder'],
-                        'statusFilter' => $statusFilter
-                    ])->render(),
-                ];
             }
-        );
+
+            return [
+                'id_barang' => $barang->id_barang,
+                'nama_barang' => $barang->nama_barang,
+                'pemasok' => $barang->pemasok?->nama_pemasok,
+                'stok_saat_ini' => $hasilRop['perlu_reorder']
+                    ? '<span class="text-danger fw-bold">' . $stokTeks . '</span>'
+                    : $stokTeks,
+                'lead_time' => number_format($hasilRop['lead_time_desimal'], 1) . ' Hr',
+                'safety_stock' => ceil($hasilRop['safety_stock']),
+                'rop' => ceil($hasilRop['rop']),
+                'status_barang' => $barang->status_barang,
+                'aksi' => view('barang._aksi', [
+                    'barang' => $barang,
+                    'perlu_reorder' => $hasilRop['perlu_reorder'],
+                    'statusFilter' => $statusFilter
+                ])->render(),
+            ];
+        })->values();
+
+        return response()->json([
+            'draw' => (int) $request->input('draw', 1),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $baris,
+        ]);
     }
 
     public function create(): View
