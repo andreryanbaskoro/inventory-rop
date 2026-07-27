@@ -52,7 +52,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover" id="tabelLaporan" style="width:100%">
                     <thead>
                         <tr>
                             @foreach ($data['kolom'] as $label)
@@ -61,17 +61,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($data['baris'] as $baris)
+                        @foreach ($data['baris'] as $baris)
                             <tr>
                                 @foreach ($baris as $sel)
                                     <td>{{ $sel }}</td>
                                 @endforeach
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="{{ count($data['kolom']) }}" class="text-center text-muted">Tidak ada data</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -80,6 +76,7 @@
 @endsection
 
 @push('styles')
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css">
     <style>
         @media print {
             #sidebar,
@@ -90,27 +87,52 @@
             .page-title,
             .laporan-filter,
             .laporan-aksi,
-            .sidebar-toggler {
+            .sidebar-toggler,
+            .dt-container .row:first-child,
+            .dt-container .row:last-child {
                 display: none !important;
             }
 
             #main {
                 margin-left: 0 !important;
             }
+
+            .card, .table-responsive {
+                border: none !important;
+                box-shadow: none !important;
+                overflow: visible !important;
+            }
         }
     </style>
 @endpush
 
 @push('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
     <script>
         (function() {
             const jenis = document.getElementById('jenis');
             const rentang = document.querySelectorAll('.rentang-tanggal');
 
-            jenis.addEventListener('change', function() {
-                const sembunyi = jenis.value === 'stok';
-                rentang.forEach(el => el.classList.toggle('d-none', sembunyi));
-            });
+            if(jenis && rentang) {
+                jenis.addEventListener('change', function() {
+                    const sembunyi = jenis.value === 'stok';
+                    rentang.forEach(el => el.classList.toggle('d-none', sembunyi));
+                });
+            }
         })();
+
+        $(document).ready(function() {
+            new DataTable('#tabelLaporan', {
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/id.json'
+                },
+                pageLength: 25,
+                lengthMenu: [10, 25, 50, 100, 200],
+                ordering: true,
+                stateSave: false
+            });
+        });
     </script>
 @endpush
