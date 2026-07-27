@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ $asetMazer }}/assets/css/bootstrap.css">
     <link rel="stylesheet" href="{{ $asetMazer }}/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="{{ $asetMazer }}/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ $asetMazer }}/assets/css/app.css">
     <link rel="stylesheet" href="{{ asset('css/premium.css') }}">
     @stack('styles')

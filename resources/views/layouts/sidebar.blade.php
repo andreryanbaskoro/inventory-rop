@@ -67,7 +67,7 @@
                     <li class="sidebar-title">Sistem</li>
                     <li class="sidebar-item {{ request()->routeIs('backup.*') ? 'active' : '' }}">
                         <a href="{{ route('backup.index') }}" class="sidebar-link">
-                            <i class="bi bi-database-down"></i>
+                            <i class="bi bi-hdd-stack-fill"></i>
                             <span>Backup Database</span>
                         </a>
                     </li>
