@@ -172,7 +172,10 @@
 
                 <div class="p-4 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="fw-bold text-dark mb-0">Reorder Point (ROP)</h6>
+                        <h6 class="fw-bold text-dark mb-0">
+                            Reorder Point (ROP)
+                            <i class="bi bi-question-circle-fill ms-1 text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Titik batas. Jika sisa stok mencapai angka ini atau lebih rendah, Anda disarankan untuk segera memesan barang ke Pemasok!"></i>
+                        </h6>
                         <span class="badge bg-danger fs-6">{{ $analisis['rop'] }}</span>
                     </div>
                     <div class="font-monospace small text-muted">
@@ -188,7 +191,10 @@
                 
                 <div class="p-4 rounded-3 h-100" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold text-dark mb-0">Hasil EOQ</h6>
+                        <h6 class="fw-bold text-dark mb-0">
+                            Hasil EOQ
+                            <i class="bi bi-question-circle-fill ms-1 text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Jumlah pesanan paling ideal ke pemasok agar total biaya pengadaan (biaya pesan + simpan) menjadi yang paling murah dan efisien."></i>
+                        </h6>
                         <span class="badge bg-success fs-6">{{ $analisis['eoq'] }}</span>
                     </div>
                     
