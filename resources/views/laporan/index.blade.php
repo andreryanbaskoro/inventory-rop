@@ -126,7 +126,7 @@
         $(document).ready(function() {
             new DataTable('#tabelLaporan', {
                 language: {
-                    url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/id.json'
+                    url: 'https://cdn.datatables.net/plug-ins/2.0.8/i18n/id.json'
                 },
                 pageLength: 25,
                 lengthMenu: [10, 25, 50, 100, 200],
