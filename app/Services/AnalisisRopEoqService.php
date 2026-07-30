@@ -121,7 +121,7 @@ class AnalisisRopEoqService
             ->where('jenis', 'Keluar')
             ->whereBetween('tanggal', [$dari->toDateString(), $sampai->toDateString()])
             ->selectRaw('id_barang, DATE(tanggal) as tanggal_harian, SUM(jumlah) as total_keluar')
-            ->groupBy('id_barang', 'tanggal_harian')
+            ->groupByRaw('id_barang, DATE(tanggal)')
             ->get()
             ->groupBy('id_barang');
 

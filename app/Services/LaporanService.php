@@ -40,13 +40,17 @@ class LaporanService
     {
         $analisis = app(AnalisisRopEoqService::class);
 
-        $baris = Barang::query()
+        $daftarBarangMentah = Barang::query()
             ->with('pemasok')
             ->where('status_barang', 'Aktif')
             ->orderBy('nama_barang')
-            ->get()
-            ->map(function (Barang $barang) use ($analisis) {
-                $hasil = $analisis->hitungUntukBarang($barang);
+            ->get();
+
+        $hasilBatch = $analisis->hitungBatch($daftarBarangMentah);
+
+        $baris = $daftarBarangMentah
+            ->map(function (Barang $barang) use ($hasilBatch) {
+                $hasil = $hasilBatch[$barang->id_barang];
                 $nilaiStok = (float) $barang->stok_saat_ini * (float) $barang->harga_beli;
 
                 return [
