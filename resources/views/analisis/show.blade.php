@@ -52,7 +52,7 @@
                         Reorder Point (ROP)
                         <i class="bi bi-question-circle-fill ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Titik batas. Jika sisa stok mencapai angka ini, Anda harus segera pesan ke Pemasok!"></i>
                     </div>
-                    <div class="cm-stat-value text-dark">{{ number_format($analisis['rop'], 2, ',', '.') }}</div>
+                    <div class="cm-stat-value text-dark">{{ number_format(round($analisis['rop']), 0, ',', '.') }}</div>
                     <span class="text-muted small">Titik pemesanan kembali</span>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                         <i class="bi bi-question-circle-fill ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Jumlah pemesanan paling ideal & hemat biaya (biaya pesan + simpan)."></i>
                     </div>
                     <div class="cm-stat-value {{ $analisis['eoq'] === null ? 'text-muted' : 'text-dark' }}">
-                        {{ $analisis['eoq'] !== null ? number_format($analisis['eoq'], 2, ',', '.') : 'N/A' }}
+                        {{ $analisis['eoq'] !== null ? number_format(round($analisis['eoq']), 0, ',', '.') : 'N/A' }}
                     </div>
                     <span class="text-muted small">Rekomendasi jumlah pesanan</span>
                 </div>
@@ -84,7 +84,7 @@
 <!-- 2. DETAIL PERHITUNGAN -->
 <div class="card mb-4 border-0">
     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-        <h5 class="mb-0 fw-bold"><i class="bi bi-calculator me-2 text-primary"></i>Penjabaran Langkah Perhitungan</h5>
+        <h5 class="mb-0 fw-bold"><i class="bi bi-table me-2 text-primary"></i>Rincian Analisis ROP & EOQ</h5>
         
         <form method="GET" action="{{ route('analisis.show', $barang) }}" class="d-flex align-items-center bg-light p-1 rounded-3">
             <label for="periode" class="me-2 fw-semibold text-muted small ps-2 text-nowrap"><i class="bi bi-calendar3 me-1"></i>Periode:</label>
@@ -174,15 +174,15 @@
                     </tr>
                     <tr>
                         <td class="fw-bold text-dark">Safety Stock (SS)</td>
-                        <td class="fw-bold text-primary" style="font-size: 1.1rem;">{{ $analisis['safety_stock'] }} <span class="fs-6 fw-normal text-dark">{{ $barang->satuan }}</span></td>
+                        <td class="fw-bold text-primary" style="font-size: 1.1rem;">{{ number_format(round($analisis['safety_stock']), 0, ',', '.') }} <span class="fs-6 fw-normal text-dark">{{ $barang->satuan }}</span></td>
                     </tr>
                     <tr>
                         <td class="fw-bold text-dark">Reorder Point (ROP)</td>
-                        <td class="fw-bold text-danger" style="font-size: 1.1rem;">{{ $analisis['rop'] }} <span class="fs-6 fw-normal text-dark">{{ $barang->satuan }}</span></td>
+                        <td class="fw-bold text-danger" style="font-size: 1.1rem;">{{ number_format(round($analisis['rop']), 0, ',', '.') }} <span class="fs-6 fw-normal text-dark">{{ $barang->satuan }}</span></td>
                     </tr>
                     <tr>
                         <td class="fw-bold text-dark">Economic Order Qty (EOQ)</td>
-                        <td class="fw-bold text-success" style="font-size: 1.1rem;">{{ $analisis['eoq'] !== null ? $analisis['eoq'] : 'N/A' }} <span class="fs-6 fw-normal text-dark">{{ $barang->satuan }}</span></td>
+                        <td class="fw-bold text-success" style="font-size: 1.1rem;">{{ $analisis['eoq'] !== null ? number_format(round($analisis['eoq']), 0, ',', '.') : 'N/A' }} <span class="fs-6 fw-normal text-dark">{{ $barang->satuan }}</span></td>
                     </tr>
                 </tbody>
             </table>
