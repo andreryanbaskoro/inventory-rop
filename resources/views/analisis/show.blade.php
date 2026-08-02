@@ -104,7 +104,7 @@
     <div class="card-body pt-3">
         
         <!-- Variabel Historis -->
-        <h6 class="fw-bold mb-3 text-uppercase" style="color: var(--cm-text-muted); font-size: 0.8rem; letter-spacing: 0.5px;">1. Variabel & Parameter ({{ $periodeHari }} Hari Terakhir)</h6>
+        <h6 class="fw-bold mb-3 text-uppercase" style="color: var(--cm-text-muted); font-size: 0.8rem; letter-spacing: 0.5px;">Rincian Variabel & Hasil Perhitungan ({{ $periodeHari }} Hari Terakhir)</h6>
         <div class="table-responsive mb-4">
             <table class="table table-bordered table-striped mb-0">
                 <tbody class="align-middle">
@@ -169,91 +169,26 @@
                             @endif
                         </td>
                     </tr>
+                    <tr style="background-color: #f8fafc;">
+                        <td colspan="2" class="fw-bold text-center text-secondary py-3 border-top border-bottom">HASIL ANALISIS</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-dark">Safety Stock (SS)</td>
+                        <td class="fw-bold text-primary" style="font-size: 1.1rem;">{{ $analisis['safety_stock'] }} <span class="fs-6 fw-normal text-dark">{{ $barang->satuan }}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-dark">Reorder Point (ROP)</td>
+                        <td class="fw-bold text-danger" style="font-size: 1.1rem;">{{ $analisis['rop'] }} <span class="fs-6 fw-normal text-dark">{{ $barang->satuan }}</span></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold text-dark">Economic Order Qty (EOQ)</td>
+                        <td class="fw-bold text-success" style="font-size: 1.1rem;">{{ $analisis['eoq'] !== null ? $analisis['eoq'] : 'N/A' }} <span class="fs-6 fw-normal text-dark">{{ $barang->satuan }}</span></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="row g-4">
-            <!-- SS & ROP (Kiri) -->
-            <div class="col-lg-6">
-                <h6 class="fw-bold mb-3 text-uppercase" style="color: var(--cm-text-muted); font-size: 0.8rem; letter-spacing: 0.5px;">2. Safety Stock & ROP</h6>
-                
-                <div class="p-4 rounded-3 mb-4" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="fw-bold text-dark mb-0">
-                            Safety Stock (SS)
-                            <i class="bi bi-question-circle-fill ms-1 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Stok cadangan pengaman (Safety Stock) agar toko tidak kehabisan barang jika pengiriman terlambat."></i>
-                        </h6>
-                        <span class="badge bg-primary fs-6">{{ $analisis['safety_stock'] }}</span>
-                    </div>
-                    {{-- DIBUAT TERSEMBUNYI BERDASARKAN PERMINTAAN USER
-                    <div class="text-end mt-2">
-                        <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSS" aria-expanded="false">
-                            <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
-                        </button>
-                    </div>
-                    <div class="collapse" id="collapseSS">
-                        <div class="font-monospace small text-muted mt-3 pt-2 border-top">
-                            <div class="mb-1 text-dark"><i class="bi bi-braces text-primary"></i> Rumus: SS = (<var>d<sub>max</sub></var> - <var>d<sub>avg</sub></var>) &times; <var>L</var></div>
-                            <div><i class="bi bi-arrow-return-right text-primary"></i> Substitusi: SS = ({{ str_replace('.', ',', round($analisis['pemakaian_maks_harian'], 2)) }} {{ $barang->satuan }}/hari - {{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari) &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari</div>
-                        </div>
-                    </div>
-                    --}}
-                </div>
 
-                <div class="p-4 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="fw-bold text-dark mb-0">
-                            Reorder Point (ROP)
-                            <i class="bi bi-question-circle-fill ms-1 text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Titik batas. Jika sisa stok mencapai angka ini atau lebih rendah, Anda disarankan untuk segera memesan barang ke Pemasok!"></i>
-                        </h6>
-                        <span class="badge bg-danger fs-6">{{ $analisis['rop'] }}</span>
-                    </div>
-                    {{-- DIBUAT TERSEMBUNYI BERDASARKAN PERMINTAAN USER
-                    <div class="text-end mt-2">
-                        <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseROP" aria-expanded="false">
-                            <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
-                        </button>
-                    </div>
-                    <div class="collapse" id="collapseROP">
-                        <div class="font-monospace small text-muted mt-3 pt-2 border-top">
-                            <div class="mb-1 text-dark"><i class="bi bi-braces text-danger"></i> Rumus: ROP = (<var>d<sub>avg</sub></var> &times; <var>L</var>) + SS</div>
-                            <div><i class="bi bi-arrow-return-right text-danger"></i> Substitusi: ROP = ({{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari) + {{ $analisis['safety_stock'] }} {{ $barang->satuan }}</div>
-                        </div>
-                    </div>
-                    --}}
-                </div>
-            </div>
-
-            <!-- EOQ (Kanan) -->
-            <div class="col-lg-6">
-                <h6 class="fw-bold mb-3 text-uppercase" style="color: var(--cm-text-muted); font-size: 0.8rem; letter-spacing: 0.5px;">3. Economic Order Quantity</h6>
-                
-                <div class="p-4 rounded-3 h-100" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold text-dark mb-0">
-                            Hasil EOQ
-                            <i class="bi bi-question-circle-fill ms-1 text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Jumlah pesanan paling ideal ke pemasok agar total biaya pengadaan (biaya pesan + simpan) menjadi yang paling murah dan efisien."></i>
-                        </h6>
-                        <span class="badge bg-success fs-6">{{ $analisis['eoq'] }}</span>
-                    </div>
-                                        {{-- DIBUAT TERSEMBUNYI BERDASARKAN PERMINTAAN USER
-                    <div class="text-end mt-2">
-                        <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEOQ" aria-expanded="false">
-                            <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
-                        </button>
-                    </div>
-                    <div class="collapse" id="collapseEOQ">
-                        <div class="font-monospace small text-muted mt-3 pt-2 border-top">
-                            <div class="mb-1 text-dark"><i class="bi bi-braces text-success"></i> Rumus: EOQ = &radic;((2 &times; D &times; S) / H)</div>
-                            <div class="mb-1"><i class="bi bi-info-circle text-success"></i> D (Permintaan Tahunan) = <var>d<sub>avg</sub></var> &times; 365 = {{ $analisis['permintaan_tahunan'] }}</div>
-                            <div><i class="bi bi-arrow-return-right text-success"></i> Substitusi: EOQ = &radic;((2 &times; {{ $analisis['permintaan_tahunan'] }} &times; {{ number_format($analisis['biaya_pesan_dipakai'], 0, '', '') }}) / {{ number_format($analisis['biaya_simpan_dipakai'], 0, '', '') }})</div>
-                        </div>
-                    </div>
-                    --}}
-                </div>
-            </div>
-        </div>
 
     </div>
 </div>
