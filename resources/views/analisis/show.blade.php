@@ -104,7 +104,7 @@
     <div class="card-body pt-3">
         
         <!-- Variabel Historis -->
-        <h6 class="fw-bold mb-3 text-uppercase" style="color: var(--cm-text-muted); font-size: 0.8rem; letter-spacing: 0.5px;">1. Variabel Historis ({{ $periodeHari }} Hari Terakhir)</h6>
+        <h6 class="fw-bold mb-3 text-uppercase" style="color: var(--cm-text-muted); font-size: 0.8rem; letter-spacing: 0.5px;">1. Variabel & Parameter ({{ $periodeHari }} Hari Terakhir)</h6>
         <div class="table-responsive mb-4">
             <table class="table table-bordered table-striped mb-0">
                 <tbody class="align-middle">
@@ -144,6 +144,28 @@
                             <div class="text-muted small fw-normal mt-1">
                                 <i class="bi bi-arrow-right-short"></i> Dikonversi ke desimal: <strong>{{ str_replace('.', ',', round($analisis['lead_time_desimal'], 4)) }} Hari</strong>
                             </div>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fw-semibold">Biaya Pesan (<var>S</var>)</td>
+                        <td class="fw-bold text-dark">
+                            Rp {{ number_format($analisis['biaya_pesan_dipakai'], 0, ',', '.') }}
+                            @if($analisis['is_asumsi_s']) 
+                                <span class="badge bg-warning text-dark ms-2 fw-normal" style="font-size: 0.65rem;">ASUMSI 5% DARI HARGA</span> 
+                            @else
+                                <span class="badge bg-success ms-2 fw-normal" style="font-size: 0.65rem;">DIISI PENGGUNA</span>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fw-semibold">Biaya Simpan (<var>H</var>)</td>
+                        <td class="fw-bold text-dark">
+                            Rp {{ number_format($analisis['biaya_simpan_dipakai'], 0, ',', '.') }} <span class="text-muted fw-normal" style="font-size:0.8rem;">/ unit / thn</span>
+                            @if($analisis['is_asumsi_h']) 
+                                <span class="badge bg-warning text-dark ms-2 fw-normal" style="font-size: 0.65rem;">ASUMSI 20% DARI HARGA</span> 
+                            @else
+                                <span class="badge bg-success ms-2 fw-normal" style="font-size: 0.65rem;">DIISI PENGGUNA</span>
                             @endif
                         </td>
                     </tr>
@@ -215,37 +237,7 @@
                         </h6>
                         <span class="badge bg-success fs-6">{{ $analisis['eoq'] }}</span>
                     </div>
-                    
-                    <div class="table-responsive mb-3 bg-white rounded border">
-                        <table class="table table-bordered table-striped mb-0 small">
-                            <tbody class="align-middle">
-                                <tr>
-                                    <td width="40%" class="fw-semibold">Biaya Pesan (S)</td>
-                                    <td class="fw-bold text-dark">
-                                        Rp {{ number_format($analisis['biaya_pesan_dipakai'], 0, ',', '.') }}
-                                        @if($analisis['is_asumsi_s']) 
-                                            <div class="mt-1"><span class="badge bg-warning text-dark" style="font-size: 0.6rem;">DIAMBIL DARI 5% (KOSONG)</span></div> 
-                                        @else
-                                            <div class="mt-1"><span class="badge bg-success" style="font-size: 0.6rem;">DIISI PENGGUNA</span></div>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-semibold">Biaya Simpan (H)</td>
-                                    <td class="fw-bold text-dark">
-                                        Rp {{ number_format($analisis['biaya_simpan_dipakai'], 0, ',', '.') }} <span class="text-muted fw-normal" style="font-size:0.75rem;">/ unit / thn</span>
-                                        @if($analisis['is_asumsi_h']) 
-                                            <div class="mt-1"><span class="badge bg-warning text-dark" style="font-size: 0.6rem;">DIAMBIL DARI 20% (KOSONG)</span></div> 
-                                        @else
-                                            <div class="mt-1"><span class="badge bg-success" style="font-size: 0.6rem;">DIISI PENGGUNA</span></div>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {{-- DIBUAT TERSEMBUNYI BERDASARKAN PERMINTAAN USER
+                                        {{-- DIBUAT TERSEMBUNYI BERDASARKAN PERMINTAAN USER
                     <div class="text-end mt-2">
                         <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEOQ" aria-expanded="false">
                             <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
