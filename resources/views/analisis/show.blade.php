@@ -164,6 +164,7 @@
                         </h6>
                         <span class="badge bg-primary fs-6">{{ $analisis['safety_stock'] }}</span>
                     </div>
+                    {{-- DIBUAT TERSEMBUNYI BERDASARKAN PERMINTAAN USER
                     <div class="text-end mt-2">
                         <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSS" aria-expanded="false">
                             <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
@@ -175,6 +176,7 @@
                             <div><i class="bi bi-arrow-return-right text-primary"></i> Substitusi: SS = ({{ str_replace('.', ',', round($analisis['pemakaian_maks_harian'], 2)) }} {{ $barang->satuan }}/hari - {{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari) &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari</div>
                         </div>
                     </div>
+                    --}}
                 </div>
 
                 <div class="p-4 rounded-3" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
@@ -185,6 +187,7 @@
                         </h6>
                         <span class="badge bg-danger fs-6">{{ $analisis['rop'] }}</span>
                     </div>
+                    {{-- DIBUAT TERSEMBUNYI BERDASARKAN PERMINTAAN USER
                     <div class="text-end mt-2">
                         <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseROP" aria-expanded="false">
                             <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
@@ -196,6 +199,7 @@
                             <div><i class="bi bi-arrow-return-right text-danger"></i> Substitusi: ROP = ({{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari) + {{ $analisis['safety_stock'] }} {{ $barang->satuan }}</div>
                         </div>
                     </div>
+                    --}}
                 </div>
             </div>
 
@@ -231,6 +235,7 @@
                         </li>
                     </ul>
 
+                    {{-- DIBUAT TERSEMBUNYI BERDASARKAN PERMINTAAN USER
                     <div class="text-end mt-2">
                         <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEOQ" aria-expanded="false">
                             <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
@@ -243,6 +248,7 @@
                             <div><i class="bi bi-arrow-return-right text-success"></i> Substitusi: EOQ = &radic;((2 &times; {{ $analisis['permintaan_tahunan'] }} &times; {{ number_format($analisis['biaya_pesan_dipakai'], 0, '', '') }}) / {{ number_format($analisis['biaya_simpan_dipakai'], 0, '', '') }})</div>
                         </div>
                     </div>
+                    --}}
                 </div>
             </div>
         </div>
