@@ -6,7 +6,7 @@
                 <span class="text-muted small ms-1">© {{ date('Y') }}</span>
             </div>
             <div class="col-md-6 text-center text-md-end">
-                <span class="text-muted small">Sistem Informasi Inventaris · ROP & EOQ</span>
+                <span class="text-muted small">Sistem Informasi Manajemen Persediaan Metode ROP & EOQ</span>
             </div>
         </div>
     </div>

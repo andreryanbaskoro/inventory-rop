@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk — Cahaya Mulya Mart</title>
+    <title>Masuk — SI-Inventaris</title>
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,10 +113,10 @@
             <div class="auth-left">
                 <div class="mb-4">
                     <a href="{{ route('login') }}" class="text-decoration-none d-inline-flex align-items-center gap-3">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo Cahaya Mulya Mart" style="height: 72px; width: auto; border-radius: 8px;">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo SI-Inventaris" style="height: 72px; width: auto; border-radius: 8px;">
                         <div>
-                            <h5 class="mb-0 fw-bold text-dark" style="letter-spacing: -0.02em;">Cahaya Mulya Mart</h5>
-                            <span class="d-block small" style="color: var(--cm-text-muted);">Sistem Inventaris ROP</span>
+                            <h5 class="mb-0 fw-bold text-dark" style="letter-spacing: -0.02em;">SI-Inventaris</h5>
+                            <span class="d-block small" style="color: var(--cm-text-muted);">Metode ROP & EOQ</span>
                         </div>
                     </a>
                 </div>
@@ -167,7 +167,7 @@
                             <line x1="4" y1="16" x2="20" y2="16"></line>
                         </svg>
                     </div>
-                    <h4 class="fw-bold text-white mb-2">Manajemen Inventaris ROP</h4>
+                    <h4 class="fw-bold text-white mb-2">Sistem Informasi Manajemen Persediaan</h4>
                     <p class="mb-0 small" style="color: rgba(255,255,255,0.9); line-height: 1.6;">
                         Pantau pergerakan barang, kelola stok gudang, dan dapatkan peringatan otomatis untuk pengadaan barang sebelum stok habis.
                     </p>

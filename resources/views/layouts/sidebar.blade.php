@@ -5,11 +5,11 @@
         <div class="sidebar-header cm-sidebar-header">
             <div class="d-flex justify-content-between align-items-start">
                 <a href="{{ route('dashboard.index') }}" class="cm-brand text-decoration-none d-flex align-items-center gap-2">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo Cahaya Mulya Mart" style="height: 52px; width: auto; border-radius: 8px;">
-                    <span>
-                        <span class="cm-brand-title d-block fw-bold text-dark" style="font-size: 0.95rem; line-height: 1.2;">Cahaya Mulya</span>
-                        <span class="cm-brand-sub d-block text-muted" style="font-size: 0.75rem;">Mart · Inventaris ROP</span>
-                    </span>
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo SI-Inventaris" style="height: 52px; width: auto; border-radius: 8px;">
+                    <div class="ms-2 d-xl-none d-block cm-sidebar-brand-text">
+                        <span class="cm-brand-title d-block fw-bold text-dark" style="font-size: 0.95rem; line-height: 1.2;">SI-Inventaris</span>
+                        <span class="cm-brand-sub d-block text-muted" style="font-size: 0.75rem;">ROP & EOQ</span>
+                    </div>
                 </a>
                 <a href="#" class="sidebar-hide d-xl-none d-block text-muted"><i class="bi bi-x-lg"></i></a>
             </div>
