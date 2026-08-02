@@ -164,9 +164,16 @@
                         </h6>
                         <span class="badge bg-primary fs-6">{{ $analisis['safety_stock'] }}</span>
                     </div>
-                    <div class="font-monospace small text-muted">
-                        <div class="mb-1 text-dark"><i class="bi bi-braces text-primary"></i> Rumus: SS = (<var>d<sub>max</sub></var> - <var>d<sub>avg</sub></var>) &times; <var>L</var></div>
-                        <div><i class="bi bi-arrow-return-right text-primary"></i> Substitusi: SS = ({{ str_replace('.', ',', round($analisis['pemakaian_maks_harian'], 2)) }} {{ $barang->satuan }}/hari - {{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari) &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari</div>
+                    <div class="text-end mt-2">
+                        <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSS" aria-expanded="false">
+                            <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
+                        </button>
+                    </div>
+                    <div class="collapse" id="collapseSS">
+                        <div class="font-monospace small text-muted mt-3 pt-2 border-top">
+                            <div class="mb-1 text-dark"><i class="bi bi-braces text-primary"></i> Rumus: SS = (<var>d<sub>max</sub></var> - <var>d<sub>avg</sub></var>) &times; <var>L</var></div>
+                            <div><i class="bi bi-arrow-return-right text-primary"></i> Substitusi: SS = ({{ str_replace('.', ',', round($analisis['pemakaian_maks_harian'], 2)) }} {{ $barang->satuan }}/hari - {{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari) &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari</div>
+                        </div>
                     </div>
                 </div>
 
@@ -178,9 +185,16 @@
                         </h6>
                         <span class="badge bg-danger fs-6">{{ $analisis['rop'] }}</span>
                     </div>
-                    <div class="font-monospace small text-muted">
-                        <div class="mb-1 text-dark"><i class="bi bi-braces text-danger"></i> Rumus: ROP = (<var>d<sub>avg</sub></var> &times; <var>L</var>) + SS</div>
-                        <div><i class="bi bi-arrow-return-right text-danger"></i> Substitusi: ROP = ({{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari) + {{ $analisis['safety_stock'] }} {{ $barang->satuan }}</div>
+                    <div class="text-end mt-2">
+                        <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseROP" aria-expanded="false">
+                            <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
+                        </button>
+                    </div>
+                    <div class="collapse" id="collapseROP">
+                        <div class="font-monospace small text-muted mt-3 pt-2 border-top">
+                            <div class="mb-1 text-dark"><i class="bi bi-braces text-danger"></i> Rumus: ROP = (<var>d<sub>avg</sub></var> &times; <var>L</var>) + SS</div>
+                            <div><i class="bi bi-arrow-return-right text-danger"></i> Substitusi: ROP = ({{ str_replace('.', ',', round($analisis['pemakaian_rata_harian'], 2)) }} {{ $barang->satuan }}/hari &times; {{ str_replace('.', ',', round($analisis['lead_time_desimal'], 2)) }} Hari) + {{ $analisis['safety_stock'] }} {{ $barang->satuan }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -217,10 +231,17 @@
                         </li>
                     </ul>
 
-                    <div class="font-monospace small text-muted">
-                        <div class="mb-1 text-dark"><i class="bi bi-braces text-success"></i> Rumus: EOQ = &radic;((2 &times; D &times; S) / H)</div>
-                        <div class="mb-1"><i class="bi bi-info-circle text-success"></i> D (Permintaan Tahunan) = <var>d<sub>avg</sub></var> &times; 365 = {{ $analisis['permintaan_tahunan'] }}</div>
-                        <div><i class="bi bi-arrow-return-right text-success"></i> Substitusi: EOQ = &radic;((2 &times; {{ $analisis['permintaan_tahunan'] }} &times; {{ number_format($analisis['biaya_pesan_dipakai'], 0, '', '') }}) / {{ number_format($analisis['biaya_simpan_dipakai'], 0, '', '') }})</div>
+                    <div class="text-end mt-2">
+                        <button class="btn btn-sm btn-outline-secondary p-1 px-2 fw-semibold" style="font-size: 0.7rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEOQ" aria-expanded="false">
+                            <i class="bi bi-calculator me-1"></i> Tampilkan Rumus
+                        </button>
+                    </div>
+                    <div class="collapse" id="collapseEOQ">
+                        <div class="font-monospace small text-muted mt-3 pt-2 border-top">
+                            <div class="mb-1 text-dark"><i class="bi bi-braces text-success"></i> Rumus: EOQ = &radic;((2 &times; D &times; S) / H)</div>
+                            <div class="mb-1"><i class="bi bi-info-circle text-success"></i> D (Permintaan Tahunan) = <var>d<sub>avg</sub></var> &times; 365 = {{ $analisis['permintaan_tahunan'] }}</div>
+                            <div><i class="bi bi-arrow-return-right text-success"></i> Substitusi: EOQ = &radic;((2 &times; {{ $analisis['permintaan_tahunan'] }} &times; {{ number_format($analisis['biaya_pesan_dipakai'], 0, '', '') }}) / {{ number_format($analisis['biaya_simpan_dipakai'], 0, '', '') }})</div>
+                        </div>
                     </div>
                 </div>
             </div>
