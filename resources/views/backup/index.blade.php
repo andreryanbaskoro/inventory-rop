@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('judul_halaman', 'Backup Database')
-@section('subjudul', 'Amankan data inventaris dan sistem Anda')
+@section('subjudul', 'Amankan data persediaan dan sistem Anda')
 
 @section('breadcrumb')
     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">

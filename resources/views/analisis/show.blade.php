@@ -30,7 +30,7 @@
                     </div>
                 @endif
                 <div>
-                    <div class="cm-stat-label">Status Inventaris</div>
+                    <div class="cm-stat-label">Status Persediaan</div>
                     <div class="cm-stat-value" style="font-size: 1.25rem; {{ $analisis['perlu_reorder'] ? 'color: #dc2626;' : 'color: #16a34a;' }}">
                         {{ $analisis['perlu_reorder'] ? 'PERLU REORDER' : 'STOK AMAN' }}
                     </div>

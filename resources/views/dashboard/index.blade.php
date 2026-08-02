@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('judul_halaman', 'Dashboard')
-@section('subjudul', 'Ringkasan inventaris dan aktivitas transaksi')
+@section('subjudul', 'Ringkasan persediaan dan aktivitas transaksi')
 
 @section('konten')
     <div class="row g-3 mb-4">
@@ -117,7 +117,7 @@
             <div class="card-header bg-success text-white py-3 d-flex align-items-center justify-content-between" style="background-color: #198754 !important;">
                 <h5 class="card-title text-white mb-0 fw-bold d-flex align-items-center">
                     <i class="bi bi-shield-check fs-4 me-2"></i> 
-                    Pemberitahuan Status Inventaris: Stok Dalam Kondisi Aman
+                    Pemberitahuan Status Persediaan: Stok Dalam Kondisi Aman
                 </h5>
                 <a href="{{ route('analisis.index') }}" class="btn btn-sm btn-light text-success fw-bold shadow-sm">
                     <i class="bi bi-graph-up me-1"></i> Analisis ROP & EOQ

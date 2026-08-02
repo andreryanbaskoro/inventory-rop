@@ -5,7 +5,7 @@
             <a href="#" class="burger-btn d-block d-xl-none text-dark">
                 <i class="bi bi-list fs-4"></i>
             </a>
-            <span class="cm-navbar-title d-xl-none fw-bold text-brand ms-2">SI-Inventaris</span>
+            <span class="cm-navbar-title d-xl-none fw-bold text-brand ms-2">SI-Persediaan</span>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="navbar-nav ms-auto align-items-center gap-3">
                     <span class="d-none d-md-inline px-3 py-2 rounded-pill fw-semibold" style="background: var(--cm-surface); color: var(--cm-text-dark); border: 1px solid #e2e8f0; font-size: 0.85rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">

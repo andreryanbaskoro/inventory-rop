@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk — SI-Inventaris</title>
+    <title>Masuk — SI-Persediaan</title>
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,9 +113,9 @@
             <div class="auth-left">
                 <div class="mb-4">
                     <a href="{{ route('login') }}" class="text-decoration-none d-inline-flex align-items-center gap-3">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo SI-Inventaris" style="height: 72px; width: auto; border-radius: 8px;">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo SI-Persediaan" style="height: 72px; width: auto; border-radius: 8px;">
                         <div>
-                            <h5 class="mb-0 fw-bold text-dark" style="letter-spacing: -0.02em;">SI-Inventaris</h5>
+                            <h5 class="mb-0 fw-bold text-dark" style="letter-spacing: -0.02em;">SI-Persediaan</h5>
                             <span class="d-block small" style="color: var(--cm-text-muted);">Metode ROP & EOQ</span>
                         </div>
                     </a>
